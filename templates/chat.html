@@ -43,6 +43,40 @@
             z-index: -1;
         }
 
+        /* iPhone Dynamic Island */
+        .dynamic-island {
+            position: absolute;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 126px;
+            height: 37px;
+            background: #000;
+            border-radius: 19px;
+            z-index: 1000;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .dynamic-island::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
         @keyframes twinkle {
             0%, 100% { opacity: 0.8; }
             50% { opacity: 1; }
@@ -51,19 +85,21 @@
         .chat-container {
             background: linear-gradient(135deg, rgba(13, 17, 23, 0.95) 0%, rgba(22, 27, 34, 0.95) 100%);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
+            border-radius: 40px;
             box-shadow: 
-                0 20px 60px rgba(0, 0, 0, 0.5),
-                0 0 0 1px rgba(255, 255, 255, 0.05),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+                0 25px 80px rgba(0, 0, 0, 0.6),
+                0 0 0 1px rgba(255, 255, 255, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15);
             width: 100%;
-            max-width: 600px;
-            height: 700px;
+            max-width: 430px;
+            height: 932px;
             display: flex;
             flex-direction: column;
             overflow: hidden;
             position: relative;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(20px);
+            /* iPhone 16 Pro Max dimensions */
+            aspect-ratio: 430/932;
         }
 
         .chat-container::before {
@@ -84,10 +120,11 @@
         .chat-header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
             color: white;
-            padding: 25px 20px;
+            padding: 45px 20px 25px;
             text-align: center;
             position: relative;
             overflow: hidden;
+            border-radius: 40px 40px 0 0;
         }
 
         .chat-header::before {
@@ -191,9 +228,9 @@
         }
 
         .message-content {
-            max-width: 85%;
+            max-width: 80%;
             padding: 16px 20px;
-            border-radius: 20px;
+            border-radius: 24px;
             font-size: 15px;
             line-height: 1.6;
             position: relative;
@@ -262,12 +299,12 @@
         .typing-dots {
             display: flex;
             align-items: center;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 14px 18px;
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.08);
+            padding: 16px 20px;
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(15px);
         }
 
         .typing-dots span {
@@ -293,18 +330,19 @@
         }
 
         .quick-reply-btn {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             color: #e6edf3;
-            padding: 12px 20px;
-            border-radius: 25px;
+            padding: 14px 22px;
+            border-radius: 28px;
             font-size: 14px;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-weight: 500;
-            backdrop-filter: blur(10px);
+            font-weight: 600;
+            backdrop-filter: blur(15px);
             position: relative;
             overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         .quick-reply-btn::before {
@@ -343,12 +381,13 @@
         .chat-input-wrapper {
             display: flex;
             align-items: center;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 25px;
-            padding: 10px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 28px;
+            padding: 12px;
             transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(15px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         .chat-input-wrapper:focus-within {
@@ -516,10 +555,15 @@
                 height: 100vh;
                 max-width: 100%;
                 border-radius: 0;
+                aspect-ratio: auto;
             }
             
             body {
                 padding: 0;
+            }
+
+            .dynamic-island {
+                top: env(safe-area-inset-top, 12px);
             }
         }
 
@@ -563,6 +607,11 @@
 </head>
 <body>
     <div class="chat-container">
+        <!-- iPhone Dynamic Island -->
+        <div class="dynamic-island">
+            <span>Wizard AI</span>
+        </div>
+        
         <!-- Chat Header -->
         <div class="chat-header">
             <div class="bot-avatar">🚀</div>
