@@ -184,11 +184,12 @@
 
         .chat-messages {
             flex: 1;
-            padding: 20px;
+            padding: 25px;
             overflow-y: auto;
             background: linear-gradient(180deg, rgba(0, 0, 0, 0.9) 0%, rgba(13, 17, 23, 0.8) 50%, rgba(22, 27, 34, 0.6) 100%);
             scroll-behavior: smooth;
             position: relative;
+            min-height: 400px;
         }
 
         .chat-messages::before {
@@ -205,7 +206,7 @@
         }
 
         .message {
-            margin-bottom: 16px;
+            margin-bottom: 20px;
             display: flex;
             align-items: flex-end;
             animation: fadeInUp 0.4s ease-out;
@@ -222,10 +223,10 @@
         }
 
         .message-content {
-            max-width: 80%;
-            padding: 16px 20px;
+            max-width: 85%;
+            padding: 18px 22px;
             border-radius: 24px;
-            font-size: 15px;
+            font-size: 16px;
             line-height: 1.6;
             position: relative;
             word-wrap: break-word;
@@ -460,15 +461,15 @@
 
         .welcome-message {
             text-align: center;
-            padding: 25px;
+            padding: 30px;
             color: rgba(230, 237, 243, 0.8);
-            font-size: 14px;
+            font-size: 15px;
             line-height: 1.6;
             background: rgba(255, 255, 255, 0.05);
             border-radius: 20px;
             border: 1px solid rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
         .welcome-message h3 {
