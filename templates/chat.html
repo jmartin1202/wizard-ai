@@ -48,26 +48,7 @@
             z-index: -1;
         }
 
-        /* iPhone Dynamic Island */
-        .dynamic-island {
-            position: absolute;
-            top: 12px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 126px;
-            height: 37px;
-            background: #000;
-            border-radius: 19px;
-            z-index: 1000;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 12px;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-        }
+
 
 
 
@@ -557,9 +538,7 @@
                 padding: 0;
             }
 
-            .dynamic-island {
-                top: env(safe-area-inset-top, 12px);
-            }
+
         }
 
         /* Loading animation for messages */
@@ -602,10 +581,7 @@
 </head>
 <body>
     <div class="chat-container">
-        <!-- iPhone Dynamic Island -->
-        <div class="dynamic-island">
-            <span>Wizard AI</span>
-        </div>
+
         
         <!-- Chat Header -->
         <div class="chat-header">
