@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI Chatbot</title>
+  <meta name="color-scheme" content="dark light">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <aside class="sidebar" aria-label="Conversation sidebar">
+    <div class="sidebar-inner">
+      <div class="sidebar-header">
+        <button class="button solid" id="new-chat-btn" aria-label="Start new chat">
+          <span class="icon">+</span>
+          <span>New chat</span>
+        </button>
+      </div>
+      <div class="sidebar-content" id="conversation-list" role="list">
+        <button class="conversation active" role="listitem">
+          <span class="title">Welcome</span>
+          <span class="timestamp">Just now</span>
+        </button>
+      </div>
+      <div class="sidebar-footer">
+        <button class="icon-button" id="theme-toggle" aria-label="Toggle theme" title="Toggle theme">
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 1 0 9.79 9.79z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button class="icon-button" id="settings-btn" aria-label="Settings" title="Settings">
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06A2 2 0 1 1 7.04 3.4l.06.06c.48.48 1.18.62 1.82.33A1.65 1.65 0 0 0 10.5 2.3V2a2 2 0 1 1 4 0v.09c0 .66.39 1.25 1 1.51.64.29 1.34.15 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06c-.48.48-.62 1.18-.33 1.82.26.61.85 1 1.51 1H22a2 2 0 1 1 0 4h-.09c-.66 0-1.25.39-1.51 1z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+  </aside>
+  <main class="chat">
+    <header class="chat-header">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">🤖</div>
+        <div class="name">AI Chatbot</div>
+      </div>
+      <div class="header-controls">
+        <label class="select">
+          <span class="sr-only">Model</span>
+          <select id="model-select">
+            <option value="gpt-4.1">gpt-4.1</option>
+            <option value="gpt-4o">gpt-4o</option>
+            <option value="gpt-3.5-turbo">gpt-3.5-turbo</option>
+          </select>
+        </label>
+        <button class="icon-button" id="clear-btn" title="Clear chat" aria-label="Clear chat">
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M3 6h18M8 6l1-2h6l1 2M6 6l1 14h10l1-14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </header>
+    <section class="messages" id="messages" aria-live="polite" aria-label="Chat messages">
+      <div class="message user">
+        <div class="avatar" aria-hidden="true">🧑</div>
+        <div class="bubble">
+          <div class="meta">
+            <span class="role">You</span>
+            <time>Just now</time>
+          </div>
+          <div class="content">
+            <p>How do I center a div?</p>
+          </div>
+        </div>
+      </div>
+      <div class="message assistant">
+        <div class="avatar" aria-hidden="true">🤖</div>
+        <div class="bubble">
+          <div class="meta">
+            <span class="role">Assistant</span>
+            <time>Just now</time>
+          </div>
+          <div class="content">
+            <p>Use flexbox:</p>
+            <pre><code>.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}</code></pre>
+          </div>
+          <div class="actions">
+            <button class="tiny-button copy" title="Copy">Copy</button>
+            <button class="tiny-button" title="Good response">👍</button>
+            <button class="tiny-button" title="Bad response">👎</button>
+          </div>
+        </div>
+      </div>
+    </section>
+    <footer class="composer-wrap">
+      <form id="composer-form" class="composer" autocomplete="off">
+        <input type="file" id="file-input" multiple hidden>
+        <div class="textarea-row">
+          <textarea id="prompt-input" rows="1" placeholder="Message your AI..." aria-label="Message"></textarea>
+          <div class="composer-buttons">
+            <button type="button" class="icon-button" id="attach-btn" title="Attach files" aria-label="Attach files">
+              <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M21.44 11.05l-8.49 8.49a6 6 0 01-8.49-8.49l9.9-9.9a4 4 0 015.66 5.66l-9.9 9.9a2 2 0 01-2.83-2.83l8.49-8.49" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <button type="submit" class="icon-button primary" id="send-btn" title="Send" aria-label="Send">
+              <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M22 2L11 13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 2l-7 20-4-9-9-4 20-7z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="attachments" id="attachments" aria-live="polite"></div>
+        <div class="hints">Enter to send • Shift+Enter = newline</div>
+      </form>
+      <div class="disclaimer">AI may make mistakes. Check important info.</div>
+    </footer>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
