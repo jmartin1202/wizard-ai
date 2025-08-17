@@ -94,10 +94,27 @@ def debug():
     try:
         client = get_openai_client()
         if client == "external_service":
+            # Test simple_openai module
+            try:
+                from simple_openai import AdvancedOpenAI
+                ai = AdvancedOpenAI()
+                ai_status = {
+                    'module_loaded': True,
+                    'api_key_exists': bool(ai.api_key),
+                    'api_key_preview': ai.api_key[:20] + "..." if ai.api_key else None
+                }
+            except Exception as e:
+                ai_status = {
+                    'module_loaded': False,
+                    'error': str(e)
+                }
+            
             return jsonify({
                 'api_key_exists': bool(api_key),
+                'client_key': api_key[:20] + "..." if api_key else None,
                 'client_created': True,
                 'client_type': 'external_service',
+                'simple_openai_status': ai_status,
                 'error': None
             })
         else:
@@ -159,19 +176,33 @@ def chat():
         user_id = session['user_id']
         
         # Initialize AI
-        from simple_openai import AdvancedOpenAI
-        ai = AdvancedOpenAI()
+        try:
+            from simple_openai import AdvancedOpenAI
+            ai = AdvancedOpenAI()
+            
+            # Log API key status
+            logger.info(f"AI initialized, API key exists: {bool(ai.api_key)}")
+            
+            # Get AI response
+            response = ai.call_openai_advanced(
+                message=message,
+                user_id=user_id,
+                personality=personality,
+                use_memory=use_memory
+            )
+            
+            logger.info(f"AI response received: {response}")
+            
+        except ImportError as e:
+            logger.error(f"Failed to import simple_openai: {e}")
+            return jsonify({'error': 'AI module import failed'}), 500
+        except Exception as e:
+            logger.error(f"Failed to initialize AI: {e}")
+            return jsonify({'error': 'AI initialization failed'}), 500
         
-        # Get AI response
-        response = ai.call_openai_advanced(
-            message=message,
-            user_id=user_id,
-            personality=personality,
-            use_memory=use_memory
-        )
-        
-        if response['success']:
+        if response and response.get('success'):
             return jsonify({
+                'success': True,
                 'response': response['response'],
                 'personality': personality,
                 'model_used': response.get('model_used', 'GPT-4'),
@@ -180,7 +211,9 @@ def chat():
                 'real_time_data': response.get('real_time_data')
             })
         else:
-            return jsonify({'error': response['error']}), 400
+            error_msg = response.get('error', 'Unknown error occurred') if response else 'No response from AI'
+            logger.error(f"AI response error: {error_msg}")
+            return jsonify({'error': error_msg}), 400
             
     except Exception as e:
         logger.error(f'Chat error: {e}')
