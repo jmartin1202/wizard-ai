@@ -85,6 +85,87 @@
             min-height: 100vh;
             color: var(--text-primary);
             overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Milky Way Live Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(ellipse at center, rgba(255,255,255,0.1) 0%, transparent 50%),
+                radial-gradient(ellipse at 20% 30%, rgba(138,43,226,0.3) 0%, transparent 40%),
+                radial-gradient(ellipse at 80% 70%, rgba(75,0,130,0.3) 0%, transparent 40%),
+                radial-gradient(ellipse at 40% 80%, rgba(147,112,219,0.2) 0%, transparent 40%),
+                radial-gradient(ellipse at 90% 20%, rgba(72,61,139,0.3) 0%, transparent 40%),
+                linear-gradient(45deg, 
+                    rgba(25,25,112,0.8) 0%, 
+                    rgba(72,61,139,0.6) 25%, 
+                    rgba(138,43,226,0.4) 50%, 
+                    rgba(75,0,130,0.6) 75%, 
+                    rgba(25,25,112,0.8) 100%);
+            background-size: 100% 100%, 200% 200%, 300% 300%, 400% 400%, 500% 500%, 100% 100%;
+            animation: milky-way-move 60s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes milky-way-move {
+            0% {
+                background-position: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;
+            }
+            100% {
+                background-position: 100% 100%, 200% 200%, 300% 300%, 400% 400%, 500% 500%, 100% 100%;
+            }
+        }
+
+        /* Add some twinkling stars */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, #eee, transparent),
+                radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.8), transparent),
+                radial-gradient(1px 1px at 90px 40px, #fff, transparent),
+                radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.6), transparent),
+                radial-gradient(2px 2px at 160px 30px, #ddd, transparent),
+                radial-gradient(2px 2px at 200px 70px, rgba(255,255,255,0.8), transparent),
+                radial-gradient(1px 1px at 250px 40px, #fff, transparent),
+                radial-gradient(1px 1px at 290px 80px, rgba(255,255,255,0.6), transparent),
+                radial-gradient(2px 2px at 320px 30px, #ddd, transparent),
+                radial-gradient(2px 2px at 360px 70px, rgba(255,255,255,0.8), transparent),
+                radial-gradient(1px 1px at 410px 40px, #fff, transparent),
+                radial-gradient(1px 1px at 450px 80px, rgba(255,255,255,0.6), transparent),
+                radial-gradient(2px 2px at 480px 30px, #ddd, transparent),
+                radial-gradient(2px 2px at 520px 70px, rgba(255,255,255,0.8), transparent),
+                radial-gradient(1px 1px at 570px 40px, #fff, transparent),
+                radial-gradient(1px 1px at 610px 80px, rgba(255,255,255,0.6), transparent),
+                radial-gradient(2px 2px at 640px 30px, #ddd, transparent),
+                radial-gradient(2px 2px at 680px 70px, rgba(255,255,255,0.8), transparent),
+                radial-gradient(1px 1px at 730px 40px, #fff, transparent),
+                radial-gradient(1px 1px at 770px 80px, rgba(255,255,255,0.6), transparent),
+                radial-gradient(2px 2px at 800px 30px, #ddd, transparent),
+                radial-gradient(2px 2px at 840px 70px, rgba(255,255,255,0.8), transparent),
+                radial-gradient(1px 1px at 890px 40px, #fff, transparent),
+                radial-gradient(1px 1px at 930px 80px, rgba(255,255,255,0.6), transparent),
+                radial-gradient(2px 2px at 960px 30px, #ddd, transparent),
+                radial-gradient(2px 2px at 1000px 70px, rgba(255,255,255,0.8), transparent);
+            background-repeat: repeat;
+            background-size: 1000px 1000px;
+            animation: twinkle 4s ease-in-out infinite alternate;
+            z-index: -1;
+        }
+
+        @keyframes twinkle {
+            0% { opacity: 0.3; }
+            100% { opacity: 1; }
         }
 
         body.light-mode {
@@ -434,204 +515,7 @@
             background: var(--accent-secondary);
         }
 
-        /* Animated Pixel Dog */
-        .pixel-dog-container {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 1000;
-            pointer-events: none;
-        }
 
-        .pixel-dog {
-            width: 48px;
-            height: 48px;
-            position: relative;
-            animation: dog-bounce 3s ease-in-out infinite;
-            image-rendering: pixelated;
-            image-rendering: -moz-crisp-edges;
-            image-rendering: crisp-edges;
-        }
-
-        .dog-body {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            background: #DEB887;
-            border: 2px solid #8B4513;
-        }
-
-        .dog-head {
-            position: absolute;
-            top: 4px;
-            left: 8px;
-            width: 32px;
-            height: 28px;
-            background: #DEB887;
-            border: 2px solid #8B4513;
-        }
-
-        .dog-ears {
-            position: absolute;
-            top: 0px;
-            left: 4px;
-            width: 24px;
-        }
-
-        .ear {
-            position: absolute;
-            width: 8px;
-            height: 8px;
-            background: #8B4513;
-            border: 1px solid #654321;
-            animation: ear-wiggle 2s ease-in-out infinite;
-        }
-
-        .left-ear {
-            left: 0px;
-        }
-
-        .right-ear {
-            right: 0px;
-        }
-
-        .dog-face {
-            position: absolute;
-            top: 8px;
-            left: 8px;
-            width: 16px;
-            height: 16px;
-        }
-
-        .dog-eyes {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 6px;
-        }
-
-        .eye {
-            width: 2px;
-            height: 2px;
-            background: #000;
-            border: 1px solid #000;
-            animation: blink 4s ease-in-out infinite;
-        }
-
-        .dog-nose {
-            width: 2px;
-            height: 2px;
-            background: #8B4513;
-            border: 1px solid #654321;
-            position: absolute;
-            left: 7px;
-            top: 8px;
-        }
-
-        .dog-mouth {
-            width: 4px;
-            height: 2px;
-            background: #8B4513;
-            position: absolute;
-            left: 6px;
-            top: 12px;
-        }
-
-        .dog-legs {
-            position: absolute;
-            bottom: 4px;
-            left: 12px;
-            width: 24px;
-        }
-
-        .leg {
-            position: absolute;
-            width: 4px;
-            height: 6px;
-            background: #DEB887;
-            border: 1px solid #8B4513;
-            animation: leg-walk 1s ease-in-out infinite alternate;
-        }
-
-        .front-left { left: 0px; animation-delay: 0s; }
-        .front-right { left: 8px; animation-delay: 0.2s; }
-        .back-left { left: 16px; animation-delay: 0.4s; }
-        .back-right { left: 24px; animation-delay: 0.6s; }
-
-        .dog-speech-bubble {
-            position: absolute;
-            bottom: 60px;
-            right: 0;
-            background: white;
-            border: 2px solid #333;
-            border-radius: 15px;
-            padding: 10px 15px;
-            max-width: 200px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            animation: bubble-float 3s ease-in-out infinite;
-            pointer-events: auto;
-        }
-
-        .bubble-text {
-            color: #333;
-            font-size: 12px;
-            font-weight: bold;
-            text-align: center;
-            line-height: 1.3;
-        }
-
-        .bubble-arrow {
-            position: absolute;
-            bottom: -8px;
-            right: 20px;
-            width: 0;
-            height: 0;
-            border-left: 8px solid transparent;
-            border-right: 8px solid transparent;
-            border-top: 8px solid white;
-        }
-
-        .bubble-arrow::before {
-            content: '';
-            position: absolute;
-            bottom: 2px;
-            right: -8px;
-            width: 0;
-            height: 0;
-            border-left: 8px solid transparent;
-            border-right: 8px solid transparent;
-            border-top: 8px solid #333;
-        }
-
-        /* Dog Animations */
-        @keyframes dog-bounce {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-5px); }
-        }
-
-        @keyframes ear-wiggle {
-            0%, 100% { transform: rotate(-15deg); }
-            50% { transform: rotate(-25deg); }
-        }
-
-        @keyframes blink {
-            0%, 90%, 100% { transform: scaleY(1); }
-            95% { transform: scaleY(0.1); }
-        }
-
-        @keyframes leg-walk {
-            0% { transform: translateY(0px); }
-            100% { transform: translateY(-3px); }
-        }
-
-        @keyframes tail-wag {
-            0%, 100% { transform: rotate(0deg); }
-            50% { transform: rotate(15deg); }
-        }
-
-        @keyframes bubble-float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-3px); }
-        }
 
         @keyframes pulse-voice {
             0% { transform: scale(1); }
@@ -851,37 +735,7 @@
     <!-- Hidden File Input for Image Upload -->
     <input type="file" id="imageUploadInput" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
     
-    <!-- Animated Pixel Dog -->
-    <div class="pixel-dog-container">
-        <div class="pixel-dog" id="pixelDog">
-            <div class="dog-body">
-                <div class="dog-head">
-                    <div class="dog-ears">
-                        <div class="ear left-ear"></div>
-                        <div class="ear right-ear"></div>
-                    </div>
-                    <div class="dog-face">
-                        <div class="dog-eyes">
-                            <div class="eye left-eye"></div>
-                            <div class="eye right-eye"></div>
-                        </div>
-                        <div class="dog-nose"></div>
-                        <div class="dog-mouth"></div>
-                    </div>
-                </div>
-                <div class="dog-legs">
-                    <div class="leg front-left"></div>
-                    <div class="leg front-right"></div>
-                    <div class="leg back-left"></div>
-                    <div class="leg back-right"></div>
-                </div>
-            </div>
-        </div>
-        <div class="dog-speech-bubble" id="dogSpeechBubble">
-            <div class="bubble-text">Thank you for visiting my app! 🐕✨</div>
-            <div class="bubble-arrow"></div>
-        </div>
-    </div>
+
 
     <!-- Image Preview Modal -->
     <div class="image-preview-modal" id="imagePreviewModal">
@@ -917,7 +771,7 @@
 
     <!-- Main Content Area -->
     <div class="main-content">
-        <h1 class="main-title">Wizard AI</h1>
+        <h1 class="main-title">Query AI</h1>
         <p class="main-subtitle">Ask detailed questions for better responses</p>
         
         <!-- Input Container -->
@@ -948,7 +802,7 @@
         <!-- Chat Container (Hidden by default) -->
     <div class="chat-container" id="chatContainer">
         <div class="chat-header">
-            <h2>AI Chat</h2>
+            <h2>Query AI Chat</h2>
         </div>
         <div class="chat-messages" id="chatMessages"></div>
         <div class="input-container">
@@ -1010,52 +864,7 @@
             }
         }
 
-        // Initialize pixel dog
-        function initPixelDog() {
-            const dog = document.getElementById('pixelDog');
-            const speechBubble = document.getElementById('dogSpeechBubble');
-            
-            // Make dog interactive
-            dog.style.pointerEvents = 'auto';
-            dog.style.cursor = 'pointer';
-            
-            // Dog click interactions
-            dog.addEventListener('click', function() {
-                // Random dog reactions
-                const reactions = [
-                    'Woof! 🐕',
-                    'Happy to see you! 🐾',
-                    'Want to play? 🎾',
-                    'Good human! 👋',
-                    'Sniff sniff... 👃'
-                ];
-                
-                const randomReaction = reactions[Math.floor(Math.random() * reactions.length)];
-                speechBubble.querySelector('.bubble-text').textContent = randomReaction;
-                
-                // Add excitement animation
-                dog.style.animation = 'dog-bounce 0.5s ease-in-out 3';
-                setTimeout(() => {
-                    dog.style.animation = 'dog-bounce 3s ease-in-out infinite';
-                }, 1500);
-                
-                // Reset to original message after 3 seconds
-                setTimeout(() => {
-                    speechBubble.querySelector('.bubble-text').textContent = 'Thank you for visiting my app! 🐕✨';
-                }, 3000);
-            });
-            
-            // Dog hover effects
-            dog.addEventListener('mouseenter', function() {
-                dog.style.transform = 'scale(1.1)';
-                speechBubble.style.transform = 'scale(1.05)';
-            });
-            
-            dog.addEventListener('mouseleave', function() {
-                dog.style.transform = 'scale(1)';
-                speechBubble.style.transform = 'scale(1)';
-            });
-        }
+
 
         // Toggle theme
         function toggleTheme() {
@@ -1538,7 +1347,6 @@
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             initTheme();
-            initPixelDog();
             // Test backend connection
             testBackend();
         });
