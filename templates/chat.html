@@ -116,29 +116,7 @@
 
 
 
-        .nav-menu {
-             display: flex;
-            gap: 30px;
-        }
 
-        .nav-item {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: 14px;
-            padding: 8px 12px;
-            border-radius: 8px;
-            transition: all var(--transition-speed) var(--transition-ease);
-        }
-
-        .nav-item.active {
-            color: var(--text-primary);
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .nav-item:hover {
-            color: var(--text-primary);
-            background: rgba(255, 255, 255, 0.05);
-        }
 
         .nav-right {
             margin-left: auto;
@@ -525,10 +503,6 @@
 
         /* Responsive Design */
         @media (max-width: 768px) {
-            .nav-menu {
-                display: none;
-            }
-            
             .input-field {
                 padding-right: 100px;
             }
@@ -549,15 +523,7 @@
     <!-- Top Navigation Bar -->
     <nav class="top-nav">
         <div class="nav-left">
-            <div class="nav-menu">
-                <a href="#" class="nav-item active">AI Mode</a>
-                <a href="#" class="nav-item">All</a>
-                <a href="#" class="nav-item">Images</a>
-                <a href="#" class="nav-item">Videos</a>
-                <a href="#" class="nav-item">News</a>
-                <a href="#" class="nav-item">Other ▼</a>
         </div>
-                </div>
         <div class="nav-right">
             <div class="nav-icon" onclick="toggleSettings()">⋮</div>
             </div>
