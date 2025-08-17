@@ -444,132 +444,298 @@
         }
 
         .pixel-dog {
-            width: 80px;
-            height: 80px;
+            width: 64px;
+            height: 48px;
             position: relative;
             animation: dog-bounce 3s ease-in-out infinite;
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
         }
 
         .dog-body {
             width: 100%;
             height: 100%;
             position: relative;
+            background: #D2691E;
+            border: 2px solid #8B4513;
+            /* Create pixel-perfect body using box-shadow for individual pixels */
+            box-shadow: 
+                /* Body outline */
+                0px 0px 0px 2px #8B4513,
+                /* Body shading */
+                2px 2px 0px 0px #CD853F,
+                4px 4px 0px 0px #CD853F,
+                6px 6px 0px 0px #CD853F,
+                8px 8px 0px 0px #CD853F,
+                10px 10px 0px 0px #CD853F,
+                12px 12px 0px 0px #CD853F,
+                14px 14px 0px 0px #CD853F,
+                16px 16px 0px 0px #CD853F,
+                18px 18px 0px 0px #CD853F,
+                20px 20px 0px 0px #CD853F,
+                22px 22px 0px 0px #CD853F,
+                24px 24px 0px 0px #CD853F,
+                26px 26px 0px 0px #CD853F,
+                28px 28px 0px 0px #CD853F,
+                30px 30px 0px 0px #CD853F,
+                32px 32px 0px 0px #CD853F,
+                34px 34px 0px 0px #CD853F,
+                36px 36px 0px 0px #CD853F,
+                38px 38px 0px 0px #CD853F,
+                40px 40px 0px 0px #CD853F,
+                42px 42px 0px 0px #CD853F,
+                44px 44px 0px 0px #CD853F,
+                46px 46px 0px 0px #CD853F,
+                48px 48px 0px 0px #CD853F,
+                50px 50px 0px 0px #CD853F,
+                52px 52px 0px 0px #CD853F,
+                54px 54px 0px 0px #CD853F,
+                56px 56px 0px 0px #CD853F,
+                58px 58px 0px 0px #CD853F,
+                60px 60px 0px 0px #CD853F,
+                62px 62px 0px 0px #CD853F,
+                /* Second row */
+                0px 2px 0px 0px #CD853F,
+                2px 4px 0px 0px #CD853F,
+                4px 6px 0px 0px #CD853F,
+                6px 8px 0px 0px #CD853F,
+                8px 10px 0px 0px #CD853F,
+                10px 12px 0px 0px #CD853F,
+                12px 14px 0px 0px #CD853F,
+                14px 16px 0px 0px #CD853F,
+                16px 18px 0px 0px #CD853F,
+                18px 20px 0px 0px #CD853F,
+                20px 22px 0px 0px #CD853F,
+                22px 24px 0px 0px #CD853F,
+                24px 26px 0px 0px #CD853F,
+                26px 28px 0px 0px #CD853F,
+                28px 30px 0px 0px #CD853F,
+                30px 32px 0px 0px #CD853F,
+                32px 34px 0px 0px #CD853F,
+                34px 36px 0px 0px #CD853F,
+                36px 38px 0px 0px #CD853F,
+                38px 40px 0px 0px #CD853F,
+                40px 42px 0px 0px #CD853F,
+                42px 44px 0px 0px #CD853F,
+                44px 46px 0px 0px #CD853F,
+                46px 48px 0px 0px #CD853F,
+                48px 50px 0px 0px #CD853F,
+                50px 52px 0px 0px #CD853F,
+                52px 54px 0px 0px #CD853F,
+                54px 56px 0px 0px #CD853F,
+                56px 58px 0px 0px #CD853F,
+                58px 60px 0px 0px #CD853F,
+                60px 62px 0px 0px #CD853F,
+                62px 64px 0px 0px #CD853F;
         }
 
         .dog-head {
-            width: 60px;
-            height: 50px;
-            background: #8B4513;
-            border-radius: 25px 25px 20px 20px;
             position: absolute;
-            top: 0;
-            left: 10px;
-            border: 2px solid #654321;
+            top: 8px;
+            left: 8px;
+            width: 32px;
+            height: 24px;
+            background: #D2691E;
+            border: 2px solid #8B4513;
+            /* Pixel-perfect head using box-shadow */
+            box-shadow: 
+                /* Head outline */
+                0px 0px 0px 2px #8B4513,
+                /* Head shading */
+                2px 2px 0px 0px #CD853F,
+                4px 4px 0px 0px #CD853F,
+                6px 6px 0px 0px #CD853F,
+                8px 8px 0px 0px #CD853F,
+                10px 10px 0px 0px #CD853F,
+                12px 12px 0px 0px #CD853F,
+                14px 14px 0px 0px #CD853F,
+                16px 16px 0px 0px #CD853F,
+                18px 18px 0px 0px #CD853F,
+                20px 20px 0px 0px #CD853F,
+                22px 22px 0px 0px #CD853F,
+                24px 24px 0px 0px #CD853F,
+                26px 26px 0px 0px #CD853F,
+                28px 28px 0px 0px #CD853F,
+                30px 30px 0px 0px #CD853F,
+                32px 32px 0px 0px #CD853F,
+                /* Second row */
+                0px 2px 0px 0px #CD853F,
+                2px 4px 0px 0px #CD853F,
+                4px 6px 0px 0px #CD853F,
+                6px 8px 0px 0px #CD853F,
+                8px 10px 0px 0px #CD853F,
+                10px 12px 0px 0px #CD853F,
+                12px 14px 0px 0px #CD853F,
+                14px 16px 0px 0px #CD853F,
+                16px 18px 0px 0px #CD853F,
+                18px 20px 0px 0px #CD853F,
+                20px 22px 0px 0px #CD853F,
+                22px 24px 0px 0px #CD853F,
+                24px 26px 0px 0px #CD853F,
+                26px 28px 0px 0px #CD853F,
+                28px 30px 0px 0px #CD853F,
+                30px 32px 0px 0px #CD853F,
+                32px 34px 0px 0px #CD853F;
         }
 
         .dog-ears {
             position: absolute;
-            top: -5px;
-            width: 100%;
+            top: 4px;
+            left: 4px;
+            width: 24px;
         }
 
         .ear {
-            width: 15px;
-            height: 20px;
-            background: #654321;
-            border-radius: 50%;
             position: absolute;
+            width: 8px;
+            height: 12px;
+            background: #8B4513;
+            border: 1px solid #654321;
+            /* Pixel-perfect ears */
+            box-shadow: 
+                0px 0px 0px 1px #654321,
+                1px 1px 0px 0px #8B4513,
+                2px 2px 0px 0px #8B4513,
+                3px 3px 0px 0px #8B4513,
+                4px 4px 0px 0px #8B4513,
+                5px 5px 0px 0px #8B4513,
+                6px 6px 0px 0px #8B4513,
+                7px 7px 0px 0px #8B4513,
+                /* Second row */
+                0px 1px 0px 0px #8B4513,
+                1px 2px 0px 0px #8B4513,
+                2px 3px 0px 0px #8B4513,
+                3px 4px 0px 0px #8B4513,
+                4px 5px 0px 0px #8B4513,
+                5px 6px 0px 0px #8B4513,
+                6px 7px 0px 0px #8B4513,
+                7px 8px 0px 0px #8B4513;
             animation: ear-wiggle 2s ease-in-out infinite;
         }
 
         .left-ear {
-            left: 5px;
-            transform: rotate(-15deg);
+            left: 0px;
         }
 
         .right-ear {
-            right: 5px;
-            transform: rotate(15deg);
+            right: 0px;
         }
 
         .dog-face {
             position: absolute;
-            top: 15px;
-            left: 15px;
-            width: 30px;
-            height: 25px;
+            top: 8px;
+            left: 8px;
+            width: 16px;
+            height: 12px;
         }
 
         .dog-eyes {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 8px;
+            margin-bottom: 4px;
         }
 
         .eye {
-            width: 6px;
-            height: 6px;
+            width: 3px;
+            height: 3px;
             background: #000;
-            border-radius: 50%;
+            border: 1px solid #000;
             animation: blink 4s ease-in-out infinite;
         }
 
         .dog-nose {
-            width: 4px;
-            height: 4px;
+            width: 2px;
+            height: 2px;
             background: #000;
-            border-radius: 50%;
+            border: 1px solid #000;
             position: absolute;
-            left: 13px;
-            top: 15px;
+            left: 7px;
+            top: 8px;
         }
 
         .dog-mouth {
-            width: 12px;
-            height: 6px;
-            border: 2px solid #000;
-            border-top: none;
-            border-radius: 0 0 12px 12px;
+            width: 6px;
+            height: 3px;
+            background: #000;
             position: absolute;
-            left: 9px;
-            top: 20px;
+            left: 5px;
+            top: 10px;
         }
 
         .dog-legs {
             position: absolute;
-            bottom: 0;
-            width: 100%;
+            bottom: -8px;
+            left: 8px;
+            width: 48px;
         }
 
         .leg {
-            width: 8px;
-            height: 20px;
+            position: absolute;
+            width: 4px;
+            height: 8px;
             background: #8B4513;
             border: 1px solid #654321;
-            position: absolute;
-            bottom: -15px;
+            /* Pixel-perfect legs */
+            box-shadow: 
+                0px 0px 0px 1px #654321,
+                1px 1px 0px 0px #8B4513,
+                2px 2px 0px 0px #8B4513,
+                3px 3px 0px 0px #8B4513,
+                /* Second row */
+                0px 1px 0px 0px #8B4513,
+                1px 2px 0px 0px #8B4513,
+                2px 3px 0px 0px #8B4513,
+                3px 4px 0px 0px #8B4513;
             animation: leg-walk 1s ease-in-out infinite alternate;
         }
 
-        .front-left { left: 15px; animation-delay: 0s; }
-        .front-right { left: 25px; animation-delay: 0.2s; }
-        .back-left { left: 35px; animation-delay: 0.4s; }
-        .back-right { left: 45px; animation-delay: 0.6s; }
+        .front-left { left: 0px; animation-delay: 0s; }
+        .front-right { left: 8px; animation-delay: 0.2s; }
+        .back-left { left: 16px; animation-delay: 0.4s; }
+        .back-right { left: 24px; animation-delay: 0.6s; }
 
         .dog-tail {
-            width: 20px;
-            height: 8px;
-            background: #654321;
-            border-radius: 4px;
             position: absolute;
-            right: 0;
-            top: 30px;
+            right: -8px;
+            top: 16px;
+            width: 12px;
+            height: 6px;
+            background: #8B4513;
+            border: 1px solid #654321;
+            /* Pixel-perfect tail */
+            box-shadow: 
+                0px 0px 0px 1px #654321,
+                1px 1px 0px 0px #8B4513,
+                2px 2px 0px 0px #8B4513,
+                3px 3px 0px 0px #8B4513,
+                4px 4px 0px 0px #8B4513,
+                5px 5px 0px 0px #8B4513,
+                6px 6px 0px 0px #8B4513,
+                7px 7px 0px 0px #8B4513,
+                8px 8px 0px 0px #8B4513,
+                9px 9px 0px 0px #8B4513,
+                10px 10px 0px 0px #8B4513,
+                11px 11px 0px 0px #8B4513,
+                /* Second row */
+                0px 1px 0px 0px #8B4513,
+                1px 2px 0px 0px #8B4513,
+                2px 3px 0px 0px #8B4513,
+                3px 4px 0px 0px #8B4513,
+                4px 5px 0px 0px #8B4513,
+                5px 6px 0px 0px #8B4513,
+                6px 7px 0px 0px #8B4513,
+                7px 8px 0px 0px #8B4513,
+                8px 9px 0px 0px #8B4513,
+                9px 10px 0px 0px #8B4513,
+                10px 11px 0px 0px #8B4513,
+                11px 12px 0px 0px #8B4513;
             animation: tail-wag 2s ease-in-out infinite;
         }
 
         .dog-speech-bubble {
             position: absolute;
-            bottom: 90px;
+            bottom: 60px;
             right: 0;
             background: white;
             border: 2px solid #333;
