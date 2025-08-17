@@ -1,0 +1,48 @@
+{
+  "name": "Advanced AI Assistant",
+  "short_name": "AI Chat",
+  "description": "Advanced AI chatbot with real-time features, multiple personalities, and beautiful themes",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#8b5cf6",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "en",
+  "categories": ["productivity", "utilities", "education"],
+  "icons": [
+    {
+      "src": "/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshot-wide.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+      "src": "/screenshot-narrow.png",
+      "sizes": "750x1334",
+      "type": "image/png",
+      "form_factor": "narrow"
+    }
+  ],
+  "features": [
+    "Cross Platform",
+    "Real-time AI",
+    "Multiple Personalities",
+    "Theme Customization",
+    "Mobile Optimized"
+  ]
+}

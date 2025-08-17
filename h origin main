@@ -1,0 +1,3 @@
+[33m1ef4e91[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m Fix environment variable loading and enhance real-time AI features - Added load_dotenv() to app.py and simple_openai.py - Fixed OpenAI API key loading issue - Enhanced real-time query detection for weather/time/crypto - Improved system prompts for better AI responses - Real-time features now working perfectly with GPT-4
+[33m0beccfd[m Complete AI chatbot with OpenAI integration - production ready for deployment
+[33m25ed139[m[33m ([m[1;31mheroku/master[m[33m)[m Fix OpenAI package dependency for Heroku deployment

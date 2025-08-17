@@ -75,6 +75,16 @@ def is_rate_limited(client_ip):
 def index():
     return render_template('chat.html')
 
+@app.route('/manifest.json')
+def manifest():
+    """Serve the PWA manifest file"""
+    return app.send_static_file('manifest.json')
+
+@app.route('/sw.js')
+def service_worker():
+    """Serve the service worker file"""
+    return app.send_static_file('sw.js')
+
 @app.route('/debug')
 def debug():
     """Debug endpoint to check API key and client status"""
@@ -128,117 +138,52 @@ def test_simple_openai():
         })
 
 @app.route('/api/chat', methods=['POST'])
-def chat_api():
+def chat():
+    """Main chat endpoint"""
+    if is_rate_limited(request.remote_addr):
+        return jsonify({'error': 'Rate limit exceeded. Please wait a moment.'}), 429
+    
     try:
-        # Get OpenAI client for this request
-        client = get_openai_client()
-        
-        # Debug logging
-        logger.info(f'Client variable value: {client}')
-        logger.info(f'Client type: {type(client)}')
-        
-        # Rate limiting
-        client_ip = request.remote_addr
-        if is_rate_limited(client_ip):
-            return jsonify({'error': 'Rate limit exceeded. Please try again later.'}), 429
-        
         data = request.get_json()
-        if not data:
-            return jsonify({'error': 'Invalid JSON data'}), 400
+        if not data or 'message' not in data:
+            return jsonify({'error': 'Message is required'}), 400
         
-        message = data.get('message', '').strip()
+        message = data['message']
         personality = data.get('personality', 'default')
         use_memory = data.get('use_memory', True)
         
-        if not message:
-            return jsonify({'error': 'Message is required'}), 400
+        # Generate user ID if not exists
+        if 'user_id' not in session:
+            session['user_id'] = str(uuid.uuid4())
         
-        if len(message) > 2000:  # Increased from 1000
-            return jsonify({'error': 'Message too long (max 2000 characters)'}), 400
+        user_id = session['user_id']
         
-        # Generate AI response using advanced features
-        if client and client != "external_service":
-            logger.info('Client is available, attempting to generate AI response')
-            try:
-                response = client.chat.completions.create(
-                    model='gpt-4',
-                    messages=[{'role': 'user', 'content': message}],
-                    max_tokens=1000,  # Increased from 500
-                    temperature=0.7
-                )
-                ai_response = response.choices[0].message.content.strip()
-                logger.info(f'AI response generated for user: {client_ip}')
-            except Exception as e:
-                logger.error(f'Unexpected OpenAI error: {e}')
-                return jsonify({'error': 'AI service error'}), 500
-        elif client == "external_service":
-            logger.info('Using external OpenAI service with advanced features')
-            try:
-                # Import and use the advanced OpenAI module
-                from simple_openai import AdvancedOpenAI
-                
-                # Initialize advanced AI with user session
-                user_id = session.get('user_id', str(uuid.uuid4()))
-                if 'user_id' not in session:
-                    session['user_id'] = user_id
-                
-                ai = AdvancedOpenAI()
-                
-                logger.info(f'Calling advanced OpenAI service for user: {user_id}, personality: {personality}')
-                result = ai.call_openai_advanced(
-                    message, 
-                    user_id=user_id, 
-                    personality=personality,
-                    max_tokens=1000,  # Increased token limit
-                    temperature=0.7,
-                    use_memory=use_memory
-                )
-                
-                if result.get('success'):
-                    ai_response = result['response']
-                    model_used = result.get('model_used', 'unknown')
-                    tokens_used = result.get('tokens_used', 0)
-                    conv_length = result.get('conversation_length', 0)
-                    
-                    logger.info(f'AI response generated for user: {user_id} (advanced service)')
-                    logger.info(f'Response length: {len(ai_response)}')
-                    logger.info(f'Model used: {model_used}, Tokens: {tokens_used}, Context: {conv_length}')
-                    
-                    return jsonify({
-                        'response': ai_response,
-                        'timestamp': datetime.now().isoformat(),
-                        'ai_generated': True,
-                        'model_used': model_used,
-                        'tokens_used': tokens_used,
-                        'conversation_length': conv_length,
-                        'personality': personality
-                    })
-                else:
-                    logger.error(f'Advanced service error: {result.get("error")}')
-                    return jsonify({'error': 'AI service temporarily unavailable'}), 503
-                    
-            except ImportError as e:
-                logger.error(f'Failed to import advanced service: {e}')
-                return jsonify({'error': 'AI service configuration error'}), 500
-            except Exception as e:
-                logger.error(f'Unexpected error with advanced service: {e}')
-                logger.error(f'Error type: {type(e)}')
-                logger.error(f'Error details: {str(e)}')
-                import traceback
-                logger.error(f'Traceback: {traceback.format_exc()}')
-                return jsonify({'error': 'AI service error'}), 500
+        # Initialize AI
+        from simple_openai import AdvancedOpenAI
+        ai = AdvancedOpenAI()
+        
+        # Get AI response
+        response = ai.call_openai_advanced(
+            message=message,
+            user_id=user_id,
+            personality=personality,
+            use_memory=use_memory
+        )
+        
+        if response['success']:
+            return jsonify({
+                'response': response['response'],
+                'personality': personality,
+                'model_used': response.get('model_used', 'GPT-4'),
+                'tokens_used': response.get('tokens_used', 0),
+                'conversation_length': response.get('conversation_length', 0),
+                'real_time_data': response.get('real_time_data')
+            })
         else:
-            logger.warning('Client is None, AI features unavailable')
-            ai_response = 'AI features are currently unavailable. Please check your configuration.'
-        
-        return jsonify({
-            'response': ai_response,
-            'timestamp': datetime.now().isoformat(),
-            'ai_generated': True
-        })
-        
+            return jsonify({'error': response['error']}), 400
+            
     except Exception as e:
-        logger.error(f'Unexpected error in chat_api: {e}')
+        logger.error(f'Chat error: {e}')
         return jsonify({'error': 'Internal server error'}), 500
 
 @app.route('/api/personalities', methods=['GET'])
@@ -247,12 +192,16 @@ def get_personalities():
     try:
         from simple_openai import AdvancedOpenAI
         ai = AdvancedOpenAI()
+        
         personalities = ai.get_available_personalities()
+        current_personality = session.get('personality', 'default')
+        
         return jsonify({
             'success': True,
             'personalities': personalities,
-            'current_personality': session.get('personality', 'default')
+            'current_personality': current_personality
         })
+        
     except Exception as e:
         logger.error(f'Error getting personalities: {e}')
         return jsonify({

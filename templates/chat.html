@@ -2,8 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#8b5cf6">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="AI Assistant">
     <title>Advanced AI Assistant</title>
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/icon-192x192.png">
     <style>
         * {
             margin: 0;
@@ -11,9 +17,41 @@
             box-sizing: border-box;
         }
 
+        :root {
+            /* Dark Theme Colors */
+            --bg-primary: #000000;
+            --bg-secondary: #0a0a0a;
+            --bg-tertiary: #0c0c23;
+            --bg-quaternary: #1a0b2e;
+            --bg-quinary: #16213e;
+            --bg-senary: #0f3460;
+            --bg-septenary: #533483;
+            
+            /* Light Theme Colors */
+            --light-bg-primary: #ffffff;
+            --light-bg-secondary: #f8fafc;
+            --light-bg-tertiary: #e2e8f0;
+            --light-bg-quaternary: #cbd5e1;
+            --light-bg-quinary: #94a3b8;
+            --light-bg-senary: #64748b;
+            --light-bg-septenary: #475569;
+            
+            /* Text Colors */
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.8);
+            --light-text-primary: #1e293b;
+            --light-text-secondary: #475569;
+            
+            /* Accent Colors */
+            --accent-primary: #8b5cf6;
+            --accent-secondary: #a855f7;
+            --light-accent-primary: #3b82f6;
+            --light-accent-secondary: #1d4ed8;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: radial-gradient(ellipse at center, #000000 0%, #0a0a0a 15%, #0c0c23 30%, #1a0b2e 50%, #16213e 70%, #0f3460 85%, #533483 100%);
+            background: radial-gradient(ellipse at center, var(--bg-primary) 0%, var(--bg-secondary) 15%, var(--bg-tertiary) 30%, var(--bg-quaternary) 50%, var(--bg-quinary) 70%, var(--bg-senary) 85%, var(--bg-septenary) 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -21,9 +59,14 @@
             padding: 20px;
             position: relative;
             overflow-x: hidden;
+            transition: background 0.5s ease;
         }
 
-        /* Animated Stars Background */
+        body.light-mode {
+            background: radial-gradient(ellipse at center, var(--light-bg-primary) 0%, var(--light-bg-secondary) 15%, var(--light-bg-tertiary) 30%, var(--light-bg-quaternary) 50%, var(--light-bg-quinary) 70%, var(--light-bg-senary) 85%, var(--light-bg-septenary) 100%);
+        }
+
+        /* Enhanced Animated Stars Background */
         body::before {
             content: '';
             position: fixed;
@@ -32,25 +75,85 @@
             width: 100%;
             height: 100%;
             background-image: 
-                radial-gradient(3px 3px at 20px 30px, #fff, transparent),
-                radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.9), transparent),
-                radial-gradient(1px 1px at 90px 40px, #fff, transparent),
-                radial-gradient(2px 2px at 130px 80px, rgba(255,255,255,0.8), transparent),
-                radial-gradient(3px 3px at 160px 30px, #fff, transparent),
-                radial-gradient(1px 1px at 200px 120px, rgba(255,255,255,0.7), transparent),
-                radial-gradient(2px 2px at 250px 60px, #fff, transparent),
-                radial-gradient(1px 1px at 300px 150px, rgba(255,255,255,0.6), transparent),
-                radial-gradient(2px 2px at 350px 90px, #fff, transparent),
-                radial-gradient(1px 1px at 400px 180px, rgba(255,255,255,0.8), transparent);
+                radial-gradient(4px 4px at 20px 30px, #fff, transparent),
+                radial-gradient(3px 3px at 40px 70px, rgba(255,255,255,0.9), transparent),
+                radial-gradient(2px 2px at 90px 40px, #fff, transparent),
+                radial-gradient(3px 3px at 130px 80px, rgba(255,255,255,0.8), transparent),
+                radial-gradient(4px 4px at 160px 30px, #fff, transparent),
+                radial-gradient(2px 2px at 200px 120px, rgba(255,255,255,0.7), transparent),
+                radial-gradient(3px 3px at 250px 60px, #fff, transparent),
+                radial-gradient(2px 2px at 300px 150px, rgba(255,255,255,0.6), transparent),
+                radial-gradient(3px 3px at 350px 90px, #fff, transparent),
+                radial-gradient(2px 2px at 400px 180px, rgba(255,255,255,0.8), transparent),
+                radial-gradient(1px 1px at 450px 50px, rgba(255,255,255,0.9), transparent),
+                radial-gradient(2px 2px at 500px 100px, #fff, transparent),
+                radial-gradient(3px 3px at 550px 200px, rgba(255,255,255,0.7), transparent),
+                radial-gradient(1px 1px at 600px 80px, rgba(255,255,255,0.8), transparent),
+                radial-gradient(2px 2px at 650px 160px, #fff, transparent);
             background-repeat: repeat;
-            background-size: 400px 200px;
-            animation: twinkle 6s ease-in-out infinite;
+            background-size: 700px 400px;
+            animation: twinkle 8s ease-in-out infinite;
             z-index: -1;
         }
 
+        /* Nebula Effect */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(ellipse 800px 600px at 20% 30%, rgba(139, 92, 246, 0.1), transparent),
+                radial-gradient(ellipse 600px 800px at 80% 70%, rgba(236, 72, 153, 0.1), transparent),
+                radial-gradient(ellipse 700px 500px at 50% 20%, rgba(59, 130, 246, 0.05), transparent);
+            z-index: -1;
+            animation: nebula 20s ease-in-out infinite;
+        }
+
         @keyframes twinkle {
-            0%, 100% { opacity: 0.8; }
-            50% { opacity: 1; }
+            0%, 100% { opacity: 0.8; transform: scale(1); }
+            25% { opacity: 1; transform: scale(1.1); }
+            50% { opacity: 0.9; transform: scale(0.95); }
+            75% { opacity: 1; transform: scale(1.05); }
+        }
+
+        @keyframes nebula {
+            0%, 100% { opacity: 0.3; transform: scale(1) rotate(0deg); }
+            33% { opacity: 0.5; transform: scale(1.1) rotate(1deg); }
+            66% { opacity: 0.4; transform: scale(0.95) rotate(-1deg); }
+        }
+
+        /* Enhanced Cosmic Particles */
+        .cosmic-particle {
+            position: fixed;
+            width: 2px;
+            height: 2px;
+            background: linear-gradient(45deg, #8b5cf6, #ec4899, #3b82f6);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: -1;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { 
+                transform: translateY(0px) translateX(0px) scale(1);
+                opacity: 0.8;
+            }
+            25% { 
+                transform: translateY(-20px) translateX(10px) scale(1.2);
+                opacity: 1;
+            }
+            50% { 
+                transform: translateY(-40px) translateX(-5px) scale(0.8);
+                opacity: 0.6;
+            }
+            75% { 
+                transform: translateY(-20px) translateX(-15px) scale(1.1);
+                opacity: 0.9;
+            }
         }
 
         .main-container {
@@ -59,7 +162,7 @@
             height: 85vh;
             display: flex;
             flex-direction: column;
-            color: white;
+            color: var(--text-primary);
             z-index: 1;
             position: relative;
         }
@@ -73,84 +176,506 @@
             font-size: 48px;
             font-weight: 700;
             margin-bottom: 15px;
-            color: white;
+            color: var(--text-primary);
             text-shadow: 0 4px 20px rgba(255, 255, 255, 0.3);
+            transition: color 0.3s ease;
         }
 
-        .controls-section {
+        body.light-mode .main-title {
+            color: var(--light-text-primary);
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Settings Icon and Panel */
+        .settings-icon {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            border-radius: 50%;
             display: flex;
+            align-items: center;
             justify-content: center;
+            cursor: pointer;
+            z-index: 1001;
+            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 24px;
+            color: white;
+        }
+
+        .settings-icon:hover {
+            transform: scale(1.1) rotate(90deg);
+            box-shadow: 0 6px 25px rgba(139, 92, 246, 0.4);
+        }
+
+        .settings-icon:active {
+            transform: scale(0.95);
+        }
+
+        .settings-panel {
+            position: fixed;
+            top: -100%;
+            right: 20px;
+            width: 400px;
+            max-height: 80vh;
+            background: rgba(0, 0, 0, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 25px;
+            z-index: 1000;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            transition: top 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-y: auto;
+        }
+
+        .settings-panel.open {
+            top: 80px;
+        }
+
+        body.light-mode .settings-panel {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        }
+
+        .settings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        body.light-mode .settings-header {
+            border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .settings-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        body.light-mode .settings-title {
+            color: var(--light-text-primary);
+        }
+
+        .settings-close {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 28px;
+            cursor: pointer;
+            padding: 0;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+        }
+
+        .settings-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        body.light-mode .settings-close {
+            color: rgba(0, 0, 0, 0.6);
+        }
+
+        body.light-mode .settings-close:hover {
+            background: rgba(0, 0, 0, 0.1);
+            color: var(--light-text-primary);
+        }
+
+        .settings-section {
+            margin-bottom: 25px;
+        }
+
+        .settings-section h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        body.light-mode .settings-section h3 {
+            color: var(--light-text-primary);
+        }
+
+        .settings-controls {
+            display: flex;
+            flex-direction: column;
             gap: 15px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
         }
 
         .control-group {
             display: flex;
             align-items: center;
-            gap: 8px;
+            justify-content: space-between;
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 12px;
-            padding: 8px 12px;
+            padding: 15px;
             backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        body.light-mode .control-group {
+            background: rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .control-group:hover {
+            border-color: var(--accent-primary);
+            transform: translateY(-2px);
         }
 
         .control-label {
             font-size: 14px;
-            color: rgba(255, 255, 255, 0.8);
-            white-space: nowrap;
+            color: var(--text-primary);
+            font-weight: 500;
+            transition: color 0.3s ease;
         }
 
-        .personality-select {
+        body.light-mode .control-label {
+            color: var(--light-text-primary);
+        }
+
+        .control-select {
             background: rgba(255, 255, 255, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 8px;
-            color: white;
-            padding: 6px 10px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            padding: 10px 14px;
+            color: var(--text-primary);
             font-size: 14px;
+            font-weight: 500;
+            outline: none;
+            transition: all 0.3s ease;
+            min-width: 140px;
             cursor: pointer;
             backdrop-filter: blur(10px);
         }
 
-        .personality-select option {
-            background: #1a0b2e;
+        body.light-mode .control-select {
+            background: rgba(0, 0, 0, 0.08);
+            border: 2px solid rgba(0, 0, 0, 0.2);
+            color: var(--light-text-primary);
+        }
+
+        .control-select:focus {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.2);
+            transform: scale(1.02);
+        }
+
+        .control-select:hover {
+            border-color: var(--accent-secondary);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        body.light-mode .control-select:hover {
+            background: rgba(0, 0, 0, 0.12);
+            border-color: var(--light-accent-secondary);
+        }
+
+        .control-select:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Enhanced dropdown styling */
+        .control-select option {
+            background: #1a1a2e;
             color: white;
+            padding: 12px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            border: none;
+            margin: 2px 0;
+        }
+
+        body.light-mode .control-select option {
+            background: #ffffff;
+            color: var(--light-text-primary);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .control-select option:hover {
+            background: var(--accent-primary);
+            color: white;
+            cursor: pointer;
+        }
+
+        .control-select option:checked {
+            background: var(--accent-primary);
+            color: white;
+            font-weight: 600;
+        }
+
+        /* Personality change animation */
+        .personality-changing {
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { 
+                opacity: 1; 
+                transform: scale(1);
+            }
+            50% { 
+                opacity: 0.7; 
+                transform: scale(1.05);
+            }
+        }
+
+        .control-checkbox {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--accent-primary);
+            cursor: pointer;
+        }
+
+        body.light-mode .control-checkbox {
+            accent-color: var(--light-accent-primary);
         }
 
         .control-button {
-            background: rgba(59, 130, 246, 0.3);
-            border: 1px solid rgba(59, 130, 246, 0.5);
-            border-radius: 8px;
-            padding: 6px 12px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            border: none;
+            border-radius: 12px;
+            padding: 12px 20px;
             color: white;
+            font-weight: 600;
             cursor: pointer;
-            font-size: 14px;
-            transition: all 0.2s ease;
-            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+            width: 100%;
+            text-align: center;
         }
 
         .control-button:hover {
-            background: rgba(59, 130, 246, 0.4);
-            border-color: rgba(59, 130, 246, 0.6);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+        }
+
+        .theme-toggle {
+            background: linear-gradient(135deg, #f59e0b, #f97316);
+            border: none;
+            border-radius: 12px;
+            padding: 12px 20px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+            width: 100%;
+            text-align: center;
+        }
+
+        .theme-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+        }
+
+        .theme-toggle.light {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .theme-toggle.light:hover {
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+        }
+
+        /* Color Schemes Panel */
+        .color-schemes-panel {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 25px;
+            max-width: 500px;
+            width: 90%;
+            z-index: 1000;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        body.light-mode .color-schemes-panel {
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        }
+
+        .color-schemes-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        body.light-mode .color-schemes-header {
+            color: var(--light-text-primary);
+        }
+
+        .color-schemes-content h4 {
+            margin-bottom: 15px;
+            color: var(--text-primary);
+            font-size: 16px;
+        }
+
+        body.light-mode .color-schemes-content h4 {
+            color: var(--light-text-primary);
+        }
+
+        .theme-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .theme-option {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid transparent;
+            border-radius: 15px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .theme-option:hover {
+            border-color: var(--accent-primary);
+            transform: translateY(-2px);
+        }
+
+        .theme-preview {
+            width: 60px;
+            height: 40px;
+            border-radius: 10px;
+            margin: 0 auto 10px;
+            background: linear-gradient(45deg, var(--accent-primary), var(--accent-secondary));
+        }
+
+        .theme-preview.galaxy {
+            background: linear-gradient(45deg, #000000, #533483);
+        }
+
+        .theme-preview.aurora {
+            background: linear-gradient(45deg, #4f46e5, #8b5cf6, #06b6d4);
+        }
+
+        .theme-preview.cyberpunk {
+            background: linear-gradient(45deg, #7c3aed, #ec4899, #f59e0b);
+        }
+
+        .theme-preview.sunset {
+            background: linear-gradient(45deg, #f59e0b, #dc2626, #f97316);
+        }
+
+        .theme-preview.ocean {
+            background: linear-gradient(45deg, #0ea5e9, #0284c7, #0891b2);
+        }
+
+        .theme-preview.forest {
+            background: linear-gradient(45deg, #16a34a, #15803d, #059669);
+        }
+
+        .theme-preview.midnight {
+            background: linear-gradient(45deg, #1f2937, #4b5563, #6b7280);
+        }
+
+        .theme-preview.candy {
+            background: linear-gradient(45deg, #ec4899, #f97316, #fbbf24);
+        }
+
+        .theme-option span {
+            color: var(--text-primary);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        body.light-mode .theme-option span {
+            color: var(--light-text-primary);
+        }
+
+        .color-inputs {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .color-input {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .color-input label {
+            color: var(--text-primary);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        body.light-mode .color-input label {
+            color: var(--light-text-primary);
+        }
+
+        .color-input input[type="color"] {
+            width: 100%;
+            height: 40px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
         }
 
         .chat-messages {
             flex: 1;
             overflow-y: auto;
             padding: 20px;
-            margin-bottom: 20px;
+            min-height: 400px;
             background: rgba(255, 255, 255, 0.05);
-            border-radius: 16px;
-            backdrop-filter: blur(20px);
+            border-radius: 20px;
             border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        body.light-mode .chat-messages {
+            background: rgba(0, 0, 0, 0.02);
+            border: 1px solid rgba(0, 0, 0, 0.1);
         }
 
         .message {
-            margin-bottom: 20px;
             display: flex;
             align-items: flex-start;
-            gap: 12px;
+            gap: 15px;
+            margin-bottom: 25px;
+            animation: fadeInUp 0.5s ease;
+            transition: all 0.3s ease;
         }
 
         .message.user {
@@ -164,16 +689,19 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
+            font-size: 20px;
             flex-shrink: 0;
+            transition: all 0.3s ease;
         }
 
         .avatar.user {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
         }
 
         .avatar.ai {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            background: linear-gradient(135deg, #ec4899, #be185d);
+            color: white;
         }
 
         .message-content {
@@ -181,34 +709,49 @@
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 18px;
             padding: 15px 20px;
-            max-width: 85%;
+            max-width: 70%;
+            color: var(--text-primary);
+            font-size: 16px;
+            line-height: 1.5;
             backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        body.light-mode .message-content {
+            background: rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            color: var(--light-text-primary);
         }
 
         .message.user .message-content {
-            background: rgba(59, 130, 246, 0.2);
-            border-color: rgba(59, 130, 246, 0.4);
-        }
-
-        .message.ai .message-content {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: rgba(255, 255, 255, 0.2);
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+            border: none;
         }
 
         .message-meta {
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.6);
             margin-top: 8px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
             display: flex;
             gap: 15px;
-            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        body.light-mode .message-meta {
+            color: rgba(0, 0, 0, 0.6);
+        }
+
+        .message.user .message-meta {
+            color: rgba(255, 255, 255, 0.8);
         }
 
         .typing-indicator {
             display: none;
             align-items: center;
-            gap: 12px;
+            gap: 15px;
             margin-bottom: 20px;
+            animation: fadeInUp 0.5s ease;
         }
 
         .typing-dots {
@@ -219,69 +762,154 @@
         .typing-dots span {
             width: 8px;
             height: 8px;
+            background: var(--accent-primary);
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.6);
             animation: typing 1.4s infinite ease-in-out;
+        }
+
+        body.light-mode .typing-dots span {
+            background: var(--light-accent-primary);
         }
 
         .typing-dots span:nth-child(1) { animation-delay: -0.32s; }
         .typing-dots span:nth-child(2) { animation-delay: -0.16s; }
 
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         @keyframes typing {
-            0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
-            40% { transform: scale(1); opacity: 1; }
+            0%, 80%, 100% {
+                transform: scale(0.8);
+                opacity: 0.5;
+            }
+            40% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        /* Scrollbar Styling */
+        .chat-messages::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        body.light-mode .chat-messages::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: var(--accent-primary);
+            border-radius: 4px;
+        }
+
+        body.light-mode .chat-messages::-webkit-scrollbar-thumb {
+            background: var(--light-accent-primary);
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-secondary);
+        }
+
+        body.light-mode .chat-messages::-webkit-scrollbar-thumb:hover {
+            background: var(--light-accent-secondary);
         }
 
         .input-container {
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            border-radius: 16px;
-            padding: 20px;
-            backdrop-filter: blur(20px);
-            transition: all 0.3s ease;
             display: flex;
             gap: 15px;
             align-items: center;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
         }
 
-        .input-container:focus-within {
-            border-color: rgba(59, 130, 246, 0.6);
-            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
-            background: rgba(255, 255, 255, 0.15);
+        body.light-mode .input-container {
+            background: rgba(0, 0, 0, 0.02);
+            border: 1px solid rgba(0, 0, 0, 0.1);
         }
 
         .input-field {
             flex: 1;
-            background: transparent;
-            border: none;
-            outline: none;
-            color: white;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 15px 20px;
+            color: var(--text-primary);
             font-size: 16px;
-            padding: 12px;
+            outline: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        body.light-mode .input-field {
+            background: rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            color: var(--light-text-primary);
         }
 
         .input-field::placeholder {
-            color: rgba(255, 255, 255, 0.7);
+            color: rgba(255, 255, 255, 0.6);
+            transition: color 0.3s ease;
+        }
+
+        body.light-mode .input-field::placeholder {
+            color: rgba(0, 0, 0, 0.5);
+        }
+
+        .input-field:focus {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+        }
+
+        body.light-mode .input-field:focus {
+            border-color: var(--light-accent-primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
         }
 
         .send-button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
             border: none;
-            border-radius: 12px;
-            padding: 12px 20px;
+            border-radius: 15px;
+            padding: 15px 25px;
             color: white;
-            cursor: pointer;
-            font-size: 16px;
             font-weight: 600;
+            cursor: pointer;
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
             gap: 8px;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
         }
 
         .send-button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
         }
 
         .send-button:disabled {
@@ -292,29 +920,41 @@
 
         .status-bar {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 20px;
-            background: rgba(255, 255, 255, 0.05);
+            justify-content: space-around;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 12px;
-            margin-bottom: 15px;
+            padding: 12px;
+            margin-bottom: 20px;
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        body.light-mode .status-bar {
+            background: rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.1);
         }
 
         .status-item {
             display: flex;
             align-items: center;
             gap: 8px;
+            color: var(--text-primary);
             font-size: 14px;
-            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        body.light-mode .status-item {
+            color: var(--light-text-primary);
         }
 
         .status-icon {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
+            width: 12px;
+            height: 12px;
             background: #10b981;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
         }
 
         /* Real-time information panel */
@@ -463,36 +1103,666 @@
                 padding: 10px 14px;
             }
         }
+
+        /* Enhanced Mobile Responsive Design */
+        @media (max-width: 768px) {
+            .main-container {
+                max-width: 100%;
+                height: 100vh;
+                padding: 10px;
+                margin: 0;
+            }
+
+            .main-title {
+                font-size: 32px;
+                margin-bottom: 10px;
+                text-align: center;
+            }
+
+            .controls-section {
+                flex-direction: column;
+                gap: 10px;
+                margin-bottom: 15px;
+                padding: 0 10px;
+            }
+
+            .control-group {
+                width: 100%;
+                justify-content: center;
+                padding: 12px 16px;
+            }
+
+            .control-button, .theme-toggle {
+                width: 100%;
+                padding: 16px;
+                font-size: 16px;
+                min-height: 48px; /* Touch-friendly height */
+                border-radius: 16px;
+            }
+
+            .status-bar {
+                flex-direction: column;
+                gap: 8px;
+                padding: 16px;
+                margin-bottom: 15px;
+            }
+
+            .status-item {
+                justify-content: center;
+                font-size: 16px;
+            }
+
+            .chat-messages {
+                padding: 15px;
+                min-height: 60vh;
+                margin-bottom: 15px;
+                border-radius: 16px;
+            }
+
+            .message {
+                margin-bottom: 20px;
+                gap: 12px;
+            }
+
+            .avatar {
+                width: 36px;
+                height: 36px;
+                font-size: 18px;
+            }
+
+            .message-content {
+                max-width: 85%;
+                font-size: 16px;
+                padding: 14px 18px;
+                border-radius: 20px;
+                line-height: 1.4;
+            }
+
+            .input-container {
+                padding: 16px;
+                border-radius: 20px;
+                margin: 0 10px;
+            }
+
+            .input-field {
+                font-size: 16px;
+                padding: 16px 20px;
+                border-radius: 16px;
+                min-height: 48px;
+            }
+
+            .send-button {
+                padding: 16px 24px;
+                font-size: 16px;
+                min-height: 48px;
+                border-radius: 16px;
+            }
+
+            .color-schemes-panel {
+                width: 95%;
+                max-width: none;
+                padding: 20px;
+                border-radius: 24px;
+            }
+
+            .theme-options {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+
+            .theme-option {
+                padding: 16px;
+                border-radius: 16px;
+            }
+
+            .color-inputs {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .color-input input[type="color"] {
+                height: 48px;
+                border-radius: 12px;
+            }
+
+            /* Mobile-specific touch improvements */
+            .control-button:active, .theme-toggle:active {
+                transform: scale(0.95);
+            }
+
+            .theme-option:active {
+                transform: scale(0.98);
+            }
+
+            /* Better mobile scrolling */
+            .chat-messages {
+                -webkit-overflow-scrolling: touch;
+                scroll-behavior: smooth;
+            }
+
+            /* Mobile-friendly close buttons */
+            .close-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 24px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-title {
+                font-size: 28px;
+                line-height: 1.2;
+            }
+
+            .controls-section {
+                padding: 0 5px;
+            }
+
+            .chat-messages {
+                padding: 12px;
+                margin: 0 5px 15px 5px;
+            }
+
+            .message-content {
+                max-width: 90%;
+                font-size: 15px;
+                padding: 12px 16px;
+            }
+
+            .input-container {
+                margin: 0 5px;
+                padding: 14px;
+            }
+
+            .input-field {
+                font-size: 16px;
+                padding: 14px 18px;
+            }
+
+            .send-button {
+                padding: 14px 20px;
+                font-size: 16px;
+            }
+
+            .color-schemes-panel {
+                padding: 16px;
+                margin: 10px;
+            }
+
+            .theme-options {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+        }
+
+        /* Landscape mobile optimization */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .main-container {
+                height: 100vh;
+                padding: 8px;
+            }
+
+            .main-title {
+                font-size: 24px;
+                margin-bottom: 8px;
+            }
+
+            .controls-section {
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 8px;
+                margin-bottom: 10px;
+            }
+
+            .control-button, .theme-toggle {
+                width: auto;
+                padding: 12px 16px;
+                font-size: 14px;
+            }
+
+            .chat-messages {
+                min-height: 50vh;
+            }
+        }
+
+        /* Enhanced Animations & Micro-interactions */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes typing {
+            0%, 80%, 100% {
+                transform: scale(0.8);
+                opacity: 0.5;
+            }
+            40% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.7;
+                transform: scale(1.05);
+            }
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: -200px 0;
+            }
+            100% {
+                background-position: calc(200px + 100%) 0;
+            }
+        }
+
+        @keyframes float {
+            0%, 100% { 
+                transform: translateY(0px) translateX(0px) scale(1);
+                opacity: 0.8;
+            }
+            25% { 
+                transform: translateY(-20px) translateX(10px) scale(1.2);
+                opacity: 1;
+            }
+            50% { 
+                transform: translateY(-40px) translateX(-5px) scale(0.8);
+                opacity: 0.6;
+            }
+            75% { 
+                transform: translateY(-20px) translateX(-15px) scale(1.1);
+                opacity: 0.9;
+            }
+        }
+
+        /* Enhanced Message Animations */
+        .message {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 25px;
+            animation: fadeInUp 0.6s ease;
+            transition: all 0.3s ease;
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+            animation: slideInRight 0.6s ease;
+        }
+
+        .message.ai {
+            animation: slideInLeft 0.6s ease;
+        }
+
+        .message:hover {
+            transform: translateY(-2px);
+        }
+
+        .message-content {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 18px;
+            padding: 15px 20px;
+            max-width: 70%;
+            color: var(--text-primary);
+            font-size: 16px;
+            line-height: 1.5;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .message-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .message-content:hover::before {
+            left: 100%;
+        }
+
+        body.light-mode .message-content::before {
+            background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.05), transparent);
+        }
+
+        /* Enhanced Button Animations */
+        .control-button, .theme-toggle {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .control-button::before, .theme-toggle::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .control-button:hover::before, .theme-toggle:hover::before {
+            left: 100%;
+        }
+
+        .control-button:active, .theme-toggle:active {
+            transform: scale(0.95);
+        }
+
+        /* Enhanced Input Animations */
+        .input-field {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .input-field:focus {
+            transform: scale(1.02);
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15);
+        }
+
+        body.light-mode .input-field:focus {
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+        }
+
+        /* Enhanced Avatar Animations */
+        .avatar {
+            transition: all 0.3s ease;
+        }
+
+        .avatar:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .avatar.user:hover {
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.5);
+        }
+
+        .avatar.ai:hover {
+            box-shadow: 0 0 20px rgba(236, 72, 153, 0.5);
+        }
+
+        /* Enhanced Theme Options */
+        .theme-option {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .theme-option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .theme-option:hover::before {
+            left: 100%;
+        }
+
+        .theme-option:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Loading States */
+        .loading {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shimmer 1.5s infinite;
+        }
+
+        /* Enhanced Scrollbar */
+        .chat-messages::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        body.light-mode .chat-messages::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: var(--accent-primary);
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        body.light-mode .chat-messages::-webkit-scrollbar-thumb {
+            background: var(--light-accent-primary);
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-secondary);
+            transform: scaleX(1.2);
+        }
+
+        body.light-mode .chat-messages::-webkit-scrollbar-thumb:hover {
+            background: var(--light-accent-secondary);
+        }
+
+        /* Mobile Responsiveness for Settings */
+        @media (max-width: 768px) {
+            .settings-icon {
+                top: 15px;
+                right: 15px;
+                width: 45px;
+                height: 45px;
+                font-size: 20px;
+            }
+
+            .settings-panel {
+                right: 15px;
+                left: 15px;
+                width: auto;
+                max-height: 85vh;
+                padding: 20px;
+            }
+
+            .settings-panel.open {
+                top: 70px;
+            }
+
+            .settings-title {
+                font-size: 20px;
+            }
+
+            .settings-section h3 {
+                font-size: 16px;
+            }
+
+            .control-group {
+                padding: 12px;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .control-select {
+                width: 100%;
+                min-width: auto;
+            }
+
+            .control-button, .theme-toggle {
+                padding: 14px 18px;
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .settings-icon {
+                top: 10px;
+                right: 10px;
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
+            }
+
+            .settings-panel {
+                right: 10px;
+                left: 10px;
+                padding: 16px;
+            }
+
+            .settings-panel.open {
+                top: 60px;
+            }
+
+            .settings-title {
+                font-size: 18px;
+            }
+
+            .settings-section h3 {
+                font-size: 15px;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="main-container">
+        <!-- Settings Icon -->
+        <div class="settings-icon" onclick="toggleSettings()">
+            ⚙️
+        </div>
+
+        <!-- Settings Panel -->
+        <div class="settings-panel" id="settingsPanel">
+            <div class="settings-header">
+                <div class="settings-title">
+                    <span>⚙️</span>
+                    <span>Settings</span>
+                </div>
+                <button class="settings-close" onclick="toggleSettings()">×</button>
+            </div>
+
+            <!-- AI Configuration Section -->
+            <div class="settings-section">
+                <h3>🤖 AI Configuration</h3>
+                <div class="settings-controls">
+                    <div class="control-group">
+                        <span class="control-label">Personality:</span>
+                        <select class="control-select" id="personalitySelect">
+                            <option value="default">Default</option>
+                            <option value="creative">Creative</option>
+                            <option value="professional">Professional</option>
+                            <option value="friendly">Friendly</option>
+                            <option value="educational">Educational</option>
+                        </select>
+                    </div>
+                    
+                    <div class="control-group">
+                        <span class="control-label">Memory:</span>
+                        <input type="checkbox" class="control-checkbox" id="memoryToggle" checked>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Management Section -->
+            <div class="settings-section">
+                <h3>💬 Chat Management</h3>
+                <div class="settings-controls">
+                    <button class="control-button" onclick="clearConversation()">Clear Chat</button>
+                    <button class="control-button" onclick="showConversationInfo()">Show Info</button>
+                    <button class="control-button" onclick="showRealTimeCapabilities()">🌐 Real-Time Data</button>
+                </div>
+            </div>
+
+            <!-- Appearance Section -->
+            <div class="settings-section">
+                <h3>🎨 Appearance</h3>
+                <div class="settings-controls">
+                    <button class="theme-toggle" id="themeToggle">Light Mode</button>
+                    <button class="control-button" onclick="showColorSchemes()">Color Schemes</button>
+                </div>
+            </div>
+
+            <!-- PWA Section -->
+            <div class="settings-section">
+                <h3>📱 App Features</h3>
+                <div class="settings-controls">
+                    <button class="control-button" id="installButton" style="display: none;">📱 Install App</button>
+                </div>
+            </div>
+        </div>
+
         <!-- Header Section -->
         <div class="header-section">
             <h1 class="main-title">Advanced AI Assistant</h1>
-            
-            <!-- Controls Section -->
-            <div class="controls-section">
-                <div class="control-group">
-                    <span class="control-label">Personality:</span>
-                    <select class="personality-select" id="personalitySelect">
-                        <option value="default">Default</option>
-                        <option value="creative">Creative</option>
-                        <option value="professional">Professional</option>
-                        <option value="friendly">Friendly</option>
-                        <option value="educational">Educational</option>
-                    </select>
-                </div>
-                
-                <div class="control-group">
-                    <span class="control-label">Memory:</span>
-                    <input type="checkbox" id="memoryToggle" checked>
-                </div>
-                
-                <button class="control-button" onclick="clearConversation()">Clear Chat</button>
-                <button class="control-button" onclick="showConversationInfo()">Info</button>
-                <button class="control-button" onclick="showRealTimeCapabilities()">🌐 Real-Time</button>
-            </div>
         </div>
 
         <!-- Status Bar -->
@@ -517,6 +1787,71 @@
             </div>
             <div class="real-time-content" id="realTimeContent">
                 <!-- Real-time data will be displayed here -->
+            </div>
+        </div>
+
+        <!-- Color Schemes Panel -->
+        <div class="color-schemes-panel" id="colorSchemesPanel" style="display: none;">
+            <div class="color-schemes-header">
+                <span>🎨 Color Schemes</span>
+                <button class="close-btn" onclick="hideColorSchemes()">×</button>
+            </div>
+            <div class="color-schemes-content">
+                <div class="preset-themes">
+                    <h4>Preset Themes</h4>
+                    <div class="theme-options">
+                        <button class="theme-option" onclick="applyPresetTheme('galaxy')" data-theme="galaxy">
+                            <div class="theme-preview galaxy"></div>
+                            <span>Galaxy</span>
+                        </button>
+                        <button class="theme-option" onclick="applyPresetTheme('aurora')" data-theme="aurora">
+                            <div class="theme-preview aurora"></div>
+                            <span>Aurora</span>
+                        </button>
+                        <button class="theme-option" onclick="applyPresetTheme('cyberpunk')" data-theme="cyberpunk">
+                            <div class="theme-preview cyberpunk"></div>
+                            <span>Cyberpunk</span>
+                        </button>
+                        <button class="theme-option" onclick="applyPresetTheme('sunset')" data-theme="sunset">
+                            <div class="theme-preview sunset"></div>
+                            <span>Sunset</span>
+                        </button>
+                        <button class="theme-option" onclick="applyPresetTheme('ocean')" data-theme="ocean">
+                            <div class="theme-preview ocean"></div>
+                            <span>Ocean</span>
+                        </button>
+                        <button class="theme-option" onclick="applyPresetTheme('forest')" data-theme="forest">
+                            <div class="theme-preview forest"></div>
+                            <span>Forest</span>
+                        </button>
+                        <button class="theme-option" onclick="applyPresetTheme('midnight')" data-theme="midnight">
+                            <div class="theme-preview midnight"></div>
+                            <span>Midnight</span>
+                        </button>
+                        <button class="theme-option" onclick="applyPresetTheme('candy')" data-theme="candy">
+                            <div class="theme-preview candy"></div>
+                            <span>Candy</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="custom-colors">
+                    <h4>Custom Colors</h4>
+                    <div class="color-inputs">
+                        <div class="color-input">
+                            <label>Primary:</label>
+                            <input type="color" id="primaryColor" value="#8b5cf6">
+                        </div>
+                        <div class="color-input">
+                            <label>Secondary:</label>
+                            <input type="color" id="secondaryColor" value="#a855f7">
+                        </div>
+                        <div class="color-input">
+                            <label>Background:</label>
+                            <input type="color" id="bgColor" value="#000000">
+                        </div>
+                    </div>
+                    <button class="control-button" onclick="applyCustomColors()">Apply Custom</button>
+                </div>
             </div>
         </div>
 
@@ -563,16 +1898,22 @@
         // Create cosmic particles
         function createCosmicParticles() {
             const container = document.body;
-            for (let i = 0; i < 15; i++) {
+            for (let i = 0; i < 25; i++) {
                 const particle = document.createElement('div');
                 particle.className = 'cosmic-particle';
                 particle.style.left = Math.random() * 100 + '%';
                 particle.style.top = Math.random() * 100 + '%';
-                particle.style.animationDelay = Math.random() * 6 + 's';
-                particle.style.animationDuration = (Math.random() * 3 + 4) + 's';
+                particle.style.animationDelay = Math.random() * 8 + 's';
+                particle.style.animationDuration = (Math.random() * 4 + 6) + 's';
+                particle.style.opacity = Math.random() * 0.5 + 0.3;
+                particle.style.width = (Math.random() * 3 + 1) + 'px';
+                particle.style.height = particle.style.width;
                 container.appendChild(particle);
             }
         }
+
+        // Initialize cosmic particles
+        createCosmicParticles();
 
         // Add message to chat
         function addMessage(content, isUser = false, meta = {}) {
@@ -705,6 +2046,15 @@
         // Change personality
         async function changePersonality(personality) {
             try {
+                // Show loading state
+                const select = document.getElementById('personalitySelect');
+                const originalValue = select.value;
+                select.disabled = true;
+                select.classList.add('personality-changing');
+                
+                // Update status to show change in progress
+                updateStatus(`Changing personality to ${personality}...`);
+                
                 const response = await fetch('/api/personality', {
                     method: 'POST',
                     headers: {
@@ -713,27 +2063,84 @@
                     body: JSON.stringify({ personality: personality })
                 });
                 
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
                 const data = await response.json();
+                
                 if (data.success) {
                     currentPersonality = personality;
-                    updateStatus(`Personality: ${personality}`);
-                    addMessage(`AI personality changed to ${personality}`, false, { personality: personality });
+                    updateStatus(`Personality: ${personality}`, 'GPT-4', conversationLength);
+                    
+                    // Show success message
+                    addMessage(`🎭 AI personality changed to **${personality}**! I'll now respond with this new personality.`, false, { personality: personality });
+                    
+                    // Close settings panel if open
+                    const settingsPanel = document.getElementById('settingsPanel');
+                    if (settingsPanel.classList.contains('open')) {
+                        settingsPanel.classList.remove('open');
+                    }
+                    
+                    // Remove animation and re-enable after delay
+                    setTimeout(() => {
+                        select.classList.remove('personality-changing');
+                        select.disabled = false;
+                    }, 800);
+                    
+                } else {
+                    throw new Error(data.error || 'Unknown error occurred');
                 }
             } catch (error) {
                 console.error('Error changing personality:', error);
+                
+                // Revert to original value on error
+                const select = document.getElementById('personalitySelect');
+                select.value = originalValue;
+                select.classList.remove('personality-changing');
+                
+                // Show user-friendly error message
+                let errorMessage = '❌ Failed to change personality. ';
+                if (error.message.includes('Failed to fetch')) {
+                    errorMessage += 'Please check if the server is running.';
+                } else if (error.message.includes('HTTP 500')) {
+                    errorMessage += 'Server error occurred. Please try again.';
+                } else {
+                    errorMessage += error.message;
+                }
+                
+                addMessage(errorMessage, false);
+                updateStatus('Ready', 'GPT-4', conversationLength);
+                select.disabled = false;
             }
         }
 
         // Clear conversation
         async function clearConversation() {
             try {
+                // Show loading state
+                const clearButton = event.target;
+                const originalText = clearButton.textContent;
+                clearButton.textContent = 'Clearing...';
+                clearButton.disabled = true;
+                
                 const response = await fetch('/api/clear-conversation', {
-                    method: 'POST'
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
                 });
                 
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
                 const data = await response.json();
+                
                 if (data.success) {
-                    document.getElementById('chatMessages').innerHTML = `
+                    // Clear the chat messages container
+                    const chatMessages = document.getElementById('chatMessages');
+                    chatMessages.innerHTML = `
                         <div class="message ai">
                             <div class="avatar ai">🤖</div>
                             <div class="message-content">
@@ -745,11 +2152,44 @@
                             </div>
                         </div>
                     `;
+                    
+                    // Reset conversation length
                     conversationLength = 0;
+                    
+                    // Update status
                     updateStatus('Ready', 'GPT-4', 0);
+                    
+                    // Close settings panel if open
+                    const settingsPanel = document.getElementById('settingsPanel');
+                    if (settingsPanel.classList.contains('open')) {
+                        settingsPanel.classList.remove('open');
+                    }
+                    
+                    // Show success message
+                    addMessage('✅ Chat conversation has been cleared successfully!', false, { personality: currentPersonality });
+                } else {
+                    throw new Error(data.error || 'Unknown error occurred');
                 }
             } catch (error) {
                 console.error('Error clearing conversation:', error);
+                
+                // Show user-friendly error message
+                let errorMessage = '❌ Failed to clear conversation. ';
+                if (error.message.includes('Failed to fetch')) {
+                    errorMessage += 'Please check if the server is running.';
+                } else if (error.message.includes('HTTP 500')) {
+                    errorMessage += 'Server error occurred. Please try again.';
+                } else {
+                    errorMessage += error.message;
+                }
+                
+                addMessage(errorMessage, false);
+                updateStatus('Error occurred', 'GPT-4', conversationLength);
+            } finally {
+                // Reset button state
+                const clearButton = event.target;
+                clearButton.textContent = 'Clear Chat';
+                clearButton.disabled = false;
             }
         }
 
@@ -892,16 +2332,202 @@
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
-            createCosmicParticles();
             
             // Focus on input field
             document.getElementById('messageInput').focus();
+            
+            // Test backend connection first
+            testBackendConnection();
             
             // Load available personalities
             loadPersonalities();
             
             // Get initial conversation info
             showConversationInfo();
+
+            // Theme toggle
+            const themeToggle = document.getElementById('themeToggle');
+            const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+
+            function updateTheme() {
+                if (prefersDarkScheme.matches) {
+                    document.body.classList.add('dark-mode');
+                    themeToggle.textContent = 'Light Mode';
+                    themeToggle.classList.remove('light');
+                } else {
+                    document.body.classList.remove('dark-mode');
+                    themeToggle.textContent = 'Dark Mode';
+                    themeToggle.classList.add('light');
+                }
+            }
+
+            updateTheme(); // Set initial theme
+            prefersDarkScheme.addEventListener('change', updateTheme);
+
+            // Theme toggle functionality
+            let currentTheme = localStorage.getItem('theme') || 'dark';
+            
+            function setTheme(theme) {
+                if (theme === 'light') {
+                    document.body.classList.add('light-mode');
+                    themeToggle.textContent = 'Dark Mode';
+                    themeToggle.classList.add('light');
+                    currentTheme = 'light';
+                } else {
+                    document.body.classList.remove('light-mode');
+                    themeToggle.textContent = 'Light Mode';
+                    themeToggle.classList.remove('light');
+                    currentTheme = 'dark';
+                }
+                localStorage.setItem('theme', currentTheme);
+            }
+
+            // Set initial theme from localStorage
+            setTheme(currentTheme);
+
+            // Theme toggle click handler
+            themeToggle.addEventListener('click', () => {
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                setTheme(newTheme);
+            });
+
+            // Color schemes functions
+            function showColorSchemes() {
+                document.getElementById('colorSchemesPanel').style.display = 'block';
+            }
+
+            function hideColorSchemes() {
+                document.getElementById('colorSchemesPanel').style.display = 'none';
+            }
+
+            function applyPresetTheme(themeName) {
+                const themes = {
+                    galaxy: {
+                        primary: '#8b5cf6',
+                        secondary: '#a855f7',
+                        background: '#000000'
+                    },
+                    aurora: {
+                        primary: '#4f46e5', // A dark purple for an aurora effect
+                        secondary: '#8b5cf6',
+                        background: '#0a0a0a'
+                    },
+                    cyberpunk: {
+                        primary: '#7c3aed', // A deep purple for cyberpunk
+                        secondary: '#ec4899',
+                        background: '#1a1a2e'
+                    },
+                    sunset: {
+                        primary: '#f59e0b',
+                        secondary: '#dc2626',
+                        background: '#7c2d12'
+                    },
+                    ocean: {
+                        primary: '#0ea5e9',
+                        secondary: '#0284c7',
+                        background: '#0c4a6e'
+                    },
+                    forest: {
+                        primary: '#16a34a',
+                        secondary: '#15803d',
+                        background: '#14532d'
+                    },
+                    midnight: {
+                        primary: '#1f2937', // A dark gray for midnight
+                        secondary: '#4b5563',
+                        background: '#0a0a0a'
+                    },
+                    candy: {
+                        primary: '#ec4899', // Pink for candy theme
+                        secondary: '#f97316',
+                        background: '#fdf2f8'
+                    }
+                };
+
+                const theme = themes[themeName];
+                if (theme) {
+                    document.documentElement.style.setProperty('--accent-primary', theme.primary);
+                    document.documentElement.style.setProperty('--accent-secondary', theme.secondary);
+                    document.documentElement.style.setProperty('--bg-primary', theme.background);
+                    
+                    // Update color inputs
+                    document.getElementById('primaryColor').value = theme.primary;
+                    document.getElementById('secondaryColor').value = theme.secondary;
+                    document.getElementById('bgColor').value = theme.background;
+                    
+                    // Save to localStorage
+                    localStorage.setItem('customTheme', JSON.stringify(theme));
+                    
+                    hideColorSchemes();
+                }
+            }
+
+            function applyCustomColors() {
+                const primary = document.getElementById('primaryColor').value;
+                const secondary = document.getElementById('secondaryColor').value;
+                const background = document.getElementById('bgColor').value;
+                
+                document.documentElement.style.setProperty('--accent-primary', primary);
+                document.documentElement.style.setProperty('--accent-secondary', secondary);
+                document.documentElement.style.setProperty('--bg-primary', background);
+                
+                // Save to localStorage
+                localStorage.setItem('customTheme', JSON.stringify({ primary, secondary, background }));
+                
+                hideColorSchemes();
+            }
+
+            // Load custom theme from localStorage
+            const savedTheme = localStorage.getItem('customTheme');
+            if (savedTheme) {
+                try {
+                    const theme = JSON.parse(savedTheme);
+                    document.documentElement.style.setProperty('--accent-primary', theme.primary);
+                    document.documentElement.style.setProperty('--accent-secondary', theme.secondary);
+                    document.documentElement.style.setProperty('--bg-primary', theme.background);
+                    
+                    // Update color inputs
+                    document.getElementById('primaryColor').value = theme.primary;
+                    document.getElementById('secondaryColor').value = theme.secondary;
+                    document.getElementById('bgColor').value = theme.background;
+                } catch (e) {
+                    console.error('Error loading custom theme:', e);
+                }
+            }
+
+            // PWA Installation
+            let deferredPrompt;
+            const installButton = document.getElementById('installButton');
+
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                installButton.style.display = 'block';
+            });
+
+            async function installPWA() {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    const { outcome } = await deferredPrompt.userChoice;
+                    if (outcome === 'accepted') {
+                        installButton.style.display = 'none';
+                    }
+                    deferredPrompt = null;
+                }
+            }
+
+            // Service Worker Registration
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('/sw.js')
+                        .then(registration => {
+                            console.log('SW registered: ', registration);
+                        })
+                        .catch(registrationError => {
+                            console.log('SW registration failed: ', registrationError);
+                        });
+                });
+            }
         });
 
         // Load available personalities
@@ -928,6 +2554,59 @@
                 }
             } catch (error) {
                 console.error('Error loading personalities:', error);
+            }
+        }
+
+        // Toggle settings panel
+        function toggleSettings() {
+            const panel = document.getElementById('settingsPanel');
+            panel.classList.toggle('open');
+        }
+
+        // Close settings panel when clicking outside
+        document.addEventListener('click', function(event) {
+            const panel = document.getElementById('settingsPanel');
+            const icon = document.querySelector('.settings-icon');
+            
+            if (!panel.contains(event.target) && !icon.contains(event.target) && panel.classList.contains('open')) {
+                panel.classList.remove('open');
+            }
+        });
+
+        // Close settings panel with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                const panel = document.getElementById('settingsPanel');
+                if (panel.classList.contains('open')) {
+                    panel.classList.remove('open');
+                }
+            }
+        });
+
+        // Check backend health
+        async function checkBackendHealth() {
+            try {
+                const response = await fetch('/debug');
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('Backend health check:', data);
+                    return true;
+                } else {
+                    console.error('Backend health check failed:', response.status);
+                    return false;
+                }
+            } catch (error) {
+                console.error('Backend health check error:', error);
+                return false;
+            }
+        }
+
+        // Test backend connection
+        async function testBackendConnection() {
+            const isHealthy = await checkBackendHealth();
+            if (!isHealthy) {
+                addMessage('⚠️ Warning: Backend connection issues detected. Some features may not work properly.', false);
+                updateStatus('Backend connection issues', 'GPT-4', conversationLength);
             }
         }
     </script>
