@@ -181,6 +181,205 @@
             text-align: center;
         }
 
+        .main-title {
+            font-size: 48px;
+            font-weight: 400;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
+        }
+
+        .main-subtitle {
+            font-size: 18px;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+            font-weight: 400;
+        }
+
+        /* Input Container */
+        .input-container {
+            width: 100%;
+            max-width: 600px;
+            position: relative;
+            margin-bottom: 40px;
+        }
+
+        .input-field {
+            width: 100%;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--dark-border);
+            border-radius: 24px;
+            padding: 16px 20px;
+            padding-left: 60px;
+            padding-right: 120px;
+            color: var(--text-primary);
+            font-size: 16px;
+            outline: none;
+            transition: all var(--transition-speed) var(--transition-ease);
+        }
+
+        .input-field:focus {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
+        }
+
+        .input-field::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .input-left-icon {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: all var(--transition-speed) var(--transition-ease);
+        }
+
+        .input-left-icon:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+        }
+
+        .input-right-icons {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .input-icon {
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: all var(--transition-speed) var(--transition-ease);
+        }
+
+        .input-icon:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+        }
+
+        .send-button {
+            background: var(--accent-primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all var(--transition-speed) var(--transition-ease);
+        }
+
+        .send-button:hover {
+            background: var(--accent-secondary);
+            transform: scale(1.05);
+        }
+
+        /* Example Questions */
+        .example-questions {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .example-question {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--dark-border);
+            border-radius: 16px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all var(--transition-speed) var(--transition-ease);
+            text-align: left;
+        }
+
+        .example-question:hover {
+            background: var(--bg-quaternary);
+            border-color: var(--accent-primary);
+            color: var(--text-primary);
+        }
+
+        .example-icon {
+            color: var(--text-secondary);
+            font-size: 18px;
+        }
+
+        /* Footer */
+        .footer-text {
+            position: absolute;
+            bottom: 20px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        /* Chat Messages (Hidden by default) */
+        .chat-container {
+            display: none;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .chat-messages {
+            max-height: 60vh;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+
+        .message {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+            align-items: flex-start;
+        }
+
+        .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .avatar.user {
+            background: var(--accent-primary);
+            color: white;
+        }
+
+        .avatar.ai {
+            background: var(--accent-secondary);
+            color: white;
+        }
+
+        .message-content {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--dark-border);
+            border-radius: 16px;
+            padding: 16px 20px;
+            color: var(--text-primary);
+            flex: 1;
+        }
+
 
 
         /* Settings Panel */
@@ -268,6 +467,29 @@
             border-bottom-color: var(--light-border);
         }
 
+        body.light-mode .input-field {
+            background: var(--light-bg-tertiary);
+            border-color: var(--light-border);
+            color: var(--light-text-primary);
+        }
+
+        body.light-mode .example-question {
+            background: var(--light-bg-tertiary);
+            border-color: var(--light-border);
+            color: var(--light-text-secondary);
+        }
+
+        body.light-mode .example-question:hover {
+            background: var(--light-bg-quaternary);
+            color: var(--light-text-primary);
+        }
+
+        body.light-mode .message-content {
+            background: var(--light-bg-tertiary);
+            border-color: var(--light-border);
+            color: var(--light-text-primary);
+        }
+
 
 
 
@@ -276,6 +498,11 @@
         @media (max-width: 768px) {
             .nav-menu {
                 display: none;
+            }
+            
+            .input-field {
+                padding-left: 50px;
+                padding-right: 100px;
             }
         }
 
@@ -309,10 +536,51 @@
 
     <!-- Main Content Area -->
     <div class="main-content">
-        <!-- Content will be added here later -->
+        <h1 class="main-title">Meet AI Mode</h1>
+        <p class="main-subtitle">Ask detailed questions for better responses</p>
+        
+        <!-- Input Container -->
+        <div class="input-container">
+            <div class="input-left-icon" onclick="uploadImage()">📷</div>
+            <input type="text" id="messageInput" class="input-field" placeholder="Ask anything" onkeypress="handleKeyPress(event)">
+            <div class="input-right-icons">
+                <div class="input-icon" onclick="startVoiceInput()">🎤</div>
+                <button class="send-button" onclick="sendMessage()">↑</button>
+            </div>
+        </div>
+
+        <!-- Example Questions -->
+        <div class="example-questions">
+            <div class="example-question" onclick="askExample('Tell me about Cursor\'s Bugbot')">
+                <span class="example-icon">🔍</span>
+                <span>Tell me about Cursor's Bugbot</span>
+            </div>
+            <div class="example-question" onclick="askExample('Help me create a marathon training plan')">
+                <span class="example-icon">🔍</span>
+                <span>Help me create a marathon training plan</span>
+            </div>
+            <div class="example-question" onclick="askExample('Compare Samsung Galaxy S25 Ultra and Z Fold 7 cameras')">
+                <span class="example-icon">🔍</span>
+                <span>Compare Samsung Galaxy S25 Ultra and Z Fold 7 cameras</span>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer-text">Based on your Google activity</div>
     </div>
 
-
+    <!-- Chat Container (Hidden by default) -->
+    <div class="chat-container" id="chatContainer">
+        <div class="chat-messages" id="chatMessages"></div>
+        <div class="input-container">
+            <div class="input-left-icon" onclick="uploadImage()">📷</div>
+            <input type="text" id="chatInput" class="input-field" placeholder="Ask anything" onkeypress="handleChatKeyPress(event)">
+            <div class="input-right-icons">
+                <div class="input-icon" onclick="startVoiceInput()">🎤</div>
+                <button class="send-button" onclick="sendChatMessage()">↑</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Settings Panel -->
     <div class="settings-panel" id="settingsPanel">
@@ -379,7 +647,133 @@
             useMemory = document.getElementById('memoryToggle').checked;
         }
 
+        // Handle key press in main input
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
 
+        // Handle key press in chat input
+        function handleChatKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendChatMessage();
+            }
+        }
+
+        // Send message from main input
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // Switch to chat view
+            showChatView();
+            
+            // Add user message
+            addMessage(message, true);
+            input.value = '';
+            
+            // Send to AI
+            sendToAI(message);
+        }
+
+        // Send message from chat input
+        function sendChatMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // Add user message
+            addMessage(message, true);
+            input.value = '';
+            
+            // Send to AI
+            sendToAI(message);
+        }
+
+        // Show chat view
+        function showChatView() {
+            document.querySelector('.main-content').style.display = 'none';
+            document.getElementById('chatContainer').style.display = 'block';
+        }
+
+        // Show main view
+        function showMainView() {
+            document.querySelector('.main-content').style.display = 'flex';
+            document.getElementById('chatContainer').style.display = 'none';
+        }
+
+        // Ask example question
+        function askExample(question) {
+            document.getElementById('messageInput').value = question;
+            sendMessage();
+        }
+
+        // Upload image
+        function uploadImage() {
+            // TODO: Implement image upload
+            alert('Image upload feature coming soon!');
+        }
+
+        // Start voice input
+        function startVoiceInput() {
+            // TODO: Implement voice input
+            alert('Voice input feature coming soon!');
+        }
+
+        // Add message to chat
+        function addMessage(content, isUser = false) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user' : 'ai'}`;
+            
+            const avatar = document.createElement('div');
+            avatar.className = `avatar ${isUser ? 'user' : 'ai'}`;
+            avatar.textContent = isUser ? '👤' : '🤖';
+            
+            const messageContent = document.createElement('div');
+            messageContent.className = 'message-content';
+            messageContent.textContent = content;
+            
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(messageContent);
+            chatMessages.appendChild(messageDiv);
+            
+            // Scroll to bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Send message to AI
+        async function sendToAI(message) {
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        message: message,
+                        use_memory: useMemory
+                    }),
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success) {
+                        addMessage(data.response, false);
+                    } else {
+                        addMessage('Sorry, I encountered an error. Please try again.', false);
+                    }
+                } else {
+                    addMessage('Sorry, I encountered an error. Please try again.', false);
+                }
+            } catch (error) {
+                addMessage('Sorry, I encountered an error. Please try again.', false);
+            }
+        }
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
