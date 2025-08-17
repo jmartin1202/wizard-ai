@@ -296,19 +296,57 @@
             font-size: 14px;
         }
 
-        /* Chat Messages (Hidden by default) */
+                /* Chat Messages (Hidden by default) */
         .chat-container {
             display: none;
             width: 100%;
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
+            margin-top: 64px;
+            min-height: calc(100vh - 64px);
         }
 
-                 .chat-messages {
-            max-height: 60vh;
-             overflow-y: auto;
-             margin-bottom: 20px;
+        .chat-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: var(--bg-tertiary);
+            border-radius: 16px;
+            border: 1px solid var(--dark-border);
+        }
+
+        .back-button {
+            background: var(--accent-primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all var(--transition-speed) var(--transition-ease);
+        }
+
+        .back-button:hover {
+            background: var(--accent-secondary);
+            transform: translateX(-2px);
+        }
+
+        .chat-header h2 {
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .chat-messages {
+            max-height: calc(100vh - 280px);
+            overflow-y: auto;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: var(--bg-tertiary);
+            border-radius: 16px;
+            border: 1px solid var(--dark-border);
         }
 
         .message {
@@ -346,6 +384,15 @@
             padding: 16px 20px;
             color: var(--text-primary);
             flex: 1;
+            word-wrap: break-word;
+            line-height: 1.5;
+            max-width: 100%;
+        }
+
+        .message.user .message-content {
+            background: var(--accent-primary);
+            color: white;
+            border: none;
         }
 
         /* Settings Panel */
@@ -510,8 +557,12 @@
         <div class="footer-text">Based on your Google activity</div>
         </div>
 
-    <!-- Chat Container (Hidden by default) -->
+        <!-- Chat Container (Hidden by default) -->
     <div class="chat-container" id="chatContainer">
+        <div class="chat-header">
+            <button class="back-button" onclick="showMainView()">← Back to Main</button>
+            <h2>AI Chat</h2>
+        </div>
         <div class="chat-messages" id="chatMessages"></div>
         <div class="input-container">
             <div class="input-left-icon" onclick="uploadImage()">📷</div>
@@ -519,9 +570,9 @@
             <div class="input-right-icons">
                 <div class="input-icon" onclick="startVoiceInput()">🎤</div>
                 <button class="send-button" onclick="sendChatMessage()">↑</button>
-                </div>
             </div>
         </div>
+    </div>
 
     <!-- Settings Panel -->
     <div class="settings-panel" id="settingsPanel">
@@ -699,22 +750,43 @@
 
                 if (response.ok) {
                     const data = await response.json();
-                    if (data.success) {
+                    if (data.success && data.response) {
                         addMessage(data.response, false);
-                } else {
+                    } else {
                         addMessage('Sorry, I encountered an error. Please try again.', false);
                     }
                 } else {
                     addMessage('Sorry, I encountered an error. Please try again.', false);
                 }
             } catch (error) {
+                console.error('Error:', error);
                 addMessage('Sorry, I encountered an error. Please try again.', false);
+            }
+        }
+
+        // Test backend connection
+        async function testBackend() {
+            try {
+                const response = await fetch('/debug');
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('Backend test successful:', data);
+                    return true;
+                } else {
+                    console.error('Backend test failed:', response.status);
+                    return false;
+                }
+            } catch (error) {
+                console.error('Backend test error:', error);
+                return false;
             }
         }
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             initTheme();
+            // Test backend connection
+            testBackend();
         });
     </script>
 </body>
