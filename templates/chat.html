@@ -240,18 +240,7 @@
             gap: 12px;
         }
 
-        .input-icon {
-            color: var(--text-secondary);
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 8px;
-            transition: all var(--transition-speed) var(--transition-ease);
-        }
 
-        .input-icon:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--text-primary);
-        }
 
         .send-button {
             background: var(--accent-primary);
@@ -524,7 +513,6 @@
         <div class="input-container">
             <input type="text" id="messageInput" class="input-field" placeholder="Ask anything" onkeypress="handleKeyPress(event)">
             <div class="input-right-icons">
-                <div class="input-icon" onclick="startVoiceInput()">🎤</div>
                 <button class="send-button" onclick="sendMessage()">↑</button>
             </div>
         </div>
@@ -545,7 +533,6 @@
         <div class="input-container">
             <input type="text" id="chatInput" class="input-field" placeholder="Ask anything" onkeypress="handleChatKeyPress(event)">
             <div class="input-right-icons">
-                <div class="input-icon" onclick="startVoiceInput()">🎤</div>
                 <button class="send-button" onclick="sendChatMessage()">↑</button>
             </div>
         </div>
@@ -679,11 +666,7 @@
 
 
 
-        // Start voice input
-        function startVoiceInput() {
-            // TODO: Implement voice input
-            alert('Voice input feature coming soon!');
-        }
+
 
         // Add message to chat
         function addMessage(content, isUser = false) {
