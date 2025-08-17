@@ -1834,11 +1834,10 @@
             <div class="message ai">
                 <div class="avatar ai">🤖</div>
                 <div class="message-content">
-                    Hello! I'm your advanced AI assistant with multiple personalities and conversation memory. How can I help you today?
-                    <div class="message-meta">
-                        <span>Personality: Default</span>
-                        <span>Model: GPT-4</span>
-                    </div>
+                                         Hello! I'm your advanced AI assistant with conversation memory and real-time data capabilities. How can I help you today?
+                     <div class="message-meta">
+                         <span>Model: GPT-4</span>
+                     </div>
                 </div>
             </div>
         </div>
@@ -2141,9 +2140,6 @@
         }
 
         // Event listeners
-        document.getElementById('personalitySelect').addEventListener('change', function(e) {
-            changePersonality(e.target.value);
-        });
 
         document.getElementById('memoryToggle').addEventListener('change', function(e) {
             useMemory = e.target.checked;
@@ -2167,32 +2163,11 @@
             // Test backend connection first
             testBackendConnection();
             
-            // Load available personalities
-            loadPersonalities();
-            
             // Get initial conversation info
             showConversationInfo();
 
-            // Theme toggle
-            const themeToggle = document.getElementById('themeToggle');
-            const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
-
-            function updateTheme() {
-                if (prefersDarkScheme.matches) {
-                    document.body.classList.add('dark-mode');
-                    themeToggle.textContent = 'Light Mode';
-                    themeToggle.classList.remove('light');
-                } else {
-                    document.body.classList.remove('dark-mode');
-                    themeToggle.textContent = 'Dark Mode';
-                    themeToggle.classList.add('light');
-                }
-            }
-
-            updateTheme(); // Set initial theme
-            prefersDarkScheme.addEventListener('change', updateTheme);
-
             // Theme toggle functionality
+            const themeToggle = document.getElementById('themeToggle');
             let currentTheme = localStorage.getItem('theme') || 'dark';
             
             function setTheme(theme) {
@@ -2358,32 +2333,7 @@
             }
         });
 
-        // Load available personalities
-        async function loadPersonalities() {
-            try {
-                const response = await fetch('/api/personalities');
-                const data = await response.json();
-                
-                if (data.success) {
-                    const select = document.getElementById('personalitySelect');
-                    select.innerHTML = '';
-                    
-                    data.personalities.forEach(personality => {
-                        const option = document.createElement('option');
-                        option.value = personality;
-                        option.textContent = personality.charAt(0).toUpperCase() + personality.slice(1);
-                        select.appendChild(option);
-                    });
-                    
-                    if (data.current_personality) {
-                        select.value = data.current_personality;
-    
-                    }
-                }
-            } catch (error) {
-                console.error('Error loading personalities:', error);
-            }
-        }
+        
 
         // Toggle settings panel
         function toggleSettings() {
