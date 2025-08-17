@@ -267,12 +267,15 @@
             padding: 8px;
             border-radius: 50%;
             transition: all var(--transition-speed) var(--transition-ease);
-            font-size: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
             width: 36px;
             height: 36px;
+        }
+
+        .voice-icon svg {
+            transition: all var(--transition-speed) var(--transition-ease);
         }
 
         .voice-icon:hover {
@@ -571,7 +574,12 @@
         <div class="input-container">
             <input type="text" id="messageInput" class="input-field" placeholder="Ask anything" onkeypress="handleKeyPress(event)">
             <div class="input-right-icons">
-                <div class="voice-icon" onclick="startVoiceInput()" title="Voice Input">🎤</div>
+                <div class="voice-icon" onclick="startVoiceInput()" title="Voice Input">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                        <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+                    </svg>
+                </div>
                 <button class="send-button" onclick="sendMessage()">↑</button>
             </div>
         </div>
@@ -592,7 +600,12 @@
         <div class="input-container">
             <input type="text" id="chatInput" class="input-field" placeholder="Ask anything" onkeypress="handleChatKeyPress(event)">
             <div class="input-right-icons">
-                <div class="voice-icon" onclick="startVoiceInput()" title="Voice Input">🎤</div>
+                <div class="voice-icon" onclick="startVoiceInput()" title="Voice Input">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                        <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+                    </svg>
+                </div>
                 <button class="send-button" onclick="sendChatMessage()">↑</button>
             </div>
         </div>
@@ -883,10 +896,12 @@
             voiceIcons.forEach(icon => {
                 if (listening) {
                     icon.classList.add('listening');
-                    icon.textContent = '🔴';
+                    // Replace SVG with red dot when listening
+                    icon.innerHTML = '<div style="width: 12px; height: 12px; background: white; border-radius: 50%;"></div>';
                 } else {
                     icon.classList.remove('listening');
-                    icon.textContent = '🎤';
+                    // Restore SVG icon when not listening
+                    icon.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>';
                 }
             });
         }
