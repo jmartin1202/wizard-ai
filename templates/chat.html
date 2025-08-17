@@ -466,21 +466,7 @@
             border: 1px solid var(--dark-border);
         }
 
-        .back-button {
-            background: var(--accent-primary);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 8px 16px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: all var(--transition-speed) var(--transition-ease);
-        }
 
-        .back-button:hover {
-            background: var(--accent-secondary);
-            transform: translateX(-2px);
-        }
 
         .chat-header h2 {
             color: var(--text-primary);
@@ -731,7 +717,6 @@
         <!-- Chat Container (Hidden by default) -->
     <div class="chat-container" id="chatContainer">
         <div class="chat-header">
-            <button class="back-button" onclick="showMainView()">← Back to Main</button>
             <h2>AI Chat</h2>
         </div>
         <div class="chat-messages" id="chatMessages"></div>
@@ -880,11 +865,7 @@
             document.getElementById('chatContainer').style.display = 'block';
         }
 
-        // Show main view
-        function showMainView() {
-            document.querySelector('.main-content').style.display = 'flex';
-            document.getElementById('chatContainer').style.display = 'none';
-        }
+
 
 
 
