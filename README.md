@@ -1,6 +1,6 @@
 # 🤖 Wizard AI - AI Chatbot
 
-A modern, production-ready AI chatbot built with Flask and OpenAI's GPT models. Features a clean web interface, robust error handling, rate limiting, and secure API integration.
+A modern, production-ready AI chatbot built with Flask and OpenAI's GPT models.
 
 ## ✨ Features
 
@@ -21,7 +21,7 @@ A modern, production-ready AI chatbot built with Flask and OpenAI's GPT models. 
 1. Clone the repository
 2. Set up virtual environment: `python -m venv venv`
 3. Install dependencies: `pip install -r requirements.txt`
-4. Copy `env_template.txt` to `.env` and add your OpenAI API key
+4. Create `.env` file with your OpenAI API key
 5. Run: `python app.py`
 6. Open: `http://localhost:8080`
 
@@ -33,9 +33,7 @@ A modern, production-ready AI chatbot built with Flask and OpenAI's GPT models. 
 
 ## 🚀 Deployment
 
-For detailed deployment instructions, see [DEPLOYMENT.md](DEPLOYMENT.md).
-
-### Quick Deploy to Heroku
+### Deploy to Heroku
 ```bash
 heroku create your-app-name
 heroku config:set OPENAI_API_KEY=your_api_key_here
@@ -52,4 +50,4 @@ git push heroku main
 
 ---
 
-**Ready to deploy?** Check out the [deployment guide](DEPLOYMENT.md)! 🚀
+**Ready to deploy!** 🚀

@@ -3,523 +3,933 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Chatbot</title>
+    <title>Advanced AI Assistant</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #fafafa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: radial-gradient(ellipse at center, #000000 0%, #0a0a0a 15%, #0c0c23 30%, #1a0b2e 50%, #16213e 70%, #0f3460 85%, #533483 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
-            color: #333;
+            position: relative;
+            overflow-x: hidden;
         }
-        
-        .chat-container {
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+
+        /* Animated Stars Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            max-width: 800px;
-            height: 80vh;
+            height: 100%;
+            background-image: 
+                radial-gradient(3px 3px at 20px 30px, #fff, transparent),
+                radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.9), transparent),
+                radial-gradient(1px 1px at 90px 40px, #fff, transparent),
+                radial-gradient(2px 2px at 130px 80px, rgba(255,255,255,0.8), transparent),
+                radial-gradient(3px 3px at 160px 30px, #fff, transparent),
+                radial-gradient(1px 1px at 200px 120px, rgba(255,255,255,0.7), transparent),
+                radial-gradient(2px 2px at 250px 60px, #fff, transparent),
+                radial-gradient(1px 1px at 300px 150px, rgba(255,255,255,0.6), transparent),
+                radial-gradient(2px 2px at 350px 90px, #fff, transparent),
+                radial-gradient(1px 1px at 400px 180px, rgba(255,255,255,0.8), transparent);
+            background-repeat: repeat;
+            background-size: 400px 200px;
+            animation: twinkle 6s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 900px;
+            height: 85vh;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
-            border: 1px solid #f0f0f0;
+            color: white;
+            z-index: 1;
+            position: relative;
         }
-        
-        .chat-header {
-            background: white;
-            color: #333;
-            padding: 24px 32px;
+
+        .header-section {
             text-align: center;
-            border-bottom: 1px solid #f0f0f0;
+            margin-bottom: 20px;
         }
-        
-        .chat-header h1 {
-            font-size: 24px;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #1a1a1a;
+
+        .main-title {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: white;
+            text-shadow: 0 4px 20px rgba(255, 255, 255, 0.3);
         }
-        
-        .chat-header p {
-            color: #666;
+
+        .controls-section {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 8px 12px;
+            backdrop-filter: blur(10px);
+        }
+
+        .control-label {
             font-size: 14px;
-            font-weight: 400;
+            color: rgba(255, 255, 255, 0.8);
+            white-space: nowrap;
         }
-        
-        .status-dot {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            background: #10b981;
-            border-radius: 50%;
-            margin-right: 8px;
-            animation: pulse 2s infinite;
+
+        .personality-select {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            color: white;
+            padding: 6px 10px;
+            font-size: 14px;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
         }
-        
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+
+        .personality-select option {
+            background: #1a0b2e;
+            color: white;
         }
-        
+
+        .control-button {
+            background: rgba(59, 130, 246, 0.3);
+            border: 1px solid rgba(59, 130, 246, 0.5);
+            border-radius: 8px;
+            padding: 6px 12px;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .control-button:hover {
+            background: rgba(59, 130, 246, 0.4);
+            border-color: rgba(59, 130, 246, 0.6);
+        }
+
         .chat-messages {
             flex: 1;
-            padding: 24px 32px;
             overflow-y: auto;
-            background: #fafafa;
-            scroll-behavior: smooth;
+            padding: 20px;
+            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        
-        .chat-messages::-webkit-scrollbar {
-            width: 6px;
-        }
-        
-        .chat-messages::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        
-        .chat-messages::-webkit-scrollbar-thumb {
-            background: #e0e0e0;
-            border-radius: 3px;
-        }
-        
-        .chat-messages::-webkit-scrollbar-thumb:hover {
-            background: #d0d0d0;
-        }
-        
+
         .message {
             margin-bottom: 20px;
             display: flex;
             align-items: flex-start;
-            animation: fadeIn 0.3s ease-out;
+            gap: 12px;
         }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
+
         .message.user {
-            justify-content: flex-end;
+            flex-direction: row-reverse;
         }
-        
-        .message-avatar {
-            width: 32px;
-            height: 32px;
+
+        .avatar {
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14px;
-            margin: 0 12px;
+            font-size: 18px;
             flex-shrink: 0;
-            background: #f8f9fa;
-            color: #666;
-            border: 1px solid #e9ecef;
         }
-        
-        .message.user .message-avatar {
-            background: #007AFF;
-            color: white;
-            border: none;
-            order: 2;
+
+        .avatar.user {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
-        
-        .message.bot .message-avatar {
-            background: #f8f9fa;
-            color: #666;
+
+        .avatar.ai {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
         }
-        
+
         .message-content {
-            max-width: 70%;
-            padding: 16px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 18px;
-            position: relative;
-            word-wrap: break-word;
-            line-height: 1.5;
-            font-size: 15px;
+            padding: 15px 20px;
+            max-width: 85%;
+            backdrop-filter: blur(10px);
         }
-        
+
         .message.user .message-content {
-            background: #007AFF;
-            color: white;
-            border-bottom-right-radius: 6px;
+            background: rgba(59, 130, 246, 0.2);
+            border-color: rgba(59, 130, 246, 0.4);
         }
-        
-        .message.bot .message-content {
-            background: white;
-            color: #333;
-            border: 1px solid #e9ecef;
-            border-bottom-left-radius: 6px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+
+        .message.ai .message-content {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
         }
-        
-        .message-time {
-            font-size: 11px;
-            opacity: 0.6;
-            margin-top: 6px;
-            text-align: right;
-        }
-        
-        .message.user .message-time {
-            text-align: left;
-        }
-        
-        .chat-input {
-            padding: 24px 32px;
-            background: white;
-            border-top: 1px solid #f0f0f0;
-        }
-        
-        .input-container {
+
+        .message-meta {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: 8px;
             display: flex;
-            gap: 12px;
+            gap: 15px;
             align-items: center;
         }
-        
-        .message-input {
-            flex: 1;
-            padding: 16px 20px;
-            border: 1px solid #e9ecef;
-            border-radius: 24px;
-            font-size: 15px;
-            outline: none;
-            transition: all 0.2s ease;
-            background: #fafafa;
-        }
-        
-        .message-input:focus {
-            border-color: #007AFF;
-            background: white;
-            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
-        }
-        
-        .message-input::placeholder {
-            color: #999;
-        }
-        
-        .send-button {
-            background: #007AFF;
-            color: white;
-            border: none;
-            padding: 16px 24px;
-            border-radius: 24px;
-            cursor: pointer;
-            font-size: 15px;
-            font-weight: 500;
-            transition: all 0.2s ease;
-        }
-        
-        .send-button:hover {
-            background: #0056CC;
-            transform: translateY(-1px);
-        }
-        
-        .send-button:active {
-            transform: translateY(0);
-        }
-        
+
         .typing-indicator {
             display: none;
-            padding: 16px 20px;
-            color: #666;
-            font-style: italic;
-            background: white;
-            border-radius: 18px;
-            border: 1px solid #e9ecef;
-            margin: 0 44px 20px 44px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
         }
-        
-        .typing-indicator.show {
-            display: block;
-            animation: fadeIn 0.3s ease-out;
-        }
-        
+
         .typing-dots {
-            display: inline-block;
+            display: flex;
+            gap: 4px;
         }
-        
-        .typing-dots::after {
-            content: '';
-            animation: typing 1.4s infinite;
+
+        .typing-dots span {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.6);
+            animation: typing 1.4s infinite ease-in-out;
         }
-        
+
+        .typing-dots span:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dots span:nth-child(2) { animation-delay: -0.16s; }
+
         @keyframes typing {
-            0%, 20% { content: ''; }
-            40% { content: '.'; }
-            60% { content: '..'; }
-            80%, 100% { content: '...'; }
+            0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+            40% { transform: scale(1); opacity: 1; }
         }
-        
-        .welcome-message {
-            text-align: center;
-            padding: 40px 20px;
-            color: #666;
+
+        .input-container {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 20px;
+            backdrop-filter: blur(20px);
+            transition: all 0.3s ease;
+            display: flex;
+            gap: 15px;
+            align-items: center;
         }
-        
-        .welcome-message h3 {
-            color: #333;
-            margin-bottom: 12px;
-            font-size: 18px;
+
+        .input-container:focus-within {
+            border-color: rgba(59, 130, 246, 0.6);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .input-field {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: white;
+            font-size: 16px;
+            padding: 12px;
+        }
+
+        .input-field::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .send-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 12px;
+            padding: 12px 20px;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
             font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-        
-        .welcome-message p {
-            line-height: 1.6;
-            margin-bottom: 8px;
+
+        .send-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .send-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            margin-bottom: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
             font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
         }
-        
-        /* Mobile Responsiveness */
+
+        .status-icon {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10b981;
+        }
+
+        /* Real-time information panel */
+        .real-time-info {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 12px;
+            margin-bottom: 15px;
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+        }
+
+        .real-time-header {
+            background: rgba(59, 130, 246, 0.2);
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 20px;
+            cursor: pointer;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .real-time-content {
+            padding: 15px 20px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .real-time-item {
+            margin-bottom: 10px;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            border-left: 3px solid rgba(59, 130, 246, 0.5);
+        }
+
+        .real-time-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .real-time-label {
+            font-weight: 600;
+            color: rgba(59, 130, 246, 0.8);
+            margin-bottom: 4px;
+        }
+
+        .real-time-value {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .real-time-timestamp {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 4px;
+        }
+
+        /* Cosmic particles effect */
+        .cosmic-particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: float-particle 6s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes float-particle {
+            0%, 100% {
+                transform: translateY(0px) translateX(0px);
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+
+        /* Responsive design */
         @media (max-width: 768px) {
-            body {
-                padding: 16px;
+            .main-title {
+                font-size: 36px;
+                margin-bottom: 15px;
             }
             
-            .chat-container {
+            .main-container {
                 height: 90vh;
-                border-radius: 12px;
             }
             
-            .chat-header {
-                padding: 20px 24px;
-            }
-            
-            .chat-header h1 {
-                font-size: 20px;
-            }
-            
-            .chat-messages {
-                padding: 20px 24px;
-            }
-            
-            .message-content {
-                max-width: 80%;
-                padding: 14px 18px;
-                font-size: 14px;
-            }
-            
-            .chat-input {
-                padding: 20px 24px;
-            }
-            
-            .input-container {
+            .controls-section {
                 gap: 10px;
             }
             
-            .message-input {
-                padding: 14px 18px;
-                font-size: 14px;
-            }
-            
-            .send-button {
-                padding: 14px 20px;
-                font-size: 14px;
-            }
-        }
-        
-        /* Dark mode support */
-        @media (prefers-color-scheme: dark) {
-            body {
-                background: #1a1a1a;
-                color: #e0e0e0;
-            }
-            
-            .chat-container {
-                background: #2a2a2a;
-                border-color: #404040;
-            }
-            
-            .chat-header {
-                background: #2a2a2a;
-                border-bottom-color: #404040;
-                color: #e0e0e0;
-            }
-            
-            .chat-header h1 {
-                color: #ffffff;
-            }
-            
-            .chat-header p {
-                color: #b0b0b0;
+            .control-group {
+                padding: 6px 10px;
             }
             
             .chat-messages {
-                background: #1a1a1a;
+                padding: 15px;
             }
             
-            .message.bot .message-content {
-                background: #2a2a2a;
-                color: #e0e0e0;
-                border-color: #404040;
+            .input-container {
+                padding: 15px;
             }
             
-            .message-avatar {
-                background: #404040;
-                color: #b0b0b0;
-                border-color: #505050;
+            .message-content {
+                max-width: 90%;
+                padding: 12px 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-title {
+                font-size: 28px;
+                margin-bottom: 15px;
             }
             
-            .chat-input {
-                background: #2a2a2a;
-                border-top-color: #404040;
+            .controls-section {
+                flex-direction: column;
+                align-items: center;
             }
             
-            .message-input {
-                background: #1a1a1a;
-                border-color: #404040;
-                color: #e0e0e0;
-            }
-            
-            .message-input:focus {
-                background: #2a2a2a;
-            }
-            
-            .typing-indicator {
-                background: #2a2a2a;
-                border-color: #404040;
-                color: #b0b0b0;
+            .message-content {
+                max-width: 95%;
+                padding: 10px 14px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="chat-container">
-        <div class="chat-header">
-            <h1><span class="status-dot"></span>AI Assistant</h1>
-            <p>How can I help you today?</p>
+    <div class="main-container">
+        <!-- Header Section -->
+        <div class="header-section">
+            <h1 class="main-title">Advanced AI Assistant</h1>
+            
+            <!-- Controls Section -->
+            <div class="controls-section">
+                <div class="control-group">
+                    <span class="control-label">Personality:</span>
+                    <select class="personality-select" id="personalitySelect">
+                        <option value="default">Default</option>
+                        <option value="creative">Creative</option>
+                        <option value="professional">Professional</option>
+                        <option value="friendly">Friendly</option>
+                        <option value="educational">Educational</option>
+                    </select>
+                </div>
+                
+                <div class="control-group">
+                    <span class="control-label">Memory:</span>
+                    <input type="checkbox" id="memoryToggle" checked>
+                </div>
+                
+                <button class="control-button" onclick="clearConversation()">Clear Chat</button>
+                <button class="control-button" onclick="showConversationInfo()">Info</button>
+                <button class="control-button" onclick="showRealTimeCapabilities()">🌐 Real-Time</button>
+            </div>
         </div>
-        
+
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <div class="status-item">
+                <div class="status-icon"></div>
+                <span id="statusText">Ready</span>
+            </div>
+            <div class="status-item">
+                <span>Model: <span id="modelInfo">GPT-4</span></span>
+            </div>
+            <div class="status-item">
+                <span>Context: <span id="contextInfo">0</span> messages</span>
+            </div>
+        </div>
+
+        <!-- Real-Time Capabilities Info -->
+        <div class="real-time-info" id="realTimeInfo" style="display: none;">
+            <div class="real-time-header">
+                <span>🌐 Real-Time Data Available</span>
+                <button class="close-btn" onclick="hideRealTimeInfo()">×</button>
+            </div>
+            <div class="real-time-content" id="realTimeContent">
+                <!-- Real-time data will be displayed here -->
+            </div>
+        </div>
+
+        <!-- Chat Messages -->
         <div class="chat-messages" id="chatMessages">
-            <div class="welcome-message">
-                <h3>Welcome! 👋</h3>
-                <p>I'm your AI assistant, ready to help with any questions.</p>
-                <p>Just type your message below to get started.</p>
+            <div class="message ai">
+                <div class="avatar ai">🤖</div>
+                <div class="message-content">
+                    Hello! I'm your advanced AI assistant with multiple personalities and conversation memory. How can I help you today?
+                    <div class="message-meta">
+                        <span>Personality: Default</span>
+                        <span>Model: GPT-4</span>
+                    </div>
+                </div>
             </div>
         </div>
-        
+
+        <!-- Typing Indicator -->
         <div class="typing-indicator" id="typingIndicator">
-            <span class="typing-dots">AI is thinking</span>
-        </div>
-        
-        <div class="chat-input">
-            <div class="input-container">
-                <input type="text" 
-                       class="message-input" 
-                       id="messageInput" 
-                       placeholder="Type your message..."
-                       maxlength="1000">
-                <button class="send-button" id="sendButton">
-                    Send
-                </button>
+            <div class="avatar ai">🤖</div>
+            <div class="typing-dots">
+                <span></span>
+                <span></span>
+                <span></span>
             </div>
+        </div>
+
+        <!-- Input Container -->
+        <div class="input-container">
+            <input type="text" class="input-field" id="messageInput" placeholder="Ask anything..." maxlength="2000">
+            <button class="send-button" id="sendButton" onclick="sendMessage()">
+                <span>Send</span>
+                <span>🚀</span>
+            </button>
         </div>
     </div>
 
     <script>
-        // DOM elements
-        const chatMessages = document.getElementById('chatMessages');
-        const messageInput = document.getElementById('messageInput');
-        const sendButton = document.getElementById('sendButton');
-        const typingIndicator = document.getElementById('typingIndicator');
-        
-        // Functions
-        function addMessage(content, sender) {
+        // Global variables
+        let currentPersonality = 'default';
+        let useMemory = true;
+        let conversationLength = 0;
+
+        // Create cosmic particles
+        function createCosmicParticles() {
+            const container = document.body;
+            for (let i = 0; i < 15; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'cosmic-particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = (Math.random() * 3 + 4) + 's';
+                container.appendChild(particle);
+            }
+        }
+
+        // Add message to chat
+        function addMessage(content, isUser = false, meta = {}) {
+            const chatMessages = document.getElementById('chatMessages');
             const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${sender}`;
+            messageDiv.className = `message ${isUser ? 'user' : 'ai'}`;
             
             const avatar = document.createElement('div');
-            avatar.className = 'message-avatar';
-            avatar.textContent = sender === 'user' ? 'U' : 'AI';
+            avatar.className = `avatar ${isUser ? 'user' : 'ai'}`;
+            avatar.textContent = isUser ? '👤' : '🤖';
             
             const messageContent = document.createElement('div');
             messageContent.className = 'message-content';
             messageContent.textContent = content;
             
-            const time = document.createElement('div');
-            time.className = 'message-time';
-            time.textContent = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-            
-            messageContent.appendChild(time);
-            
-            if (sender === 'user') {
-                messageDiv.appendChild(messageContent);
-                messageDiv.appendChild(avatar);
-            } else {
-                messageDiv.appendChild(avatar);
-                messageDiv.appendChild(messageContent);
+            // Add message metadata
+            if (meta && Object.keys(meta).length > 0) {
+                const messageMeta = document.createElement('div');
+                messageMeta.className = 'message-meta';
+                
+                if (meta.personality) {
+                    messageMeta.innerHTML += `<span>Personality: ${meta.personality}</span>`;
+                }
+                if (meta.model) {
+                    messageMeta.innerHTML += `<span>Model: ${meta.model}</span>`;
+                }
+                if (meta.tokens) {
+                    messageMeta.innerHTML += `<span>Tokens: ${meta.tokens}</span>`;
+                }
+                
+                messageContent.appendChild(messageMeta);
             }
             
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(messageContent);
             chatMessages.appendChild(messageDiv);
+            
+            // Scroll to bottom
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
-        
+
+        // Show typing indicator
         function showTypingIndicator() {
-            typingIndicator.classList.add('show');
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+            document.getElementById('typingIndicator').style.display = 'flex';
+            document.getElementById('chatMessages').scrollTop = document.getElementById('chatMessages').scrollHeight;
         }
-        
+
+        // Hide typing indicator
         function hideTypingIndicator() {
-            typingIndicator.classList.remove('show');
+            document.getElementById('typingIndicator').style.display = 'none';
         }
-        
-        function sendMessage() {
-            const message = messageInput.value.trim();
+
+        // Update status bar
+        function updateStatus(status, model = 'GPT-4', context = 0) {
+            document.getElementById('statusText').textContent = status;
+            document.getElementById('modelInfo').textContent = model;
+            document.getElementById('contextInfo').textContent = context;
+        }
+
+        // Send message
+        async function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const sendButton = document.getElementById('sendButton');
+            const message = input.value.trim();
+            
             if (!message) return;
             
-            // Add user message to chat
-            addMessage(message, 'user');
+            // Add user message
+            addMessage(message, true);
+            input.value = '';
             
-            // Clear input
-            messageInput.value = '';
+            // Disable input and button
+            input.disabled = true;
+            sendButton.disabled = true;
             
             // Show typing indicator
             showTypingIndicator();
+            updateStatus('AI is thinking...');
             
-            // Simulate AI response
-            setTimeout(() => {
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        message: message,
+                        personality: currentPersonality,
+                        use_memory: useMemory
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.error) {
+                    addMessage('Sorry, I encountered an error. Please try again.', false);
+                    updateStatus('Error occurred');
+                } else {
+                    // Add AI response with metadata
+                    const meta = {
+                        personality: data.personality || currentPersonality,
+                        model: data.model_used || 'GPT-4',
+                        tokens: data.tokens_used || 0
+                    };
+                    
+                    addMessage(data.response, false, meta);
+                    
+                    // Display real-time data if available
+                    if (data.real_time_data) {
+                        showRealTimeData(data.real_time_data);
+                    }
+                    
+                    // Update conversation info
+                    conversationLength = data.conversation_length || 0;
+                    updateStatus('Ready', meta.model, conversationLength);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                addMessage('Sorry, I encountered an error. Please try again.', false);
+                updateStatus('Connection error');
+            } finally {
+                // Hide typing indicator and re-enable input
                 hideTypingIndicator();
-                const responses = [
-                    "That's a great question. Let me help you with that.",
-                    "I understand what you're looking for. Here's what I can tell you...",
-                    "Thanks for asking! I'm here to assist you.",
-                    "I can help you with that. Let me provide some information.",
-                    "That's an interesting question. Here's what I know..."
-                ];
-                const randomResponse = responses[Math.floor(Math.random() * responses.length)];
-                addMessage(randomResponse, 'bot');
-            }, 1200 + Math.random() * 800);
+                input.disabled = false;
+                sendButton.disabled = false;
+                input.focus();
+            }
         }
-        
+
+        // Change personality
+        async function changePersonality(personality) {
+            try {
+                const response = await fetch('/api/personality', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ personality: personality })
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    currentPersonality = personality;
+                    updateStatus(`Personality: ${personality}`);
+                    addMessage(`AI personality changed to ${personality}`, false, { personality: personality });
+                }
+            } catch (error) {
+                console.error('Error changing personality:', error);
+            }
+        }
+
+        // Clear conversation
+        async function clearConversation() {
+            try {
+                const response = await fetch('/api/clear-conversation', {
+                    method: 'POST'
+                });
+                
+                const data = await response.json();
+                if (data.success) {
+                    document.getElementById('chatMessages').innerHTML = `
+                        <div class="message ai">
+                            <div class="avatar ai">🤖</div>
+                            <div class="message-content">
+                                Conversation cleared! How can I help you today?
+                                <div class="message-meta">
+                                    <span>Personality: ${currentPersonality}</span>
+                                    <span>Model: GPT-4</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    conversationLength = 0;
+                    updateStatus('Ready', 'GPT-4', 0);
+                }
+            } catch (error) {
+                console.error('Error clearing conversation:', error);
+            }
+        }
+
+        // Show conversation info
+        async function showConversationInfo() {
+            try {
+                const response = await fetch('/api/conversation-info');
+                const data = await response.json();
+                
+                if (data.success) {
+                    const info = `Conversation Info:\n• Messages: ${data.conversation_length}\n• Personality: ${data.personality}\n• User ID: ${data.user_id}`;
+                    addMessage(info, false, { personality: data.personality });
+                }
+            } catch (error) {
+                console.error('Error getting conversation info:', error);
+            }
+        }
+
+        // Show real-time capabilities info
+        async function showRealTimeCapabilities() {
+            try {
+                const response = await fetch('/api/real-time-capabilities');
+                const data = await response.json();
+                
+                if (data.success) {
+                    let content = `🌐 Real-Time Capabilities:\n\n`;
+                    for (const [key, value] of Object.entries(data.capabilities)) {
+                        content += `• ${key.charAt(0).toUpperCase() + key.slice(1)}: ${value}\n`;
+                    }
+                    content += `\n💡 Try asking about:\n`;
+                    content += `• "What's the weather in London?"\n`;
+                    content += `• "What time is it in New York?"\n`;
+                    content += `• "What's the current Bitcoin price?"\n`;
+                    content += `• "Show me the latest news"\n`;
+                    content += `• "What's Apple's stock price?"\n`;
+                    
+                    addMessage(content, false, { personality: currentPersonality });
+                } else {
+                    addMessage('Could not fetch real-time capabilities.', false);
+                }
+            } catch (error) {
+                console.error('Error getting real-time capabilities:', error);
+                addMessage('Could not fetch real-time capabilities.', false);
+            }
+        }
+
+        // Display real-time data panel
+        function showRealTimeData(data) {
+            if (!data) return;
+            
+            const realTimeInfo = document.getElementById('realTimeInfo');
+            const realTimeContent = document.getElementById('realTimeContent');
+            
+            let html = '';
+            
+            if (data.city) { // Weather data
+                html += `
+                    <div class="real-time-item">
+                        <div class="real-time-label">🌤️ Weather in ${data.city}, ${data.country}</div>
+                        <div class="real-time-value">
+                            ${data.temperature} (feels like ${data.feels_like})<br>
+                            ${data.description} | Humidity: ${data.humidity} | Wind: ${data.wind_speed}
+                        </div>
+                        <div class="real-time-timestamp">Updated: ${data.timestamp}</div>
+                    </div>
+                `;
+            } else if (data.time) { // Time data
+                html += `
+                    <div class="real-time-item">
+                        <div class="real-time-label">🕐 Current Time (${data.timezone})</div>
+                        <div class="real-time-value">${data.time}</div>
+                        <div class="real-time-timestamp">Real-time data</div>
+                    </div>
+                `;
+            } else if (data.coin) { // Crypto data
+                html += `
+                    <div class="real-time-item">
+                        <div class="real-time-label">₿ ${data.coin} Price</div>
+                        <div class="real-time-value">
+                            USD: ${data.usd}<br>
+                            EUR: ${data.eur}
+                        </div>
+                        <div class="real-time-timestamp">Updated: ${data.timestamp}</div>
+                    </div>
+                `;
+            } else if (data.headlines) { // News data
+                html += `
+                    <div class="real-time-item">
+                        <div class="real-time-label">📰 Latest ${data.category} News (${data.country})</div>
+                        <div class="real-time-value">`;
+                data.headlines.forEach(headline => {
+                    html += `• ${headline.title}<br><small>${headline.source} - ${headline.published}</small><br><br>`;
+                });
+                html += `</div>
+                        <div class="real-time-timestamp">Updated: ${data.timestamp}</div>
+                    </div>
+                `;
+            } else if (data.symbol) { // Stock data
+                html += `
+                    <div class="real-time-item">
+                        <div class="real-time-label">📈 ${data.symbol} Stock</div>
+                        <div class="real-time-value">
+                            Price: ${data.price}<br>
+                            Change: ${data.change} (${data.change_percent})<br>
+                            Volume: ${data.volume}
+                        </div>
+                        <div class="real-time-timestamp">Updated: ${data.timestamp}</div>
+                    </div>
+                `;
+            }
+            
+            if (html) {
+                realTimeContent.innerHTML = html;
+                realTimeInfo.style.display = 'block';
+            }
+        }
+
+        // Hide real-time capabilities info
+        function hideRealTimeInfo() {
+            document.getElementById('realTimeInfo').style.display = 'none';
+        }
+
         // Event listeners
-        sendButton.addEventListener('click', sendMessage);
-        
-        messageInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
+        document.getElementById('personalitySelect').addEventListener('change', function(e) {
+            changePersonality(e.target.value);
+        });
+
+        document.getElementById('memoryToggle').addEventListener('change', function(e) {
+            useMemory = e.target.checked;
+            updateStatus(useMemory ? 'Memory enabled' : 'Memory disabled');
+        });
+
+        // Handle Enter key
+        document.getElementById('messageInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
                 sendMessage();
             }
         });
-        
-        // Focus on input when page loads
-        window.addEventListener('load', () => {
-            messageInput.focus();
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            createCosmicParticles();
+            
+            // Focus on input field
+            document.getElementById('messageInput').focus();
+            
+            // Load available personalities
+            loadPersonalities();
+            
+            // Get initial conversation info
+            showConversationInfo();
         });
-        
-        // Add initial bot message
-        setTimeout(() => {
-            addMessage("Hello! I'm your AI assistant. How can I help you today?", 'bot');
-        }, 800);
+
+        // Load available personalities
+        async function loadPersonalities() {
+            try {
+                const response = await fetch('/api/personalities');
+                const data = await response.json();
+                
+                if (data.success) {
+                    const select = document.getElementById('personalitySelect');
+                    select.innerHTML = '';
+                    
+                    data.personalities.forEach(personality => {
+                        const option = document.createElement('option');
+                        option.value = personality;
+                        option.textContent = personality.charAt(0).toUpperCase() + personality.slice(1);
+                        select.appendChild(option);
+                    });
+                    
+                    if (data.current_personality) {
+                        select.value = data.current_personality;
+                        currentPersonality = data.current_personality;
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading personalities:', error);
+            }
+        }
     </script>
 </body>
-</html>/ /   U p d a t e d :   0 8 / 1 5 / 2 0 2 5   2 2 : 5 9 : 2 5  
- 
+</html>
