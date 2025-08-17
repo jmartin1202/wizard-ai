@@ -774,6 +774,9 @@
                 return;
             }
 
+            // Debug input fields before starting
+            debugInputFields();
+
             // Initialize speech recognition
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             recognition = new SpeechRecognition();
@@ -797,23 +800,30 @@
                 const transcript = event.results[0][0].transcript;
                 console.log('Voice input:', transcript);
                 
-                // Fill the input field with the transcript
-                const activeInput = document.activeElement;
-                if (activeInput && (activeInput.id === 'messageInput' || activeInput.id === 'chatInput')) {
-                    activeInput.value = transcript;
+                // Determine which input field should receive the transcript
+                let targetInput = null;
+                
+                // Check if we're in chat view or main view
+                const chatContainer = document.getElementById('chatContainer');
+                const mainContent = document.querySelector('.main-content');
+                
+                if (chatContainer && chatContainer.style.display !== 'none') {
+                    // We're in chat view, use chatInput
+                    targetInput = document.getElementById('chatInput');
+                } else if (mainContent && mainContent.style.display !== 'none') {
+                    // We're in main view, use messageInput
+                    targetInput = document.getElementById('messageInput');
+                }
+                
+                // If we found a target input, fill it with the transcript
+                if (targetInput) {
+                    targetInput.value = transcript;
+                    targetInput.focus(); // Focus the input field
                     showVoiceStatus(`"${transcript}" - Ready to send!`);
+                    console.log('Transcript added to:', targetInput.id);
                 } else {
-                    // If no active input, try to find the visible one
-                    const chatInput = document.getElementById('chatInput');
-                    const messageInput = document.getElementById('messageInput');
-                    
-                    if (chatInput.style.display !== 'none') {
-                        chatInput.value = transcript;
-                        showVoiceStatus(`"${transcript}" - Ready to send!`);
-                    } else {
-                        messageInput.value = transcript;
-                        showVoiceStatus(`"${transcript}" - Ready to send!`);
-                    }
+                    console.error('No target input found for transcript');
+                    showVoiceStatus('Error: Could not find input field');
                 }
                 
                 // Stop listening
@@ -886,6 +896,23 @@
         function hideVoiceStatus() {
             const status = document.getElementById('voiceStatus');
             status.classList.remove('show');
+        }
+
+        // Debug function to check input field states
+        function debugInputFields() {
+            const chatContainer = document.getElementById('chatContainer');
+            const mainContent = document.querySelector('.main-content');
+            const chatInput = document.getElementById('chatInput');
+            const messageInput = document.getElementById('messageInput');
+            
+            console.log('=== Input Field Debug ===');
+            console.log('Chat container display:', chatContainer ? chatContainer.style.display : 'not found');
+            console.log('Main content display:', mainContent ? mainContent.style.display : 'not found');
+            console.log('Chat input exists:', !!chatInput);
+            console.log('Message input exists:', !!messageInput);
+            console.log('Chat input value:', chatInput ? chatInput.value : 'N/A');
+            console.log('Message input value:', messageInput ? messageInput.value : 'N/A');
+            console.log('========================');
         }
 
         // Test backend connection
