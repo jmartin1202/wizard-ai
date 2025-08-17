@@ -210,7 +210,6 @@
             border: 1px solid var(--dark-border);
             border-radius: 24px;
             padding: 16px 20px;
-            padding-left: 60px;
             padding-right: 120px;
             color: var(--text-primary);
             font-size: 16px;
@@ -227,22 +226,7 @@
             color: var(--text-secondary);
         }
 
-        .input-left-icon {
-            position: absolute;
-            left: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-secondary);
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 8px;
-            transition: all var(--transition-speed) var(--transition-ease);
-        }
 
-        .input-left-icon:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--text-primary);
-        }
 
         .input-right-icons {
             position: absolute;
@@ -503,7 +487,6 @@
             }
             
             .input-field {
-                padding-left: 50px;
                 padding-right: 100px;
             }
         }
@@ -543,7 +526,6 @@
         
         <!-- Input Container -->
         <div class="input-container">
-            <div class="input-left-icon" onclick="uploadImage()">📷</div>
             <input type="text" id="messageInput" class="input-field" placeholder="Ask anything" onkeypress="handleKeyPress(event)">
             <div class="input-right-icons">
                 <div class="input-icon" onclick="startVoiceInput()">🎤</div>
@@ -565,7 +547,6 @@
         </div>
         <div class="chat-messages" id="chatMessages"></div>
         <div class="input-container">
-            <div class="input-left-icon" onclick="uploadImage()">📷</div>
             <input type="text" id="chatInput" class="input-field" placeholder="Ask anything" onkeypress="handleChatKeyPress(event)">
             <div class="input-right-icons">
                 <div class="input-icon" onclick="startVoiceInput()">🎤</div>
@@ -700,11 +681,7 @@
 
 
 
-        // Upload image
-        function uploadImage() {
-            // TODO: Implement image upload
-            alert('Image upload feature coming soon!');
-        }
+
 
         // Start voice input
         function startVoiceInput() {
