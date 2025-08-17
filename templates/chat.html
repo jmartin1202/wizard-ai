@@ -427,21 +427,7 @@
             font-weight: 600;
         }
 
-        /* Personality change animation */
-        .personality-changing {
-            animation: pulse 1s infinite;
-        }
 
-        @keyframes pulse {
-            0%, 100% { 
-                opacity: 1; 
-                transform: scale(1);
-            }
-            50% { 
-                opacity: 0.7; 
-                transform: scale(1.05);
-            }
-        }
 
         .control-checkbox {
             width: 20px;
@@ -1715,17 +1701,6 @@
                 <h3>🤖 AI Configuration</h3>
                 <div class="settings-controls">
                     <div class="control-group">
-                        <span class="control-label">Personality:</span>
-                        <select class="control-select" id="personalitySelect">
-                            <option value="default">Default</option>
-                            <option value="creative">Creative</option>
-                            <option value="professional">Professional</option>
-                            <option value="friendly">Friendly</option>
-                            <option value="educational">Educational</option>
-                        </select>
-                    </div>
-                    
-                    <div class="control-group">
                         <span class="control-label">Memory:</span>
                         <input type="checkbox" class="control-checkbox" id="memoryToggle" checked>
                     </div>
@@ -1736,7 +1711,6 @@
             <div class="settings-section">
                 <h3>💬 Chat Management</h3>
                 <div class="settings-controls">
-                    <button class="control-button" onclick="clearConversation()">Clear Chat</button>
                     <button class="control-button" onclick="showConversationInfo()">Show Info</button>
                     <button class="control-button" onclick="showRealTimeCapabilities()">🌐 Real-Time Data</button>
                 </div>
@@ -1891,7 +1865,7 @@
 
     <script>
         // Global variables
-        let currentPersonality = 'default';
+
         let useMemory = true;
         let conversationLength = 0;
 
@@ -2001,7 +1975,7 @@
                     },
                     body: JSON.stringify({ 
                         message: message,
-                        personality: currentPersonality,
+        
                         use_memory: useMemory
                     })
                 });
@@ -2014,7 +1988,7 @@
                 } else {
                     // Add AI response with metadata
                     const meta = {
-                        personality: data.personality || currentPersonality,
+        
                         model: data.model_used || 'GPT-4',
                         tokens: data.tokens_used || 0
                     };
@@ -2043,155 +2017,9 @@
             }
         }
 
-        // Change personality
-        async function changePersonality(personality) {
-            try {
-                // Show loading state
-                const select = document.getElementById('personalitySelect');
-                const originalValue = select.value;
-                select.disabled = true;
-                select.classList.add('personality-changing');
-                
-                // Update status to show change in progress
-                updateStatus(`Changing personality to ${personality}...`);
-                
-                const response = await fetch('/api/personality', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ personality: personality })
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                }
-                
-                const data = await response.json();
-                
-                if (data.success) {
-                    currentPersonality = personality;
-                    updateStatus(`Personality: ${personality}`, 'GPT-4', conversationLength);
-                    
-                    // Show success message
-                    addMessage(`🎭 AI personality changed to **${personality}**! I'll now respond with this new personality.`, false, { personality: personality });
-                    
-                    // Close settings panel if open
-                    const settingsPanel = document.getElementById('settingsPanel');
-                    if (settingsPanel.classList.contains('open')) {
-                        settingsPanel.classList.remove('open');
-                    }
-                    
-                    // Remove animation and re-enable after delay
-                    setTimeout(() => {
-                        select.classList.remove('personality-changing');
-                        select.disabled = false;
-                    }, 800);
-                    
-                } else {
-                    throw new Error(data.error || 'Unknown error occurred');
-                }
-            } catch (error) {
-                console.error('Error changing personality:', error);
-                
-                // Revert to original value on error
-                const select = document.getElementById('personalitySelect');
-                select.value = originalValue;
-                select.classList.remove('personality-changing');
-                
-                // Show user-friendly error message
-                let errorMessage = '❌ Failed to change personality. ';
-                if (error.message.includes('Failed to fetch')) {
-                    errorMessage += 'Please check if the server is running.';
-                } else if (error.message.includes('HTTP 500')) {
-                    errorMessage += 'Server error occurred. Please try again.';
-                } else {
-                    errorMessage += error.message;
-                }
-                
-                addMessage(errorMessage, false);
-                updateStatus('Ready', 'GPT-4', conversationLength);
-                select.disabled = false;
-            }
-        }
 
-        // Clear conversation
-        async function clearConversation() {
-            try {
-                // Show loading state
-                const clearButton = event.target;
-                const originalText = clearButton.textContent;
-                clearButton.textContent = 'Clearing...';
-                clearButton.disabled = true;
-                
-                const response = await fetch('/api/clear-conversation', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    }
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                }
-                
-                const data = await response.json();
-                
-                if (data.success) {
-                    // Clear the chat messages container
-                    const chatMessages = document.getElementById('chatMessages');
-                    chatMessages.innerHTML = `
-                        <div class="message ai">
-                            <div class="avatar ai">🤖</div>
-                            <div class="message-content">
-                                Conversation cleared! How can I help you today?
-                                <div class="message-meta">
-                                    <span>Personality: ${currentPersonality}</span>
-                                    <span>Model: GPT-4</span>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                    
-                    // Reset conversation length
-                    conversationLength = 0;
-                    
-                    // Update status
-                    updateStatus('Ready', 'GPT-4', 0);
-                    
-                    // Close settings panel if open
-                    const settingsPanel = document.getElementById('settingsPanel');
-                    if (settingsPanel.classList.contains('open')) {
-                        settingsPanel.classList.remove('open');
-                    }
-                    
-                    // Show success message
-                    addMessage('✅ Chat conversation has been cleared successfully!', false, { personality: currentPersonality });
-                } else {
-                    throw new Error(data.error || 'Unknown error occurred');
-                }
-            } catch (error) {
-                console.error('Error clearing conversation:', error);
-                
-                // Show user-friendly error message
-                let errorMessage = '❌ Failed to clear conversation. ';
-                if (error.message.includes('Failed to fetch')) {
-                    errorMessage += 'Please check if the server is running.';
-                } else if (error.message.includes('HTTP 500')) {
-                    errorMessage += 'Server error occurred. Please try again.';
-                } else {
-                    errorMessage += error.message;
-                }
-                
-                addMessage(errorMessage, false);
-                updateStatus('Error occurred', 'GPT-4', conversationLength);
-            } finally {
-                // Reset button state
-                const clearButton = event.target;
-                clearButton.textContent = 'Clear Chat';
-                clearButton.disabled = false;
-            }
-        }
+
+
 
         // Show conversation info
         async function showConversationInfo() {
@@ -2226,7 +2054,7 @@
                     content += `• "Show me the latest news"\n`;
                     content += `• "What's Apple's stock price?"\n`;
                     
-                    addMessage(content, false, { personality: currentPersonality });
+                    addMessage(content, false);
                 } else {
                     addMessage('Could not fetch real-time capabilities.', false);
                 }
@@ -2549,7 +2377,7 @@
                     
                     if (data.current_personality) {
                         select.value = data.current_personality;
-                        currentPersonality = data.current_personality;
+    
                     }
                 }
             } catch (error) {
