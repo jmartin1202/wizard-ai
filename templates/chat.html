@@ -1907,9 +1907,6 @@
                 const messageMeta = document.createElement('div');
                 messageMeta.className = 'message-meta';
                 
-                if (meta.personality) {
-                    messageMeta.innerHTML += `<span>Personality: ${meta.personality}</span>`;
-                }
                 if (meta.model) {
                     messageMeta.innerHTML += `<span>Model: ${meta.model}</span>`;
                 }
@@ -2027,8 +2024,8 @@
                 const data = await response.json();
                 
                 if (data.success) {
-                    const info = `Conversation Info:\n• Messages: ${data.conversation_length}\n• Personality: ${data.personality}\n• User ID: ${data.user_id}`;
-                    addMessage(info, false, { personality: data.personality });
+                    const info = `Conversation Info:\n• Messages: ${data.conversation_length}\n• User ID: ${data.user_id}`;
+                    addMessage(info, false);
                 }
             } catch (error) {
                 console.error('Error getting conversation info:', error);
