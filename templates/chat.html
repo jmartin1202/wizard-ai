@@ -1745,12 +1745,6 @@
                 <div class="status-icon"></div>
                 <span id="statusText">Ready</span>
             </div>
-            <div class="status-item">
-                <span>Model: <span id="modelInfo">GPT-4</span></span>
-            </div>
-            <div class="status-item">
-                <span>Context: <span id="contextInfo">0</span> messages</span>
-            </div>
         </div>
 
         <!-- Real-Time Capabilities Info -->
@@ -1866,7 +1860,6 @@
         // Global variables
 
         let useMemory = true;
-        let conversationLength = 0;
 
         // Create cosmic particles
         function createCosmicParticles() {
@@ -1907,12 +1900,7 @@
                 const messageMeta = document.createElement('div');
                 messageMeta.className = 'message-meta';
                 
-                if (meta.model) {
-                    messageMeta.innerHTML += `<span>Model: ${meta.model}</span>`;
-                }
-                if (meta.tokens) {
-                    messageMeta.innerHTML += `<span>Tokens: ${meta.tokens}</span>`;
-                }
+                // No metadata to display
                 
                 messageContent.appendChild(messageMeta);
             }
@@ -1937,10 +1925,8 @@
         }
 
         // Update status bar
-        function updateStatus(status, model = 'GPT-4', context = 0) {
+        function updateStatus(status) {
             document.getElementById('statusText').textContent = status;
-            document.getElementById('modelInfo').textContent = model;
-            document.getElementById('contextInfo').textContent = context;
         }
 
         // Send message
@@ -1982,23 +1968,15 @@
                     addMessage('Sorry, I encountered an error. Please try again.', false);
                     updateStatus('Error occurred');
                 } else {
-                    // Add AI response with metadata
-                    const meta = {
-        
-                        model: data.model_used || 'GPT-4',
-                        tokens: data.tokens_used || 0
-                    };
-                    
-                    addMessage(data.response, false, meta);
+                                        // Add AI response without metadata
+                    addMessage(data.response, false);
                     
                     // Display real-time data if available
                     if (data.real_time_data) {
                         showRealTimeData(data.real_time_data);
                     }
                     
-                    // Update conversation info
-                    conversationLength = data.conversation_length || 0;
-                    updateStatus('Ready', meta.model, conversationLength);
+                    updateStatus('Ready');
                 }
             } catch (error) {
                 console.error('Error:', error);
@@ -2381,7 +2359,7 @@
             const isHealthy = await checkBackendHealth();
             if (!isHealthy) {
                 addMessage('⚠️ Warning: Backend connection issues detected. Some features may not work properly.', false);
-                updateStatus('Backend connection issues', 'GPT-4', conversationLength);
+                updateStatus('Backend connection issues');
             }
         }
     </script>
