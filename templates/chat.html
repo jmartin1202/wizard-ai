@@ -434,6 +434,215 @@
             background: var(--accent-secondary);
         }
 
+        /* Animated Pixel Dog */
+        .pixel-dog-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            pointer-events: none;
+        }
+
+        .pixel-dog {
+            width: 80px;
+            height: 80px;
+            position: relative;
+            animation: dog-bounce 3s ease-in-out infinite;
+        }
+
+        .dog-body {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .dog-head {
+            width: 60px;
+            height: 50px;
+            background: #8B4513;
+            border-radius: 25px 25px 20px 20px;
+            position: absolute;
+            top: 0;
+            left: 10px;
+            border: 2px solid #654321;
+        }
+
+        .dog-ears {
+            position: absolute;
+            top: -5px;
+            width: 100%;
+        }
+
+        .ear {
+            width: 15px;
+            height: 20px;
+            background: #654321;
+            border-radius: 50%;
+            position: absolute;
+            animation: ear-wiggle 2s ease-in-out infinite;
+        }
+
+        .left-ear {
+            left: 5px;
+            transform: rotate(-15deg);
+        }
+
+        .right-ear {
+            right: 5px;
+            transform: rotate(15deg);
+        }
+
+        .dog-face {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            width: 30px;
+            height: 25px;
+        }
+
+        .dog-eyes {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .eye {
+            width: 6px;
+            height: 6px;
+            background: #000;
+            border-radius: 50%;
+            animation: blink 4s ease-in-out infinite;
+        }
+
+        .dog-nose {
+            width: 4px;
+            height: 4px;
+            background: #000;
+            border-radius: 50%;
+            position: absolute;
+            left: 13px;
+            top: 15px;
+        }
+
+        .dog-mouth {
+            width: 12px;
+            height: 6px;
+            border: 2px solid #000;
+            border-top: none;
+            border-radius: 0 0 12px 12px;
+            position: absolute;
+            left: 9px;
+            top: 20px;
+        }
+
+        .dog-legs {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .leg {
+            width: 8px;
+            height: 20px;
+            background: #8B4513;
+            border: 1px solid #654321;
+            position: absolute;
+            bottom: -15px;
+            animation: leg-walk 1s ease-in-out infinite alternate;
+        }
+
+        .front-left { left: 15px; animation-delay: 0s; }
+        .front-right { left: 25px; animation-delay: 0.2s; }
+        .back-left { left: 35px; animation-delay: 0.4s; }
+        .back-right { left: 45px; animation-delay: 0.6s; }
+
+        .dog-tail {
+            width: 20px;
+            height: 8px;
+            background: #654321;
+            border-radius: 4px;
+            position: absolute;
+            right: 0;
+            top: 30px;
+            animation: tail-wag 2s ease-in-out infinite;
+        }
+
+        .dog-speech-bubble {
+            position: absolute;
+            bottom: 90px;
+            right: 0;
+            background: white;
+            border: 2px solid #333;
+            border-radius: 15px;
+            padding: 10px 15px;
+            max-width: 200px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            animation: bubble-float 3s ease-in-out infinite;
+            pointer-events: auto;
+        }
+
+        .bubble-text {
+            color: #333;
+            font-size: 12px;
+            font-weight: bold;
+            text-align: center;
+            line-height: 1.3;
+        }
+
+        .bubble-arrow {
+            position: absolute;
+            bottom: -8px;
+            right: 20px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 8px solid white;
+        }
+
+        .bubble-arrow::before {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            right: -8px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 8px solid #333;
+        }
+
+        /* Dog Animations */
+        @keyframes dog-bounce {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+        }
+
+        @keyframes ear-wiggle {
+            0%, 100% { transform: rotate(-15deg); }
+            50% { transform: rotate(-25deg); }
+        }
+
+        @keyframes blink {
+            0%, 90%, 100% { transform: scaleY(1); }
+            95% { transform: scaleY(0.1); }
+        }
+
+        @keyframes leg-walk {
+            0% { transform: translateY(0px); }
+            100% { transform: translateY(-3px); }
+        }
+
+        @keyframes tail-wag {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(15deg); }
+        }
+
+        @keyframes bubble-float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-3px); }
+        }
+
         @keyframes pulse-voice {
             0% { transform: scale(1); }
             50% { transform: scale(1.1); }
@@ -652,6 +861,39 @@
     <!-- Hidden File Input for Image Upload -->
     <input type="file" id="imageUploadInput" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
     
+    <!-- Animated Pixel Dog -->
+    <div class="pixel-dog-container">
+        <div class="pixel-dog" id="pixelDog">
+            <div class="dog-body">
+                <div class="dog-head">
+                    <div class="dog-ears">
+                        <div class="ear left-ear"></div>
+                        <div class="ear right-ear"></div>
+                    </div>
+                    <div class="dog-face">
+                        <div class="dog-eyes">
+                            <div class="eye left-eye"></div>
+                            <div class="eye right-eye"></div>
+                        </div>
+                        <div class="dog-nose"></div>
+                        <div class="dog-mouth"></div>
+                    </div>
+                </div>
+                <div class="dog-legs">
+                    <div class="leg front-left"></div>
+                    <div class="leg front-right"></div>
+                    <div class="leg back-left"></div>
+                    <div class="leg back-right"></div>
+                </div>
+                <div class="dog-tail"></div>
+            </div>
+        </div>
+        <div class="dog-speech-bubble" id="dogSpeechBubble">
+            <div class="bubble-text">Thank you for visiting my app! 🐕✨</div>
+            <div class="bubble-arrow"></div>
+        </div>
+    </div>
+
     <!-- Image Preview Modal -->
     <div class="image-preview-modal" id="imagePreviewModal">
         <div class="image-preview-content">
@@ -777,6 +1019,53 @@
                 document.body.classList.remove('light-mode');
                 document.getElementById('themeToggle').textContent = '🌙';
             }
+        }
+
+        // Initialize pixel dog
+        function initPixelDog() {
+            const dog = document.getElementById('pixelDog');
+            const speechBubble = document.getElementById('dogSpeechBubble');
+            
+            // Make dog interactive
+            dog.style.pointerEvents = 'auto';
+            dog.style.cursor = 'pointer';
+            
+            // Dog click interactions
+            dog.addEventListener('click', function() {
+                // Random dog reactions
+                const reactions = [
+                    'Woof! 🐕',
+                    'Happy to see you! 🐾',
+                    'Want to play? 🎾',
+                    'Good human! 👋',
+                    'Sniff sniff... 👃'
+                ];
+                
+                const randomReaction = reactions[Math.floor(Math.random() * reactions.length)];
+                speechBubble.querySelector('.bubble-text').textContent = randomReaction;
+                
+                // Add excitement animation
+                dog.style.animation = 'dog-bounce 0.5s ease-in-out 3';
+                setTimeout(() => {
+                    dog.style.animation = 'dog-bounce 3s ease-in-out infinite';
+                }, 1500);
+                
+                // Reset to original message after 3 seconds
+                setTimeout(() => {
+                    speechBubble.querySelector('.bubble-text').textContent = 'Thank you for visiting my app! 🐕✨';
+                }, 3000);
+            });
+            
+            // Dog hover effects
+            dog.addEventListener('mouseenter', function() {
+                dog.style.transform = 'scale(1.1)';
+                speechBubble.style.transform = 'scale(1.05)';
+            });
+            
+            dog.addEventListener('mouseleave', function() {
+                dog.style.transform = 'scale(1)';
+                speechBubble.style.transform = 'scale(1)';
+            });
         }
 
         // Toggle theme
@@ -1175,6 +1464,53 @@
             }
         }
 
+        // Pixel Dog Interactions
+        function initPixelDog() {
+            const dog = document.getElementById('pixelDog');
+            const speechBubble = document.getElementById('dogSpeechBubble');
+            
+            // Make dog interactive
+            dog.style.pointerEvents = 'auto';
+            dog.style.cursor = 'pointer';
+            
+            // Dog click interactions
+            dog.addEventListener('click', function() {
+                // Random dog reactions
+                const reactions = [
+                    'Woof! 🐕',
+                    'Happy to see you! 🐾',
+                    'Want to play? 🎾',
+                    'Good human! 👋',
+                    'Sniff sniff... 👃'
+                ];
+                
+                const randomReaction = reactions[Math.floor(Math.random() * reactions.length)];
+                speechBubble.querySelector('.bubble-text').textContent = randomReaction;
+                
+                // Add excitement animation
+                dog.style.animation = 'dog-bounce 0.5s ease-in-out 3';
+                setTimeout(() => {
+                    dog.style.animation = 'dog-bounce 3s ease-in-out infinite';
+                }, 1500);
+                
+                // Reset to original message after 3 seconds
+                setTimeout(() => {
+                    speechBubble.querySelector('.bubble-text').textContent = 'Thank you for visiting my app! 🐕✨';
+                }, 3000);
+            });
+            
+            // Dog hover effects
+            dog.addEventListener('mouseenter', function() {
+                dog.style.transform = 'scale(1.1)';
+                speechBubble.style.transform = 'scale(1.05)';
+            });
+            
+            dog.addEventListener('mouseleave', function() {
+                dog.style.transform = 'scale(1)';
+                speechBubble.style.transform = 'scale(1)';
+            });
+        }
+
         // Debug function to check input field states
         function debugInputFields() {
             const chatContainer = document.getElementById('chatContainer');
@@ -1213,6 +1549,7 @@
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             initTheme();
+            initPixelDog();
             // Test backend connection
             testBackend();
         });
