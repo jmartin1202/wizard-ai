@@ -154,6 +154,73 @@ def test_simple_openai():
             'error_type': str(type(e))
         })
 
+@app.route('/api/chat-with-image', methods=['POST'])
+def chat_with_image():
+    """Chat endpoint with image analysis"""
+    if is_rate_limited(request.remote_addr):
+        return jsonify({'error': 'Rate limit exceeded. Please wait a moment.'}), 429
+    
+    try:
+        data = request.get_json()
+        if not data or 'message' not in data or 'image_data' not in data:
+            return jsonify({'error': 'Message and image data are required'}), 400
+        
+        message = data['message']
+        image_data = data['image_data']
+        personality = data.get('personality', 'default')
+        use_memory = data.get('use_memory', True)
+        
+        # Generate user ID if not exists
+        if 'user_id' not in session:
+            session['user_id'] = str(uuid.uuid4())
+        
+        user_id = session['user_id']
+        
+        # Initialize AI with image analysis
+        try:
+            from simple_openai import AdvancedOpenAI
+            ai = AdvancedOpenAI()
+            
+            # Log API key status
+            logger.info(f"AI initialized for image analysis, API key exists: {bool(ai.api_key)}")
+            
+            # Get AI response with image
+            response = ai.call_openai_with_image(
+                message=message,
+                image_data=image_data,
+                user_id=user_id,
+                personality=personality,
+                use_memory=use_memory
+            )
+            
+            logger.info(f"AI image analysis response received: {response}")
+            
+        except ImportError as e:
+            logger.error(f"Failed to import simple_openai: {e}")
+            return jsonify({'error': 'AI module import failed'}), 500
+        except Exception as e:
+            logger.error(f"Failed to initialize AI: {e}")
+            return jsonify({'error': 'AI initialization failed'}), 500
+        
+        if response and response.get('success'):
+            return jsonify({
+                'success': True,
+                'response': response['response'],
+                'personality': personality,
+                'model_used': response.get('model_used', 'GPT-4 Vision'),
+                'tokens_used': response.get('tokens_used', 0),
+                'conversation_length': response.get('conversation_length', 0),
+                'image_analyzed': True
+            })
+        else:
+            error_msg = response.get('error', 'Unknown error occurred') if response else 'No response from AI'
+            logger.error(f"AI image analysis error: {error_msg}")
+            return jsonify({'error': error_msg}), 400
+            
+    except Exception as e:
+        logger.error(f'Chat with image error: {e}')
+        return jsonify({'error': 'Internal server error'}), 500
+
 @app.route('/api/chat', methods=['POST'])
 def chat():
     """Main chat endpoint"""

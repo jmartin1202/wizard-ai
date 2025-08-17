@@ -379,6 +379,91 @@ class AdvancedOpenAI:
         except Exception as e:
             return {"success": False, "error": str(e)}
     
+    def call_openai_with_image(self, message, image_data, user_id="default", personality="default", 
+                              max_tokens=1000, temperature=0.7, use_memory=True):
+        """
+        OpenAI API call with image analysis using GPT-4 Vision
+        """
+        try:
+            if not self.api_key:
+                return {"success": False, "error": "No API key found"}
+            
+            # Get system prompt based on personality
+            system_prompt = self.system_prompts.get(personality, self.system_prompts['default'])
+            system_prompt += "\n\nYou are now analyzing an image. Please provide detailed, accurate analysis of what you see in the image. Be specific about objects, people, text, colors, actions, and any other relevant details. If the user asks a specific question about the image, answer it thoroughly based on what you can observe."
+            
+            # Prepare messages array with image
+            messages = [
+                {
+                    "role": "system", 
+                    "content": system_prompt
+                },
+                {
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": message
+                        },
+                        {
+                            "type": "image_url",
+                            "image_url": {
+                                "url": image_data
+                            }
+                        }
+                    ]
+                }
+            ]
+            
+            # Add conversation history if memory is enabled
+            if use_memory:
+                conversation = self.get_conversation_context(user_id)
+                for msg in conversation[-5:]:  # Last 5 messages for context (shorter for image analysis)
+                    if msg["role"] in ["user", "assistant"]:
+                        messages.insert(-1, {"role": msg["role"], "content": msg["content"]})
+            
+            # Use GPT-4 Vision model
+            data = {
+                "model": "gpt-4-vision-preview",
+                "max_tokens": max_tokens,
+                "temperature": temperature,
+                "messages": messages
+            }
+            
+            headers = {
+                "Authorization": f"Bearer {self.api_key}",
+                "Content-Type": "application/json"
+            }
+            
+            response = requests.post(
+                f"{self.base_url}/chat/completions",
+                headers=headers,
+                json=data,
+                timeout=120  # Longer timeout for image analysis
+            )
+            
+            if response.status_code == 200:
+                result = response.json()
+                ai_response = result['choices'][0]['message']['content'].strip()
+                
+                # Add to conversation history
+                self.add_to_conversation(user_id, "user", f"[Image Analysis Request] {message}")
+                self.add_to_conversation(user_id, "assistant", ai_response)
+                
+                return {
+                    "success": True, 
+                    "response": ai_response,
+                    "model_used": "gpt-4-vision-preview",
+                    "tokens_used": result['usage']['total_tokens'],
+                    "conversation_length": len(self.get_conversation_context(user_id)),
+                    "image_analyzed": True
+                }
+            else:
+                return {"success": False, "error": f"API error: {response.status_code} - {response.text}"}
+                
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+    
     def change_personality(self, personality):
         """Change the AI personality"""
         if personality in self.system_prompts:
