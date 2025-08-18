@@ -127,6 +127,8 @@ class RealTimeInfo:
             return f"Stock data unavailable: {str(e)}"
 
 class AdvancedOpenAI:
+    """Advanced OpenAI integration with enhanced features"""
+    
     def __init__(self):
         self.api_key = os.environ.get('OPENAI_API_KEY')
         self.claude_api_key = os.environ.get('CLAUDE_API_KEY')
@@ -316,7 +318,7 @@ class AdvancedOpenAI:
                     "provider": "openai",
                     "tokens_used": result['usage']['total_tokens'],
                     "conversation_length": len(self.get_conversation_context(user_id)),
-                    "real_time_data": None
+                    "real_time_data": real_time_data
                 }
             else:
                 return {"success": False, "error": f"OpenAI API error: {response.status_code} - {response.text}"}
@@ -403,7 +405,7 @@ class AdvancedOpenAI:
                     "provider": "claude",
                     "tokens_used": result['usage']['input_tokens'] + result['usage']['output_tokens'],
                     "conversation_length": len(self.get_conversation_context(user_id)),
-                    "real_time_data": None
+                    "real_time_data": real_time_data
                 }
             else:
                 return {"success": False, "error": f"Claude API error: {response.status_code} - {response.text}"}
@@ -497,7 +499,7 @@ class AdvancedOpenAI:
                     "provider": "gemini",
                     "tokens_used": result['usageMetadata']['totalTokenCount'],
                     "conversation_length": len(self.get_conversation_context(user_id)),
-                    "real_time_data": None
+                    "real_time_data": real_time_data
                 }
             else:
                 return {"success": False, "error": f"Gemini API error: {response.status_code} - {response.text}"}
@@ -640,7 +642,7 @@ class AdvancedOpenAI:
 def call_openai_direct(message, max_tokens=500, temperature=0.7):
     """Legacy function for backward compatibility"""
     ai = AdvancedOpenAI()
-    return ai.call_openai_advanced(message, max_tokens=max_tokens, temperature=temperature)
+    return ai.call_openai(message, max_tokens=max_tokens, temperature=temperature)
 
 if __name__ == "__main__":
     # Test the advanced features
@@ -649,19 +651,18 @@ if __name__ == "__main__":
     print("Testing Advanced OpenAI Features with Real-Time Information:")
     print("=" * 60)
     
-    # Test different personalities
-    personalities = ai.get_available_personalities()
-    print(f"Available personalities: {personalities}")
-    
     # Test real-time capabilities
-    capabilities = ai.get_real_time_capabilities()
-    print(f"\nReal-time capabilities: {list(capabilities.keys())}")
+    print("\nTesting real-time data detection:")
+    test_message = "What's the weather in New York?"
+    real_time_data = ai.detect_and_fetch_real_time_data(test_message)
+    print(f"Message: {test_message}")
+    print(f"Real-time data detected: {real_time_data}")
     
     # Test conversation memory
-    result = ai.call_openai_advanced("Hello, what's your name?", user_id="test_user", personality="friendly")
+    result = ai.call_openai("Hello, what's your name?", user_id="test_user", personality="friendly")
     print(f"\nFirst response: {result}")
     
-    result2 = ai.call_openai_advanced("Do you remember my name?", user_id="test_user", personality="friendly")
+    result2 = ai.call_openai("Do you remember my name?", user_id="test_user", personality="friendly")
     print(f"\nSecond response: {result2}")
     
     # Test conversation context
