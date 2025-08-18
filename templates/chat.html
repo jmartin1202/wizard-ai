@@ -133,9 +133,9 @@
         }
 
         .settings-icon {
-            position: absolute;
-            top: 0;
-            right: 0;
+            position: fixed;
+            top: 20px;
+            right: 20px;
             width: 40px;
             height: 40px;
             display: flex;
@@ -145,6 +145,7 @@
             color: var(--text-secondary);
             transition: all 0.3s ease;
             border-radius: 50%;
+            z-index: 1000;
         }
 
         .settings-icon:hover {
