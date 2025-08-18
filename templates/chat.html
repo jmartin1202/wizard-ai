@@ -76,7 +76,7 @@
             align-items: center;
         }
 
-        /* Obsidian Black Background */
+        /* Obsidian Black Background - will be overridden by theme switching */
         body::before {
             content: '';
             position: fixed;
@@ -86,9 +86,12 @@
             height: 100%;
             background: #0a0a0a;
             z-index: -1;
+            transition: background 0.3s ease;
         }
 
-
+        body.light-mode::before {
+            background: #ffffff;
+        }
 
         body.light-mode {
             background: #ffffff;
@@ -1936,13 +1939,16 @@
                 console.error('openSettings function is NOT available!');
             }
             
-            // Apply current theme on page load
-            const currentTheme = localStorage.getItem('theme') || 'dark';
-            applyTheme(currentTheme);
-            
-            // Apply current TTS setting
-            const currentTTS = localStorage.getItem('ttsEnabled') === 'true';
-            updateTTS(currentTTS);
+            // Force refresh theme on page load
+            setTimeout(() => {
+                const currentTheme = localStorage.getItem('theme') || 'dark';
+                console.log('Applying theme on load:', currentTheme);
+                applyTheme(currentTheme);
+                
+                // Apply current TTS setting
+                const currentTTS = localStorage.getItem('ttsEnabled') === 'true';
+                updateTTS(currentTTS);
+            }, 100);
         });
 
         // Real-time Updates System
@@ -2571,7 +2577,7 @@
                     updateBotName(value);
                     break;
                 case 'theme':
-                    applyTheme(value);
+                    forceThemeRefresh(value);
                     break;
                 case 'preferredLanguage':
                     setLanguagePreference(value);
@@ -2883,6 +2889,29 @@
                     notification.parentNode.removeChild(notification);
                 }
             }, 3000);
+        }
+
+        function forceThemeRefresh(theme) {
+            // Remove the CSS pseudo-element background
+            const style = document.createElement('style');
+            style.id = 'theme-override';
+            style.textContent = `
+                body::before {
+                    background: ${theme === 'light' ? '#ffffff' : '#0a0a0a'} !important;
+                }
+            `;
+            
+            // Remove existing override
+            const existingOverride = document.getElementById('theme-override');
+            if (existingOverride) {
+                existingOverride.remove();
+            }
+            
+            // Add new override
+            document.head.appendChild(style);
+            
+            // Apply theme
+            applyTheme(theme);
         }
     </script>
 </body>
