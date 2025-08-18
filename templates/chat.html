@@ -88,7 +88,7 @@
             position: relative;
         }
 
-        /* Milky Way Live Background */
+        /* Obsidian Black Background */
         body::before {
             content: '';
             position: fixed;
@@ -96,76 +96,8 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: 
-                radial-gradient(ellipse at center, rgba(255,255,255,0.1) 0%, transparent 50%),
-                radial-gradient(ellipse at 20% 30%, rgba(138,43,226,0.3) 0%, transparent 40%),
-                radial-gradient(ellipse at 80% 70%, rgba(75,0,130,0.3) 0%, transparent 40%),
-                radial-gradient(ellipse at 40% 80%, rgba(147,112,219,0.2) 0%, transparent 40%),
-                radial-gradient(ellipse at 90% 20%, rgba(72,61,139,0.3) 0%, transparent 40%),
-                linear-gradient(45deg, 
-                    rgba(25,25,112,0.8) 0%, 
-                    rgba(72,61,139,0.6) 25%, 
-                    rgba(138,43,226,0.4) 50%, 
-                    rgba(75,0,130,0.6) 75%, 
-                    rgba(25,25,112,0.8) 100%);
-            background-size: 100% 100%, 200% 200%, 300% 300%, 400% 400%, 500% 500%, 100% 100%;
-            animation: milky-way-move 60s linear infinite;
+            background: #0a0a0a;
             z-index: -1;
-        }
-
-        @keyframes milky-way-move {
-            0% {
-                background-position: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;
-            }
-            100% {
-                background-position: 100% 100%, 200% 200%, 300% 300%, 400% 400%, 500% 500%, 100% 100%;
-            }
-        }
-
-        /* Add some twinkling stars */
-        body::after {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                radial-gradient(2px 2px at 20px 30px, #eee, transparent),
-                radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.8), transparent),
-                radial-gradient(1px 1px at 90px 40px, #fff, transparent),
-                radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.6), transparent),
-                radial-gradient(2px 2px at 160px 30px, #ddd, transparent),
-                radial-gradient(2px 2px at 200px 70px, rgba(255,255,255,0.8), transparent),
-                radial-gradient(1px 1px at 250px 40px, #fff, transparent),
-                radial-gradient(1px 1px at 290px 80px, rgba(255,255,255,0.6), transparent),
-                radial-gradient(2px 2px at 320px 30px, #ddd, transparent),
-                radial-gradient(2px 2px at 360px 70px, rgba(255,255,255,0.8), transparent),
-                radial-gradient(1px 1px at 410px 40px, #fff, transparent),
-                radial-gradient(1px 1px at 450px 80px, rgba(255,255,255,0.6), transparent),
-                radial-gradient(2px 2px at 480px 30px, #ddd, transparent),
-                radial-gradient(2px 2px at 520px 70px, rgba(255,255,255,0.8), transparent),
-                radial-gradient(1px 1px at 570px 40px, #fff, transparent),
-                radial-gradient(1px 1px at 610px 80px, rgba(255,255,255,0.6), transparent),
-                radial-gradient(2px 2px at 640px 30px, #ddd, transparent),
-                radial-gradient(2px 2px at 680px 70px, rgba(255,255,255,0.8), transparent),
-                radial-gradient(1px 1px at 730px 40px, #fff, transparent),
-                radial-gradient(1px 1px at 770px 80px, rgba(255,255,255,0.6), transparent),
-                radial-gradient(2px 2px at 800px 30px, #ddd, transparent),
-                radial-gradient(2px 2px at 840px 70px, rgba(255,255,255,0.8), transparent),
-                radial-gradient(1px 1px at 890px 40px, #fff, transparent),
-                radial-gradient(1px 1px at 930px 80px, rgba(255,255,255,0.6), transparent),
-                radial-gradient(2px 2px at 960px 30px, #ddd, transparent),
-                radial-gradient(2px 2px at 1000px 70px, rgba(255,255,255,0.8), transparent);
-            background-repeat: repeat;
-            background-size: 1000px 1000px;
-            animation: twinkle 4s ease-in-out infinite alternate;
-            z-index: -1;
-        }
-
-        @keyframes twinkle {
-            0% { opacity: 0.3; }
-            100% { opacity: 1; }
         }
 
         body.light-mode {
