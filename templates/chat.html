@@ -566,35 +566,7 @@
             }
         }
 
-        /* Real-time Status Bar */
-        .real-time-status {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            padding: 12px 20px;
-            margin: 20px 0;
-            backdrop-filter: blur(10px);
-        }
 
-        .status-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 14px;
-        }
-
-        .status-icon {
-            font-size: 16px;
-            animation: pulse 2s infinite;
-        }
-
-        .status-text {
-            font-weight: 500;
-        }
 
         /* Typing Indicator */
         .typing-indicator {
@@ -688,20 +660,7 @@
             border-color: rgba(255, 165, 0, 0.3);
         }
 
-        /* Connection Status Colors */
-        .status-item.connected .status-icon {
-            color: #10b981;
-        }
 
-        .status-item.disconnected .status-icon {
-            color: #ef4444;
-            animation: pulse 1s infinite;
-        }
-
-        .status-item.connecting .status-icon {
-            color: #f59e0b;
-            animation: pulse 0.5s infinite;
-        }
 
 
 
@@ -783,22 +742,6 @@
             
             <!-- Main Messages Area -->
             <div class="main-messages" id="mainMessages"></div>
-            
-            <!-- Real-time Status Bar -->
-            <div class="real-time-status" id="realTimeStatus">
-                <div class="status-item">
-                    <span class="status-icon">🟢</span>
-                    <span class="status-text">AI Online</span>
-                </div>
-                <div class="status-item">
-                    <span class="status-icon">⏱️</span>
-                    <span class="status-text" id="responseTime">Ready</span>
-                </div>
-                <div class="status-item">
-                    <span class="status-icon">📡</span>
-                    <span class="status-text" id="connectionStatus">Connected</span>
-                </div>
-            </div>
             
             <!-- Typing Indicator -->
             <div class="typing-indicator" id="typingIndicator" style="display: none;">
@@ -1466,33 +1409,18 @@
             
             // Start real-time updates
             startRealTimeUpdates();
-            
-            // Initialize connection monitoring
-            monitorConnection();
         });
 
         // Real-time Updates System
-        let realTimeInterval;
-        let connectionMonitorInterval;
 
         function startRealTimeUpdates() {
-            // Update response time every second
-            realTimeInterval = setInterval(() => {
-                updateResponseTime();
-            }, 1000);
-            
             // Initial load of live data
             setTimeout(() => {
                 showNotification('Real-time system ready!', 'success');
             }, 1000);
         }
 
-        function updateResponseTime() {
-            const responseTimeElement = document.getElementById('responseTime');
-            const now = new Date();
-            const timeString = now.toLocaleTimeString();
-            responseTimeElement.textContent = `Last: ${timeString}`;
-        }
+
 
         function updateLiveData() {
             // Keep this function for future use but don't auto-fetch data
@@ -1542,34 +1470,7 @@
             }
         }
 
-        // Connection Monitoring
-        function monitorConnection() {
-            connectionMonitorInterval = setInterval(() => {
-                checkConnection();
-            }, 5000); // Check every 5 seconds
-        }
 
-        async function checkConnection() {
-            const statusElement = document.getElementById('connectionStatus');
-            const statusItem = statusElement.parentElement;
-            
-            try {
-                const response = await fetch('/debug', { 
-                    method: 'GET',
-                    signal: AbortSignal.timeout(3000) // 3 second timeout
-                });
-                
-                if (response.ok) {
-                    statusElement.textContent = 'Connected';
-                    statusItem.className = 'status-item connected';
-                } else {
-                    throw new Error('Response not ok');
-                }
-            } catch (error) {
-                statusElement.textContent = 'Disconnected';
-                statusItem.className = 'status-item disconnected';
-            }
-        }
 
         // Typing Indicator Functions
         function showTypingIndicator() {
