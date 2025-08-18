@@ -69,6 +69,11 @@
             color: var(--text-primary);
             overflow-x: hidden;
             position: relative;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         /* Obsidian Black Background */
@@ -107,6 +112,8 @@
             padding: 40px 20px;
             text-align: center;
             max-width: 800px;
+            width: 100%;
+            position: relative;
         }
 
         .main-title {
@@ -132,6 +139,9 @@
             text-align: left;
             width: 100%;
             max-width: 600px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .main-messages .message {
@@ -139,6 +149,8 @@
             gap: 16px;
             margin-bottom: 24px;
             align-items: flex-start;
+            width: 100%;
+            max-width: 600px;
         }
 
         .main-messages .avatar {
