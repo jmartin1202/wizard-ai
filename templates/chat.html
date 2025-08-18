@@ -191,6 +191,83 @@
             font-weight: 400;
         }
 
+        /* Main Messages Area */
+        .main-messages {
+            margin: 30px 0;
+            max-height: 400px;
+            overflow-y: auto;
+            text-align: left;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .main-messages .message {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+            align-items: flex-start;
+        }
+
+        .main-messages .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .main-messages .avatar.user {
+            background: var(--accent-primary);
+            color: white;
+        }
+
+        .main-messages .avatar.ai {
+            background: var(--accent-secondary);
+            color: white;
+        }
+
+        .main-messages .message-content {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--dark-border);
+            border-radius: 16px;
+            padding: 16px 20px;
+            flex: 1;
+            line-height: 1.6;
+            color: var(--text-primary);
+        }
+
+        .main-messages .message.user .message-content {
+            background: var(--accent-primary);
+            color: white;
+            border-color: var(--accent-primary);
+        }
+
+        .main-messages .message.ai .message-content {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        /* Light mode support for main messages */
+        .light-mode .main-messages .message-content {
+            background: var(--light-bg-secondary);
+            border-color: var(--light-border);
+            color: var(--light-text-primary);
+        }
+
+        .light-mode .main-messages .message.user .message-content {
+            background: var(--light-accent-primary);
+            color: white;
+            border-color: var(--light-accent-primary);
+        }
+
+        .light-mode .main-messages .message.ai .message-content {
+            background: var(--light-bg-secondary);
+            color: var(--light-text-primary);
+        }
+
         /* Input Container */
         .input-container {
             width: 100%;
@@ -705,35 +782,38 @@
 
 
 
-    <!-- Main Content Area -->
-    <div class="main-content">
-        <h1 class="main-title">Query AI</h1>
-        <p class="main-subtitle">Ask detailed questions for better responses</p>
-        
-        <!-- Input Container -->
-        <div class="input-container">
-            <input type="text" id="messageInput" class="input-field" placeholder="Ask anything" onkeypress="handleKeyPress(event)">
-            <div class="input-right-icons">
-                <div class="image-icon" onclick="triggerImageUpload()" title="Upload Image">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
-                    </svg>
+            <!-- Main Content Area -->
+        <div class="main-content">
+            <h1 class="main-title">Query AI</h1>
+            <p class="main-subtitle">Ask detailed questions for better responses</p>
+            
+            <!-- Main Messages Area -->
+            <div class="main-messages" id="mainMessages"></div>
+            
+            <!-- Input Container -->
+            <div class="input-container">
+                <input type="text" id="messageInput" class="input-field" placeholder="Ask anything" onkeypress="handleKeyPress(event)">
+                <div class="input-right-icons">
+                    <div class="image-icon" onclick="triggerImageUpload()" title="Upload Image">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M21 19V5c0-1.1-.9-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+                        </svg>
+                    </div>
+                    <div class="voice-icon" onclick="startVoiceInput()" title="Voice Input">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                            <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+                        </svg>
+                    </div>
+                    <button class="send-button" onclick="sendMessage()">↑</button>
                 </div>
-                <div class="voice-icon" onclick="startVoiceInput()" title="Voice Input">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
-                        <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
-                    </svg>
-                </div>
-                <button class="send-button" onclick="sendMessage()">↑</button>
             </div>
-        </div>
 
 
 
-        <!-- Footer -->
+            <!-- Footer -->
 
-        </div>
+            </div>
 
         <!-- Chat Container (Hidden by default) -->
     <div class="chat-container" id="chatContainer">
@@ -848,11 +928,12 @@
             
             if (!message) return;
             
-            // Switch to chat view
-            showChatView();
+            // Clear previous messages for a fresh conversation
+            const mainMessages = document.getElementById('mainMessages');
+            mainMessages.innerHTML = '';
             
-            // Add user message
-            addMessage(message, true);
+            // Add user message to main page
+            addMainMessage(message, true);
             input.value = '';
             
             // Send to AI with image if available
@@ -896,6 +977,28 @@
 
 
 
+        // Add message to main page
+        function addMainMessage(content, isUser = false) {
+            const mainMessages = document.getElementById('mainMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user' : 'ai'}`;
+            
+            const avatar = document.createElement('div');
+            avatar.className = `avatar ${isUser ? 'user' : 'ai'}`;
+            avatar.textContent = isUser ? '👤' : '🤖';
+            
+            const messageContent = document.createElement('div');
+            messageContent.className = 'message-content';
+            messageContent.textContent = content;
+            
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(messageContent);
+            mainMessages.appendChild(messageDiv);
+            
+            // Scroll to bottom
+            mainMessages.scrollTop = mainMessages.scrollHeight;
+        }
+
         // Add message to chat
         function addMessage(content, isUser = false) {
             const chatMessages = document.getElementById('chatMessages');
@@ -921,8 +1024,8 @@
         // Send message to AI with image
         async function sendToAIWithImage(message, imageData) {
             try {
-                // Show loading message
-                addMessage('Analyzing image and processing your question...', false);
+                // Show loading message on main page
+                addMainMessage('Analyzing image and processing your question...', false);
                 
                 const response = await fetch('/api/chat-with-image', {
                     method: 'POST',
@@ -939,25 +1042,33 @@
                 if (response.ok) {
                     const data = await response.json();
                     if (data.success && data.response) {
-                        // Remove loading message and add AI response
-                        const chatMessages = document.getElementById('chatMessages');
-                        chatMessages.removeChild(chatMessages.lastChild);
-                        addMessage(data.response, false);
+                        // Remove loading message and add AI response to main page
+                        const mainMessages = document.getElementById('mainMessages');
+                        if (mainMessages.lastChild) {
+                            mainMessages.removeChild(mainMessages.lastChild);
+                        }
+                        addMainMessage(data.response, false);
                     } else {
-                        const chatMessages = document.getElementById('chatMessages');
-                        chatMessages.removeChild(chatMessages.lastChild);
-                        addMessage('Sorry, I encountered an error analyzing the image. Please try again.', false);
+                        const mainMessages = document.getElementById('mainMessages');
+                        if (mainMessages.lastChild) {
+                            mainMessages.removeChild(mainMessages.lastChild);
+                        }
+                        addMainMessage('Sorry, I encountered an error analyzing the image. Please try again.', false);
                     }
                 } else {
-                    const chatMessages = document.getElementById('chatMessages');
-                    chatMessages.removeChild(chatMessages.lastChild);
-                    addMessage('Sorry, I encountered an error analyzing the image. Please try again.', false);
+                    const mainMessages = document.getElementById('mainMessages');
+                    if (mainMessages.lastChild) {
+                        mainMessages.removeChild(mainMessages.lastChild);
+                    }
+                    addMainMessage('Sorry, I encountered an error analyzing the image. Please try again.', false);
                 }
             } catch (error) {
                 console.error('Error with image analysis:', error);
-                const chatMessages = document.getElementById('chatMessages');
-                chatMessages.removeChild(chatMessages.lastChild);
-                addMessage('Sorry, I encountered an error analyzing the image. Please try again.', false);
+                const mainMessages = document.getElementById('mainMessages');
+                if (mainMessages.lastChild) {
+                    mainMessages.removeChild(mainMessages.lastChild);
+                }
+                addMainMessage('Sorry, I encountered an error analyzing the image. Please try again.', false);
             }
         }
 
@@ -978,12 +1089,12 @@
                 if (response.ok) {
                     const data = await response.json();
                     if (data.success && data.response) {
-                        addMessage(data.response, false);
+                        addMainMessage(data.response, false);
                     } else {
-                        addMessage('Sorry, I encountered an error. Please try again.', false);
+                        addMainMessage('Sorry, I encountered an error. Please try again.', false);
                     }
                 } else {
-                    addMessage('Sorry, I encountered an error. Please try again.', false);
+                    addMainMessage('Sorry, I encountered an error. Please try again.', false);
                 }
             } catch (error) {
                 console.error('Error:', error);
