@@ -566,7 +566,299 @@
             }
         }
 
+        /* Real-time Status Bar */
+        .real-time-status {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 12px 20px;
+            margin: 20px 0;
+            backdrop-filter: blur(10px);
+        }
 
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 14px;
+        }
+
+        .status-icon {
+            font-size: 16px;
+            animation: pulse 2s infinite;
+        }
+
+        .status-text {
+            font-weight: 500;
+        }
+
+        /* Typing Indicator */
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin: 20px 0;
+            backdrop-filter: blur(10px);
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+        }
+
+        .typing-dots span {
+            width: 8px;
+            height: 8px;
+            background: #8b5cf6;
+            border-radius: 50%;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+
+        .typing-dots span:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dots span:nth-child(2) { animation-delay: -0.16s; }
+
+        .typing-text {
+            color: #8b5cf6;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        /* Real-time Animations */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        @keyframes typing {
+            0%, 80%, 100% { 
+                transform: scale(0.8);
+                opacity: 0.5;
+            }
+            40% { 
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Real-time Message Animations */
+        .message {
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .message.ai {
+            animation: slideIn 0.4s ease-out;
+        }
+
+        /* Live Data Updates */
+        .live-data {
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px solid rgba(0, 255, 0, 0.2);
+            border-radius: 8px;
+            padding: 10px 15px;
+            margin: 10px 0;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .live-data.updating {
+            background: rgba(255, 165, 0, 0.1);
+            border-color: rgba(255, 165, 0, 0.3);
+        }
+
+        /* Connection Status Colors */
+        .status-item.connected .status-icon {
+            color: #10b981;
+        }
+
+        .status-item.disconnected .status-icon {
+            color: #ef4444;
+            animation: pulse 1s infinite;
+        }
+
+        .status-item.connecting .status-icon {
+            color: #f59e0b;
+            animation: pulse 0.5s infinite;
+        }
+
+        /* Live Data Dashboard */
+        .live-dashboard {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            backdrop-filter: blur(10px);
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .dashboard-header h3 {
+            color: #fff;
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .refresh-btn {
+            background: rgba(139, 92, 246, 0.2);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 6px;
+            color: #8b5cf6;
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .refresh-btn:hover {
+            background: rgba(139, 92, 246, 0.3);
+            border-color: rgba(139, 92, 246, 0.5);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .dashboard-item {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dashboard-item:hover {
+            transform: translateY(-2px);
+            border-color: rgba(139, 92, 246, 0.3);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2);
+        }
+
+        .dashboard-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #8b5cf6, #06b6d4, #10b981);
+            animation: shimmer 2s infinite;
+        }
+
+        .item-header {
+            color: #8b5cf6;
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .item-content {
+            color: #fff;
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            min-height: 20px;
+        }
+
+        .item-footer {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 12px;
+        }
+
+        .dashboard-item.updating {
+            background: rgba(255, 165, 0, 0.1);
+            border-color: rgba(255, 165, 0, 0.3);
+        }
+
+        .dashboard-item.updating::before {
+            background: linear-gradient(90deg, #f59e0b, #ef4444, #8b5cf6);
+        }
+
+        /* Shimmer Animation */
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* Real-time Notifications */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(139, 92, 246, 0.9);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            max-width: 300px;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background: rgba(16, 185, 129, 0.9);
+        }
+
+        .notification.error {
+            background: rgba(239, 68, 68, 0.9);
+        }
+
+        .notification.warning {
+            background: rgba(245, 158, 11, 0.9);
+        }
+
+        /* Responsive Dashboard */
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-item {
+                padding: 12px;
+            }
+            
+            .dashboard-header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+        }
     </style>
 </head>
 <body>
@@ -612,6 +904,62 @@
             
             <!-- Main Messages Area -->
             <div class="main-messages" id="mainMessages"></div>
+            
+            <!-- Real-time Status Bar -->
+            <div class="real-time-status" id="realTimeStatus">
+                <div class="status-item">
+                    <span class="status-icon">🟢</span>
+                    <span class="status-text">AI Online</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-icon">⏱️</span>
+                    <span class="status-text" id="responseTime">Ready</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-icon">📡</span>
+                    <span class="status-text" id="connectionStatus">Connected</span>
+                </div>
+            </div>
+            
+            <!-- Live Data Dashboard -->
+            <div class="live-dashboard" id="liveDashboard">
+                <div class="dashboard-header">
+                    <h3>📊 Live Data</h3>
+                    <button class="refresh-btn" onclick="refreshLiveData()">🔄 Refresh</button>
+                </div>
+                <div class="dashboard-grid">
+                    <div class="dashboard-item" id="weatherCard">
+                        <div class="item-header">🌤️ Weather</div>
+                        <div class="item-content">Loading...</div>
+                        <div class="item-footer">New York</div>
+                    </div>
+                    <div class="dashboard-item" id="timeCard">
+                        <div class="item-header">🕐 Time</div>
+                        <div class="item-content">Loading...</div>
+                        <div class="item-footer">UTC</div>
+                    </div>
+                    <div class="dashboard-item" id="cryptoCard">
+                        <div class="item-header">₿ Crypto</div>
+                        <div class="item-content">Loading...</div>
+                        <div class="item-footer">Bitcoin</div>
+                    </div>
+                    <div class="dashboard-item" id="newsCard">
+                        <div class="item-header">📰 News</div>
+                        <div class="item-content">Loading...</div>
+                        <div class="item-footer">Technology</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Typing Indicator -->
+            <div class="typing-indicator" id="typingIndicator" style="display: none;">
+                <div class="typing-dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <span class="typing-text">AI is thinking...</span>
+            </div>
             
             <!-- Input Container -->
             <div class="input-container">
@@ -701,12 +1049,31 @@
             addMainMessage(message, true);
             input.value = '';
             
+            // Show typing indicator
+            showTypingIndicator();
+            
+            // Start response timer
+            const startTime = Date.now();
+            
             // Send to AI with image if available
             if (uploadedImage && uploadedImageData) {
                 sendToAIWithImage(message, uploadedImageData);
             } else {
                 sendToAI(message);
             }
+            
+            // Hide typing indicator
+            hideTypingIndicator();
+            
+            // Update response time
+            const responseTime = Date.now() - startTime;
+            const responseTimeElement = document.getElementById('responseTime');
+            responseTimeElement.textContent = `${responseTime}ms`;
+            
+            // Add response time to status
+            setTimeout(() => {
+                responseTimeElement.textContent = 'Ready';
+            }, 5000);
         }
 
         // Send message from chat input
@@ -1177,6 +1544,20 @@
                 
                 if (data.success) {
                     addMainMessage(data.response, false);
+                    
+                    // Real-time model info
+                    const modelInfo = document.createElement('div');
+                    modelInfo.className = 'model-indicator';
+                    modelInfo.innerHTML = `
+                        <small style="color: #8b5cf6; font-size: 12px; opacity: 0.8;">
+                            Powered by GPT-4o • ${data.tokens_used || 0} tokens
+                        </small>
+                    `;
+                    
+                    const lastMessage = document.querySelector('.main-messages .message.ai:last-child');
+                    if (lastMessage) {
+                        lastMessage.appendChild(modelInfo);
+                    }
                 } else {
                     addMainMessage(`Error: ${data.error}`, false);
                 }
@@ -1206,6 +1587,20 @@
                 
                 if (data.success) {
                     addMainMessage(data.response, false);
+                    
+                    // Real-time model info for image analysis
+                    const modelInfo = document.createElement('div');
+                    modelInfo.className = 'model-indicator';
+                    modelInfo.innerHTML = `
+                        <small style="color: #8b5cf6; font-size: 12px; opacity: 0.8;">
+                            Powered by GPT-4o (Image Analysis) • ${data.tokens_used || 0} tokens
+                        </small>
+                    `;
+                    
+                    const lastMessage = document.querySelector('.main-messages .message.ai:last-child');
+                    if (lastMessage) {
+                        lastMessage.appendChild(modelInfo);
+                    }
                 } else {
                     addMainMessage(`Error: ${data.error}`, false);
                 }
@@ -1219,7 +1614,447 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Test backend connection
             testBackend();
+            
+            // Start real-time updates
+            startRealTimeUpdates();
+            
+            // Initialize connection monitoring
+            monitorConnection();
         });
+
+        // Real-time Updates System
+        let realTimeInterval;
+        let connectionMonitorInterval;
+
+        function startRealTimeUpdates() {
+            // Update response time every second
+            realTimeInterval = setInterval(() => {
+                updateResponseTime();
+            }, 1000);
+            
+            // Update live data every 30 seconds
+            setInterval(() => {
+                updateLiveData();
+            }, 30000);
+            
+            // Initial load of live data
+            setTimeout(() => {
+                loadLiveData();
+            }, 1000);
+        }
+
+        function updateResponseTime() {
+            const responseTimeElement = document.getElementById('responseTime');
+            const now = new Date();
+            const timeString = now.toLocaleTimeString();
+            responseTimeElement.textContent = `Last: ${timeString}`;
+        }
+
+        function updateLiveData() {
+            // Update weather, time, crypto, etc.
+            fetchLiveWeather();
+            fetchLiveTime();
+            fetchLiveCrypto();
+            fetchLiveNews();
+        }
+
+        function loadLiveData() {
+            // Load all live data initially
+            updateLiveData();
+            showNotification('Live data loaded successfully!', 'success');
+        }
+
+        function refreshLiveData() {
+            const refreshBtn = document.querySelector('.refresh-btn');
+            refreshBtn.textContent = '⏳ Updating...';
+            refreshBtn.disabled = true;
+            
+            // Refresh all data
+            Promise.all([
+                fetchLiveWeather(),
+                fetchLiveTime(),
+                fetchLiveCrypto(),
+                fetchLiveNews()
+            ]).then(() => {
+                showNotification('Live data refreshed!', 'success');
+                refreshBtn.textContent = '🔄 Refresh';
+                refreshBtn.disabled = false;
+            }).catch(() => {
+                showNotification('Some data failed to refresh', 'warning');
+                refreshBtn.textContent = '🔄 Refresh';
+                refreshBtn.disabled = false;
+            });
+        }
+
+        async function fetchLiveWeather() {
+            try {
+                const card = document.getElementById('weatherCard');
+                card.classList.add('updating');
+                
+                const response = await fetch('/api/real-time/weather?city=New York');
+                const data = await response.json();
+                
+                if (data.success) {
+                    updateDashboardCard('weatherCard', data.data, 'New York');
+                } else {
+                    updateDashboardCard('weatherCard', 'Data unavailable', 'New York');
+                }
+            } catch (error) {
+                updateDashboardCard('weatherCard', 'Connection failed', 'New York');
+            } finally {
+                setTimeout(() => {
+                    document.getElementById('weatherCard').classList.remove('updating');
+                }, 1000);
+            }
+        }
+
+        async function fetchLiveTime() {
+            try {
+                const card = document.getElementById('timeCard');
+                card.classList.add('updating');
+                
+                const response = await fetch('/api/real-time/time?timezone=UTC');
+                const data = await response.json();
+                
+                if (data.success) {
+                    updateDashboardCard('timeCard', data.data, 'UTC');
+                } else {
+                    updateDashboardCard('timeCard', 'Data unavailable', 'UTC');
+                }
+            } catch (error) {
+                updateDashboardCard('timeCard', 'Connection failed', 'UTC');
+            } finally {
+                setTimeout(() => {
+                    document.getElementById('timeCard').classList.remove('updating');
+                }, 1000);
+            }
+        }
+
+        async function fetchLiveCrypto() {
+            try {
+                const card = document.getElementById('cryptoCard');
+                card.classList.add('updating');
+                
+                const response = await fetch('/api/real-time/crypto?symbol=btc');
+                const data = await response.json();
+                
+                if (data.success) {
+                    updateDashboardCard('cryptoCard', data.data, 'Bitcoin');
+                } else {
+                    updateDashboardCard('cryptoCard', 'Data unavailable', 'Bitcoin');
+                }
+            } catch (error) {
+                updateDashboardCard('cryptoCard', 'Connection failed', 'Bitcoin');
+            } finally {
+                setTimeout(() => {
+                    document.getElementById('cryptoCard').classList.remove('updating');
+                }, 1000);
+            }
+        }
+
+        async function fetchLiveNews() {
+            try {
+                const card = document.getElementById('newsCard');
+                card.classList.add('updating');
+                
+                const response = await fetch('/api/real-time/news?topic=technology&limit=1');
+                const data = await response.json();
+                
+                if (data.success) {
+                    const newsText = data.data.split('\n')[1]?.replace('1. ', '') || 'No recent news';
+                    updateDashboardCard('newsCard', newsText, 'Technology');
+                } else {
+                    updateDashboardCard('newsCard', 'Data unavailable', 'Technology');
+                }
+            } catch (error) {
+                updateDashboardCard('newsCard', 'Connection failed', 'Technology');
+            } finally {
+                setTimeout(() => {
+                    document.getElementById('newsCard').classList.remove('updating');
+                }, 1000);
+            }
+        }
+
+        function updateDashboardCard(cardId, content, footer) {
+            const card = document.getElementById(cardId);
+            const contentElement = card.querySelector('.item-content');
+            const footerElement = card.querySelector('.item-footer');
+            
+            contentElement.textContent = content;
+            footerElement.textContent = footer;
+            
+            // Add update animation
+            card.style.animation = 'fadeIn 0.5s ease-in';
+            setTimeout(() => {
+                card.style.animation = '';
+            }, 500);
+        }
+
+        function showLiveDataUpdate(type, data) {
+            // Create or update live data display
+            let liveDataElement = document.getElementById(`live-${type.toLowerCase()}`);
+            if (!liveDataElement) {
+                liveDataElement = document.createElement('div');
+                liveDataElement.id = `live-${type.toLowerCase()}`;
+                liveDataElement.className = 'live-data';
+                document.querySelector('.main-content').insertBefore(liveDataElement, document.getElementById('mainMessages'));
+            }
+            
+            liveDataElement.innerHTML = `
+                <strong>${type}:</strong> ${data}
+                <small style="opacity: 0.7; margin-left: 10px;">${new Date().toLocaleTimeString()}</small>
+            `;
+            
+            // Add updating animation
+            liveDataElement.classList.add('updating');
+            setTimeout(() => {
+                liveDataElement.classList.remove('updating');
+            }, 1000);
+        }
+
+        // Notification System
+        function showNotification(message, type = 'info', duration = 3000) {
+            // Remove existing notifications
+            const existingNotifications = document.querySelectorAll('.notification');
+            existingNotifications.forEach(notification => notification.remove());
+            
+            // Create new notification
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span>${getNotificationIcon(type)}</span>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Show notification
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            // Hide notification after duration
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, duration);
+        }
+
+        function getNotificationIcon(type) {
+            switch (type) {
+                case 'success': return '✅';
+                case 'error': return '❌';
+                case 'warning': return '⚠️';
+                default: return 'ℹ️';
+            }
+        }
+
+        // Connection Monitoring
+        function monitorConnection() {
+            connectionMonitorInterval = setInterval(() => {
+                checkConnection();
+            }, 5000); // Check every 5 seconds
+        }
+
+        async function checkConnection() {
+            const statusElement = document.getElementById('connectionStatus');
+            const statusItem = statusElement.parentElement;
+            
+            try {
+                const response = await fetch('/debug', { 
+                    method: 'GET',
+                    signal: AbortSignal.timeout(3000) // 3 second timeout
+                });
+                
+                if (response.ok) {
+                    statusElement.textContent = 'Connected';
+                    statusItem.className = 'status-item connected';
+                } else {
+                    throw new Error('Response not ok');
+                }
+            } catch (error) {
+                statusElement.textContent = 'Disconnected';
+                statusItem.className = 'status-item disconnected';
+            }
+        }
+
+        // Typing Indicator Functions
+        function showTypingIndicator() {
+            const typingIndicator = document.getElementById('typingIndicator');
+            typingIndicator.style.display = 'flex';
+            typingIndicator.style.animation = 'fadeIn 0.3s ease-in';
+        }
+
+        function hideTypingIndicator() {
+            const typingIndicator = document.getElementById('typingIndicator');
+            typingIndicator.style.display = 'none';
+        }
+
+        // Enhanced Message Functions with Real-time Features
+        function addMainMessage(content, isUser = false) {
+            const mainMessages = document.getElementById('mainMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user' : 'ai'}`;
+            
+            const avatar = document.createElement('div');
+            avatar.className = `avatar ${isUser ? 'user' : 'ai'}`;
+            avatar.textContent = isUser ? '👤' : '🤖';
+            
+            const messageContent = document.createElement('div');
+            messageContent.className = 'message-content';
+            messageContent.textContent = content;
+            
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(messageContent);
+            mainMessages.appendChild(messageDiv);
+            
+            // Real-time scroll with smooth animation
+            mainMessages.scrollTo({
+                top: mainMessages.scrollHeight,
+                behavior: 'smooth'
+            });
+            
+            // Add real-time timestamp
+            const timestamp = document.createElement('div');
+            timestamp.className = 'message-timestamp';
+            timestamp.textContent = new Date().toLocaleTimeString();
+            timestamp.style.cssText = 'font-size: 11px; opacity: 0.6; margin-top: 5px; text-align: right;';
+            messageDiv.appendChild(timestamp);
+        }
+
+        // Enhanced Send Message with Real-time Features
+        async function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // Clear previous messages for a fresh conversation
+            const mainMessages = document.getElementById('mainMessages');
+            mainMessages.innerHTML = '';
+            
+            // Add user message to main page
+            addMainMessage(message, true);
+            input.value = '';
+            
+            // Show typing indicator
+            showTypingIndicator();
+            
+            // Start response timer
+            const startTime = Date.now();
+            
+            // Send to AI with image if available
+            if (uploadedImage && uploadedImageData) {
+                await sendToAIWithImage(message, uploadedImageData);
+            } else {
+                await sendToAI(message);
+            }
+            
+            // Hide typing indicator
+            hideTypingIndicator();
+            
+            // Update response time
+            const responseTime = Date.now() - startTime;
+            const responseTimeElement = document.getElementById('responseTime');
+            responseTimeElement.textContent = `${responseTime}ms`;
+            
+            // Add response time to status
+            setTimeout(() => {
+                responseTimeElement.textContent = 'Ready';
+            }, 5000);
+        }
+
+        // Enhanced AI Functions with Real-time Features
+        async function sendToAI(message) {
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        personality: 'default',
+                        use_memory: true,
+                        provider: 'openai',
+                        model: 'gpt-4o'
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    addMainMessage(data.response, false);
+                    
+                    // Real-time model info
+                    const modelInfo = document.createElement('div');
+                    modelInfo.className = 'model-indicator';
+                    modelInfo.innerHTML = `
+                        <small style="color: #8b5cf6; font-size: 12px; opacity: 0.8;">
+                            Powered by GPT-4o • ${data.tokens_used || 0} tokens
+                        </small>
+                    `;
+                    
+                    const lastMessage = document.querySelector('.main-messages .message.ai:last-child');
+                    if (lastMessage) {
+                        lastMessage.appendChild(modelInfo);
+                    }
+                } else {
+                    addMainMessage(`Error: ${data.error}`, false);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                addMainMessage('Sorry, I encountered an error. Please try again.', false);
+            }
+        }
+
+        async function sendToAIWithImage(message, imageData) {
+            try {
+                const response = await fetch('/api/chat-with-image', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        image_data: imageData,
+                        personality: 'default',
+                        use_memory: true
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    addMainMessage(data.response, false);
+                    
+                    // Real-time model info for image analysis
+                    const modelInfo = document.createElement('div');
+                    modelInfo.className = 'model-indicator';
+                    modelInfo.innerHTML = `
+                        <small style="color: #8b5cf6; font-size: 12px; opacity: 0.8;">
+                            Powered by GPT-4o (Image Analysis) • ${data.tokens_used || 0} tokens
+                        </small>
+                    `;
+                    
+                    const lastMessage = document.querySelector('.main-messages .message.ai:last-child');
+                    if (lastMessage) {
+                        lastMessage.appendChild(modelInfo);
+                    }
+                } else {
+                    addMainMessage(`Error: ${data.error}`, false);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                addMainMessage('Sorry, I encountered an error. Please try again.', false);
+            }
+        }
     </script>
 </body>
 </html>
