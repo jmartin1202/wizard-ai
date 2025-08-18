@@ -1661,8 +1661,7 @@
         }
 
         // Image upload functionality
-        let uploadedImage = null;
-        let uploadedImageData = null;
+        // Variables are declared globally below
 
         function triggerImageUpload() {
             document.getElementById('imageUploadInput').click();
@@ -2318,7 +2317,7 @@
                                         <label style="display: flex; align-items: center; color: white; margin-bottom: 8px; font-weight: 500; cursor: pointer;">
                                             <input type="checkbox" id="ttsEnabled" ${currentSettings.ttsEnabled ? 'checked' : ''} onchange="updateSetting('ttsEnabled', this.checked)" style="
                                                 margin-right: 10px;
-                                                transform: scale(1.2;
+                                                transform: scale(1.2);
                                             ">
                                             Text-to-Speech
                                         </label>
@@ -2328,7 +2327,7 @@
                                         <label style="display: flex; align-items: center; color: white; margin-bottom: 8px; font-weight: 500; cursor: pointer;">
                                             <input type="checkbox" id="autoSave" ${currentSettings.autoSave ? 'checked' : ''} onchange="updateSetting('autoSave', this.checked)" style="
                                                 margin-right: 10px;
-                                                transform: scale(1.2;
+                                                transform: scale(1.2);
                                             ">
                                             Auto-save Conversations
                                         </label>
@@ -2509,7 +2508,7 @@
         }
 
         // Text-to-Speech Functionality
-        let ttsEnabled = false;
+        // Variables are declared globally below
         let speechSynthesis = window.speechSynthesis;
 
         function toggleTTS() {
