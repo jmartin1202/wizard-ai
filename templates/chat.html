@@ -100,247 +100,7 @@
             z-index: -1;
         }
 
-        /* AI Response Modal */
-        .ai-response-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 1000;
-            display: none;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
 
-        .ai-response-modal.show {
-            display: flex;
-            opacity: 1;
-        }
-
-        .ai-response-content {
-            background: white;
-            width: 90%;
-            max-width: 800px;
-            height: 90%;
-            margin: auto;
-            border-radius: 16px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            transform: translateY(20px);
-            transition: transform 0.3s ease;
-        }
-
-        .ai-response-modal.show .ai-response-content {
-            transform: translateY(0);
-        }
-
-        .ai-response-header {
-            padding: 24px 32px 16px;
-            border-bottom: 1px solid #e0e0e0;
-            background: #f8f9fa;
-            border-radius: 16px 16px 0 0;
-        }
-
-        .ai-response-title {
-            font-size: 24px;
-            font-weight: 600;
-            color: #1a1a1a;
-            margin: 0;
-            line-height: 1.3;
-        }
-
-        .ai-response-body {
-            flex: 1;
-            padding: 32px;
-            overflow-y: auto;
-            background: white;
-        }
-
-        .ai-response-text {
-            font-size: 16px;
-            line-height: 1.6;
-            color: #333;
-            margin-bottom: 20px;
-        }
-
-        .ai-response-text h1,
-        .ai-response-text h2,
-        .ai-response-text h3 {
-            color: #1a1a1a;
-            margin-top: 24px;
-            margin-bottom: 16px;
-        }
-
-        .ai-response-text h1 {
-            font-size: 22px;
-            font-weight: 600;
-        }
-
-        .ai-response-text h2 {
-            font-size: 20px;
-            font-weight: 600;
-        }
-
-        .ai-response-text h3 {
-            font-size: 18px;
-            font-weight: 600;
-        }
-
-        .ai-response-text ul,
-        .ai-response-text ol {
-            margin: 16px 0;
-            padding-left: 24px;
-        }
-
-        .ai-response-text li {
-            margin: 8px 0;
-            line-height: 1.5;
-        }
-
-        .ai-response-text p {
-            margin: 16px 0;
-        }
-
-        .ai-response-footer {
-            padding: 16px 32px 24px;
-            border-top: 1px solid #e0e0e0;
-            background: #f8f9fa;
-            border-radius: 0 0 16px 16px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .ai-response-input {
-            flex: 1;
-            padding: 12px 16px;
-            border: 1px solid #ddd;
-            border-radius: 24px;
-            font-size: 16px;
-            outline: none;
-            transition: border-color 0.2s ease;
-        }
-
-        .ai-response-input:focus {
-            border-color: #6200ee;
-        }
-
-        .ai-response-input::placeholder {
-            color: #999;
-        }
-
-        .ai-response-actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        .ai-response-btn {
-            padding: 12px 16px;
-            border: none;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .ai-response-btn.primary {
-            background: #6200ee;
-            color: white;
-        }
-
-        .ai-response-btn.primary:hover {
-            background: #5000d6;
-        }
-
-        .ai-response-btn.secondary {
-            background: #f0f0f0;
-            color: #333;
-        }
-
-        .ai-response-btn.secondary:hover {
-            background: #e0e0e0;
-        }
-
-        .ai-response-btn svg {
-            width: 16px;
-            height: 16px;
-        }
-
-        .close-modal-btn {
-            position: absolute;
-            top: 16px;
-            right: 16px;
-            background: rgba(255, 255, 255, 0.9);
-            border: none;
-            border-radius: 50%;
-            width: 32px;
-            height: 32px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            color: #666;
-            transition: all 0.2s ease;
-        }
-
-        .close-modal-btn:hover {
-            background: white;
-            color: #333;
-        }
-
-        /* Dark mode support */
-        .dark-mode .ai-response-content {
-            background: #1a1a1a;
-            color: white;
-        }
-
-        .dark-mode .ai-response-header,
-        .dark-mode .ai-response-footer {
-            background: #2d2d2d;
-            border-color: #404040;
-        }
-
-        .dark-mode .ai-response-title {
-            color: white;
-        }
-
-        .dark-mode .ai-response-text {
-            color: #e0e0e0;
-        }
-
-        .dark-mode .ai-response-text h1,
-        .dark-mode .ai-response-text h2,
-        .dark-mode .ai-response-text h3 {
-            color: white;
-        }
-
-        .dark-mode .ai-response-input {
-            background: #2d2d2d;
-            border-color: #404040;
-            color: white;
-        }
-
-        .dark-mode .ai-response-input::placeholder {
-            color: #999;
-        }
-
-        .dark-mode .ai-response-btn.secondary {
-            background: #404040;
-            color: #e0e0e0;
-        }
-
-        .dark-mode .ai-response-btn.secondary:hover {
-            background: #505050;
-        }
 
         body.light-mode {
             background: var(--light-bg-primary);
@@ -906,40 +666,7 @@
     <!-- Voice Status Indicator -->
     <div class="voice-status" id="voiceStatus">Listening...</div>
     
-    <!-- AI Response Modal -->
-    <div class="ai-response-modal" id="aiResponseModal">
-        <div class="ai-response-content">
-            <button class="close-modal-btn" onclick="closeAIResponseModal()">×</button>
-            
-            <div class="ai-response-header">
-                <h1 class="ai-response-title" id="aiResponseTitle">AI Response</h1>
-            </div>
-            
-            <div class="ai-response-body">
-                <div class="ai-response-text" id="aiResponseText">
-                    <!-- AI response content will be inserted here -->
-                </div>
-            </div>
-            
-            <div class="ai-response-footer">
-                <input type="text" class="ai-response-input" id="aiResponseInput" placeholder="Ask anything" onkeypress="handleAIResponseInput(event)">
-                <div class="ai-response-actions">
-                    <button class="ai-response-btn secondary" onclick="startVoiceInputInModal()" title="Voice Input">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
-                            <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
-                        </svg>
-                    </button>
-                    <button class="ai-response-btn primary" onclick="sendAIResponseMessage()">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
-                        </svg>
-                        Send
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
+
     
     <!-- Hidden File Input for Image Upload -->
     <input type="file" id="imageUploadInput" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
@@ -1212,10 +939,10 @@
                 if (response.ok) {
                     const data = await response.json();
                     if (data.success && data.response) {
-                        // Remove loading message and show AI response in modal
+                        // Remove loading message and add AI response
                         const chatMessages = document.getElementById('chatMessages');
                         chatMessages.removeChild(chatMessages.lastChild);
-                        showAIResponseModal(message, data.response);
+                        addMessage(data.response, false);
                     } else {
                         const chatMessages = document.getElementById('chatMessages');
                         chatMessages.removeChild(chatMessages.lastChild);
@@ -1251,8 +978,7 @@
                 if (response.ok) {
                     const data = await response.json();
                     if (data.success && data.response) {
-                        // Show AI response in modal instead of chat
-                        showAIResponseModal(message, data.response);
+                        addMessage(data.response, false);
                     } else {
                         addMessage('Sorry, I encountered an error. Please try again.', false);
                     }
@@ -1554,133 +1280,13 @@
             }
         }
 
-        // AI Response Modal Functions
-        function showAIResponseModal(title, content) {
-            const modal = document.getElementById('aiResponseModal');
-            const titleElement = document.getElementById('aiResponseTitle');
-            const contentElement = document.getElementById('aiResponseText');
-            
-            // Set the title and content
-            titleElement.textContent = title;
-            contentElement.innerHTML = content;
-            
-            // Show the modal with animation
-            modal.classList.add('show');
-            
-            // Focus the input field
-            setTimeout(() => {
-                document.getElementById('aiResponseInput').focus();
-            }, 300);
-        }
 
-        function closeAIResponseModal() {
-            const modal = document.getElementById('aiResponseModal');
-            modal.classList.remove('show');
-            
-            // Clear the input
-            document.getElementById('aiResponseInput').value = '';
-        }
-
-        function handleAIResponseInput(event) {
-            if (event.key === 'Enter') {
-                sendAIResponseMessage();
-            }
-        }
-
-        function sendAIResponseMessage() {
-            const input = document.getElementById('aiResponseInput');
-            const message = input.value.trim();
-            
-            if (message) {
-                // Close the modal first
-                closeAIResponseModal();
-                
-                // Send the message using the existing chat system
-                if (document.getElementById('chatContainer').style.display !== 'none') {
-                    // We're in chat view
-                    document.getElementById('chatInput').value = message;
-                    sendChatMessage();
-                } else {
-                    // We're in main view
-                    document.getElementById('messageInput').value = message;
-                    sendMessage();
-                }
-            }
-        }
-
-        function startVoiceInputInModal() {
-            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-                alert('Voice input is not supported in your browser. Please use Chrome or Edge.');
-                return;
-            }
-
-            if (isListening) {
-                stopVoiceInput();
-                return;
-            }
-
-            // Initialize speech recognition
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            recognition = new SpeechRecognition();
-            
-            recognition.continuous = false;
-            recognition.interimResults = false;
-            recognition.lang = 'en-US';
-
-            // Start listening
-            recognition.start();
-            isListening = true;
-            updateVoiceIcon(true);
-            showVoiceStatus('Listening... Speak now!');
-
-            // Set up event handlers
-            recognition.onresult = function(event) {
-                const transcript = event.results[0][0].transcript;
-                console.log('Voice input in modal:', transcript);
-                
-                // Fill the modal input with transcript
-                document.getElementById('aiResponseInput').value = transcript;
-                document.getElementById('aiResponseInput').focus();
-                
-                showVoiceStatus(`"${transcript}" - Ready to send!`);
-                stopVoiceInput();
-            };
-
-            recognition.onerror = function(event) {
-                console.error('Speech recognition error:', event.error);
-                showVoiceStatus('Voice input error. Please try again.');
-                stopVoiceInput();
-            };
-
-            recognition.onend = function() {
-                isListening = false;
-                updateVoiceIcon(false);
-                hideVoiceStatus();
-            };
-        }
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             initTheme();
             // Test backend connection
             testBackend();
-            
-            // Add modal event listeners
-            const modal = document.getElementById('aiResponseModal');
-            
-            // Close modal when clicking outside
-            modal.addEventListener('click', function(event) {
-                if (event.target === modal) {
-                    closeAIResponseModal();
-                }
-            });
-            
-            // Close modal with Escape key
-            document.addEventListener('keydown', function(event) {
-                if (event.key === 'Escape' && modal.classList.contains('show')) {
-                    closeAIResponseModal();
-                }
-            });
         });
     </script>
 </body>
