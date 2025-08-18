@@ -1935,6 +1935,14 @@
             } else {
                 console.error('openSettings function is NOT available!');
             }
+            
+            // Apply current theme on page load
+            const currentTheme = localStorage.getItem('theme') || 'dark';
+            applyTheme(currentTheme);
+            
+            // Apply current TTS setting
+            const currentTTS = localStorage.getItem('ttsEnabled') === 'true';
+            updateTTS(currentTTS);
         });
 
         // Real-time Updates System
@@ -2593,10 +2601,109 @@
                 document.body.classList.add(theme);
             }
             
+            // Update the entire app theme
+            const isDark = document.body.classList.contains('dark');
+            
+            if (isDark) {
+                // Dark theme - apply dark styles
+                document.body.style.background = '#0a0a0a';
+                document.body.style.color = '#ffffff';
+                
+                // Update main content colors
+                const mainContent = document.querySelector('.main-content');
+                if (mainContent) {
+                    mainContent.style.color = '#ffffff';
+                }
+                
+                // Update title colors
+                const mainTitle = document.querySelector('.main-title');
+                if (mainTitle) {
+                    mainTitle.style.color = '#ffffff';
+                }
+                
+                const mainSubtitle = document.querySelector('.main-subtitle');
+                if (mainSubtitle) {
+                    mainSubtitle.style.color = 'rgba(255, 255, 255, 0.9)';
+                }
+                
+                // Update input field colors
+                const inputFields = document.querySelectorAll('.input-field');
+                inputFields.forEach(field => {
+                    field.style.background = '#2a2a2a';
+                    field.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                    field.style.color = '#ffffff';
+                });
+                
+                // Update message colors
+                const messageContents = document.querySelectorAll('.message-content');
+                messageContents.forEach(msg => {
+                    if (!msg.classList.contains('user')) {
+                        msg.style.background = '#2a2a2a';
+                        msg.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                        msg.style.color = '#ffffff';
+                    }
+                });
+                
+                // Update clear chat button
+                const clearChatBtn = document.querySelector('.clear-chat-btn');
+                if (clearChatBtn) {
+                    clearChatBtn.style.background = 'rgba(255, 255, 255, 0.1)';
+                    clearChatBtn.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+                    clearChatBtn.style.color = 'rgba(255, 255, 255, 0.7)';
+                }
+                
+            } else {
+                // Light theme - apply light styles
+                document.body.style.background = '#ffffff';
+                document.body.style.color = '#212529';
+                
+                // Update main content colors
+                const mainContent = document.querySelector('.main-content');
+                if (mainContent) {
+                    mainContent.style.color = '#212529';
+                }
+                
+                // Update title colors
+                const mainTitle = document.querySelector('.main-title');
+                if (mainTitle) {
+                    mainTitle.style.color = '#212529';
+                }
+                
+                const mainSubtitle = document.querySelector('.main-subtitle');
+                if (mainSubtitle) {
+                    mainSubtitle.style.color = '#6c757d';
+                }
+                
+                // Update input field colors
+                const inputFields = document.querySelectorAll('.input-field');
+                inputFields.forEach(field => {
+                    field.style.background = '#f8f9fa';
+                    field.style.borderColor = '#ced4da';
+                    field.style.color = '#212529';
+                });
+                
+                // Update message colors
+                const messageContents = document.querySelectorAll('.message-content');
+                messageContents.forEach(msg => {
+                    if (!msg.classList.contains('user')) {
+                        msg.style.background = '#f8f9fa';
+                        msg.style.borderColor = '#dee2e6';
+                        msg.style.color = '#212529';
+                    }
+                });
+                
+                // Update clear chat button
+                const clearChatBtn = document.querySelector('.clear-chat-btn');
+                if (clearChatBtn) {
+                    clearChatBtn.style.background = 'rgba(0, 0, 0, 0.1)';
+                    clearChatBtn.style.borderColor = 'rgba(0, 0, 0, 0.2)';
+                    clearChatBtn.style.color = 'rgba(0, 0, 0, 0.7)';
+                }
+            }
+            
             // Update settings modal colors based on theme
             const settingsModal = document.getElementById('settingsModal');
             if (settingsModal) {
-                const isDark = document.body.classList.contains('dark');
                 const modalContent = settingsModal.querySelector('div > div');
                 const modalHeader = modalContent.querySelector('div:first-child');
                 const modalBody = modalContent.querySelector('div:last-child');
@@ -2670,27 +2777,18 @@
         function saveAllSettings() {
             // Collect all current values from the form
             const settings = {
-                botName: document.getElementById('botName').value,
-                botDescription: document.getElementById('botDescription').value,
-                apiKey: document.getElementById('apiKey').value,
-                selectedModel: document.getElementById('selectedModel').value,
-                creativityLevel: document.getElementById('creativityLevel').value,
                 theme: document.getElementById('theme').value,
                 language: document.getElementById('language').value,
                 ttsEnabled: document.getElementById('ttsEnabled').checked,
-                maxTokens: document.getElementById('maxTokens').value,
-                timeout: document.getElementById('timeout').value,
-                autoSave: document.getElementById('autoSave').checked,
-                dataRetention: document.getElementById('dataRetention').value
+                autoSave: document.getElementById('autoSave').checked
             };
             
             // Save all settings to localStorage
             Object.entries(settings).forEach(([key, value]) => {
-                localStorage.setItem(key, value);
+                localStorage.setItem(key === 'language' ? 'preferredLanguage' : key, value);
             });
             
             // Apply all changes
-            updateBotName(settings.botName);
             applyTheme(settings.theme);
             updateTTS(settings.ttsEnabled);
             
@@ -2704,27 +2802,17 @@
             if (confirm('Are you sure you want to reset all settings to defaults? This cannot be undone.')) {
                 // Clear all custom settings
                 const keysToRemove = [
-                    'botName', 'botDescription', 'apiKey', 'selectedModel', 'creativityLevel',
-                    'theme', 'preferredLanguage', 'ttsEnabled', 'maxTokens', 'timeout',
-                    'autoSave', 'dataRetention'
+                    'theme', 'preferredLanguage', 'ttsEnabled', 'autoSave'
                 ];
                 
                 keysToRemove.forEach(key => localStorage.removeItem(key));
                 
                 // Reset form values
                 const defaultSettings = {
-                    botName: 'Query AI',
-                    botDescription: 'Your intelligent AI assistant',
-                    apiKey: '',
-                    selectedModel: 'gpt-4o',
-                    creativityLevel: '0.7',
                     theme: 'dark',
                     language: 'en-US',
                     ttsEnabled: false,
-                    maxTokens: '1000',
-                    timeout: '30',
-                    autoSave: true,
-                    dataRetention: '30'
+                    autoSave: true
                 };
                 
                 // Update form fields
@@ -2740,7 +2828,6 @@
                 });
                 
                 // Apply default changes
-                updateBotName(defaultSettings.botName);
                 applyTheme(defaultSettings.theme);
                 updateTTS(defaultSettings.ttsEnabled);
                 
