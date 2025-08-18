@@ -37,20 +37,9 @@
             --dark-card-border: rgba(255, 255, 255, 0.08);
             --dark-card-shadow: rgba(0, 0, 0, 0.4);
             
-            /* Light Theme Colors */
-            --light-bg-primary: #ffffff;
-            --light-bg-secondary: #f8fafc;
-            --light-bg-tertiary: #e2e8f0;
-            --light-bg-quaternary: #cbd5e1;
-            --light-bg-quinary: #94a3b8;
-            --light-bg-septenary: #64748b;
-            --light-bg-septenary: #475569;
-            
             /* Text Colors */
             --text-primary: #ffffff;
             --text-secondary: rgba(255, 255, 255, 0.9);
-            --light-text-primary: #1e293b;
-            --light-text-secondary: #475569;
             
             /* Enhanced Dark Mode Text Colors */
             --dark-text-primary: #ffffff;
@@ -61,18 +50,12 @@
             /* Accent Colors */
             --accent-primary: #8b5cf6;
             --accent-secondary: #a855f7;
-            --light-accent-primary: #3b82f6;
-            --light-accent-secondary: #1d4ed8;
             
             /* Enhanced Theme Colors */
             --dark-surface: #1a1a2e;
             --dark-surface-hover: #16213e;
-            --light-surface: #ffffff;
-            --light-surface-hover: #f8fafc;
             --dark-border: rgba(255, 255, 255, 0.1);
-            --light-border: rgba(0, 0, 0, 0.1);
             --dark-shadow: rgba(0, 0, 0, 0.3);
-            --light-shadow: rgba(0, 0, 0, 0.1);
             
             /* Smooth Transitions */
             --transition-speed: 0.3s;
@@ -107,57 +90,7 @@
             color: var(--light-text-primary);
         }
 
-        /* Top Navigation Bar */
-        .top-nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 64px;
-            background: var(--bg-secondary);
-            border-bottom: 1px solid var(--dark-border);
-            display: flex;
-            align-items: center;
-            padding: 0 20px;
-            z-index: 1000;
-            backdrop-filter: blur(20px);
-        }
 
-        .nav-left {
-             display: flex;
-             align-items: center;
-            gap: 20px;
-        }
-
-
-
-
-
-        .nav-right {
-            margin-left: auto;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .nav-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all var(--transition-speed) var(--transition-ease);
-            color: var(--text-secondary);
-            font-size: 20px;
-            font-weight: bold;
-        }
-
-        .nav-icon:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--text-primary);
-        }
 
 
 
@@ -166,8 +99,8 @@
         /* Main Content Area */
         .main-content {
             margin-left: 0;
-            margin-top: 64px;
-            min-height: calc(100vh - 64px);
+            margin-top: 0;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -250,23 +183,7 @@
             color: var(--text-primary);
         }
 
-        /* Light mode support for main messages */
-        .light-mode .main-messages .message-content {
-            background: var(--light-bg-secondary);
-            border-color: var(--light-border);
-            color: var(--light-text-primary);
-        }
 
-        .light-mode .main-messages .message.user .message-content {
-            background: var(--light-accent-primary);
-            color: white;
-            border-color: var(--light-accent-primary);
-        }
-
-        .light-mode .main-messages .message.ai .message-content {
-            background: var(--light-bg-secondary);
-            color: var(--light-text-primary);
-        }
 
         /* Input Container */
         .input-container {
@@ -623,98 +540,9 @@
             border: none;
         }
 
-        /* Settings Panel */
-        .settings-panel {
-            position: fixed;
-            top: 0;
-            right: -400px;
-            width: 400px;
-            height: 100vh;
-            background: var(--bg-secondary);
-            border-left: 1px solid var(--dark-border);
-            transition: right var(--transition-speed) var(--transition-ease);
-            z-index: 1001;
-            overflow-y: auto;
-        }
-
-        .settings-panel.open {
-            right: 0;
-        }
-
-        .settings-header {
-            padding: 20px;
-            border-bottom: 1px solid var(--dark-border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .settings-title {
-            font-size: 20px;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .settings-close {
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            font-size: 24px;
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 8px;
-            transition: all var(--transition-speed) var(--transition-ease);
-        }
-
-        .settings-close:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--text-primary);
-        }
-
-        .settings-content {
-             padding: 20px;
-        }
-
-        .settings-section {
-            margin-bottom: 24px;
-        }
-
-        .settings-section h3 {
-             font-size: 16px;
-             font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 16px;
-        }
-
-        .control-group {
-             display: flex;
-             align-items: center;
-            justify-content: space-between;
-            background: var(--bg-tertiary);
-            border: 1px solid var(--dark-border);
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 12px;
-        }
-
-        .control-label {
-             color: var(--text-secondary);
-             font-size: 14px;
-        }
-
-        /* Light Mode Adjustments */
-        body.light-mode .top-nav {
-            background: var(--light-bg-secondary);
-            border-bottom-color: var(--light-border);
-        }
 
 
 
-        body.light-mode .input-field {
-            background: var(--light-bg-tertiary);
-            border-color: var(--light-border);
-            color: var(--light-text-primary);
-        }
 
 
 
@@ -771,14 +599,7 @@
         </div>
     </div>
     
-    <!-- Top Navigation Bar -->
-    <nav class="top-nav">
-        <div class="nav-left">
-        </div>
-        <div class="nav-right">
-            <div class="nav-icon" onclick="toggleSettings()">⋮</div>
-            </div>
-    </nav>
+
 
 
 
@@ -840,72 +661,18 @@
         </div>
     </div>
 
-    <!-- Settings Panel -->
-    <div class="settings-panel" id="settingsPanel">
-        <div class="settings-header">
-            <h2 class="settings-title">Settings</h2>
-            <button class="settings-close" onclick="toggleSettings()">×</button>
-                     </div>
-        <div class="settings-content">
-            <div class="settings-section">
-                <h3>Theme</h3>
-                <div class="control-group">
-                    <span class="control-label">Dark Mode</span>
-                    <button id="themeToggle" onclick="toggleTheme()">🌙</button>
-                </div>
-            </div>
-            <div class="settings-section">
-                <h3>AI Settings</h3>
-                <div class="control-group">
-                    <span class="control-label">Use Memory</span>
-                    <input type="checkbox" id="memoryToggle" checked onchange="toggleMemory()">
-        </div>
-             </div>
-        </div>
-    </div>
+
 
     <script>
         // Global variables
         let useMemory = true;
-        let currentTheme = localStorage.getItem('theme') || 'dark';
-
-        // Initialize theme
-        function initTheme() {
-            if (currentTheme === 'light') {
-                document.body.classList.add('light-mode');
-                document.getElementById('themeToggle').textContent = '☀️';
-            } else {
-                document.body.classList.remove('light-mode');
-                document.getElementById('themeToggle').textContent = '🌙';
-            }
-        }
 
 
 
-        // Toggle theme
-        function toggleTheme() {
-            if (currentTheme === 'dark') {
-                currentTheme = 'light';
-                document.body.classList.add('light-mode');
-                document.getElementById('themeToggle').textContent = '☀️';
-            } else {
-                currentTheme = 'dark';
-                document.body.classList.remove('light-mode');
-                document.getElementById('themeToggle').textContent = '🌙';
-            }
-            localStorage.setItem('theme', currentTheme);
-        }
 
-        // Toggle settings panel
-        function toggleSettings() {
-            const panel = document.getElementById('settingsPanel');
-            panel.classList.toggle('open');
-        }
 
-        // Toggle memory
-        function toggleMemory() {
-            useMemory = document.getElementById('memoryToggle').checked;
-        }
+
+
 
         // Handle key press in main input
         function handleKeyPress(event) {
@@ -1395,7 +1162,6 @@
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
-            initTheme();
             // Test backend connection
             testBackend();
         });
