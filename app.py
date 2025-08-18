@@ -207,7 +207,7 @@ def chat_with_image():
                 'success': True,
                 'response': response['response'],
                 'personality': personality,
-                'model_used': response.get('model_used', 'GPT-4 Vision'),
+                'model_used': response.get('model_used', 'GPT-4o'),
                 'tokens_used': response.get('tokens_used', 0),
                 'conversation_length': response.get('conversation_length', 0),
                 'image_analyzed': True
@@ -272,7 +272,7 @@ def chat():
                 'success': True,
                 'response': response['response'],
                 'personality': personality,
-                'model_used': response.get('model_used', 'GPT-4'),
+                'model_used': response.get('model_used', 'GPT-4o'),
                 'tokens_used': response.get('tokens_used', 0),
                 'conversation_length': response.get('conversation_length', 0),
                 'real_time_data': response.get('real_time_data')

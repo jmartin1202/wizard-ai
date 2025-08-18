@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Advanced OpenAI Module - Enhanced AI features with GPT-4, system prompts, conversation memory, and real-time information
+Advanced OpenAI Module - Enhanced AI features with GPT-4o (latest), system prompts, conversation memory, and real-time information
 """
 
 import os
@@ -164,8 +164,8 @@ class AdvancedOpenAI:
             'friendly': "You are a warm, friendly, and approachable AI assistant. Make users feel comfortable and engaged in conversation. Share real-time information in a friendly, helpful way.",
             'educational': "You are an educational AI assistant. Explain complex topics clearly, provide examples, and help users learn effectively. Use real-time information to make learning more relevant and current."
         }
-        self.default_model = "gpt-4"  # Upgrade to GPT-4
-        self.fallback_model = "gpt-3.5-turbo"  # Fallback if GPT-4 unavailable
+        self.default_model = "gpt-4o"  # Latest GPT-4 Turbo (GPT-4o)
+        self.fallback_model = "gpt-4-turbo"  # Fallback to GPT-4 Turbo
     
     def get_conversation_key(self, user_id):
         """Generate a unique conversation key for each user"""
@@ -422,13 +422,13 @@ class AdvancedOpenAI:
                     if msg["role"] in ["user", "assistant"]:
                         messages.insert(-1, {"role": msg["role"], "content": msg["content"]})
             
-            # Use GPT-4 Vision model
-            data = {
-                "model": "gpt-4-vision-preview",
-                "max_tokens": max_tokens,
-                "temperature": temperature,
-                "messages": messages
-            }
+                            # Use GPT-4o model (latest and best for images)
+                data = {
+                    "model": "gpt-4o",
+                    "max_tokens": max_tokens,
+                    "temperature": temperature,
+                    "messages": messages
+                }
             
             headers = {
                 "Authorization": f"Bearer {self.api_key}",
@@ -450,14 +450,14 @@ class AdvancedOpenAI:
                 self.add_to_conversation(user_id, "user", f"[Image Analysis Request] {message}")
                 self.add_to_conversation(user_id, "assistant", ai_response)
                 
-                return {
-                    "success": True, 
-                    "response": ai_response,
-                    "model_used": "gpt-4-vision-preview",
-                    "tokens_used": result['usage']['total_tokens'],
-                    "conversation_length": len(self.get_conversation_context(user_id)),
-                    "image_analyzed": True
-                }
+                                    return {
+                        "success": True, 
+                        "response": ai_response,
+                        "model_used": "gpt-4o",
+                        "tokens_used": result['usage']['total_tokens'],
+                        "conversation_length": len(self.get_conversation_context(user_id)),
+                        "image_analyzed": True
+                    }
             else:
                 return {"success": False, "error": f"API error: {response.status_code} - {response.text}"}
                 
