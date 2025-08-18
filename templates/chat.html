@@ -91,8 +91,49 @@
 
 
         body.light-mode {
-            background: var(--light-bg-primary);
-            color: var(--light-text-primary);
+            background: #ffffff;
+            color: #212529;
+        }
+
+        body.light-mode .main-title {
+            color: #212529;
+        }
+
+        body.light-mode .main-subtitle {
+            color: #6c757d;
+        }
+
+        body.light-mode .input-field {
+            background: #f8f9fa;
+            border-color: #ced4da;
+            color: #212529;
+        }
+
+        body.light-mode .input-field::placeholder {
+            color: #6c757d;
+        }
+
+        body.light-mode .main-messages .message-content {
+            background: #f8f9fa;
+            border-color: #dee2e6;
+            color: #212529;
+        }
+
+        body.light-mode .main-messages .message.user .message-content {
+            background: #3B82F6;
+            color: white;
+        }
+
+        body.light-mode .clear-chat-btn {
+            background: rgba(0, 0, 0, 0.1);
+            border-color: rgba(0, 0, 0, 0.2);
+            color: rgba(0, 0, 0, 0.7);
+        }
+
+        body.light-mode .clear-chat-btn:hover {
+            background: rgba(0, 0, 0, 0.15);
+            border-color: rgba(0, 0, 0, 0.3);
+            color: rgba(0, 0, 0, 0.9);
         }
 
 
@@ -866,9 +907,9 @@
 
 
         body.light-mode .message-content {
-            background: var(--light-bg-tertiary);
-            border-color: var(--light-border);
-            color: var(--light-text-primary);
+            background: #f8f9fa;
+            border-color: #dee2e6;
+            color: #212529;
         }
 
         /* Responsive Design */
@@ -2142,7 +2183,7 @@
                         <div style="padding: 30px;">
                             <!-- Appearance & Theme Section -->
                             <div style="margin-bottom: 40px;">
-                                <h3 style="color: #3B82F6; margin: 0 0 20px 0; font-size: 18px; display: flex; align-items: center;">
+                                <h3 style="color: white; margin: 0 0 20px 0; font-size: 18px; display: flex; align-items: center;">
                                     🎨 Appearance & Theme
                                 </h3>
                                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
@@ -2191,7 +2232,7 @@
                             
                             <!-- Features Section -->
                             <div style="margin-bottom: 40px;">
-                                <h3 style="color: #3B82F6; margin: 0 0 20px 0; font-size: 18px; display: flex; align-items: center;">
+                                <h3 style="color: white; margin: 0 0 20px 0; font-size: 18px; display: flex; align-items: center;">
                                     ✨ Features
                                 </h3>
                                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
@@ -2214,46 +2255,6 @@
                                             Auto-save Conversations
                                         </label>
                                         <small style="color: #888; font-size: 12px;">Automatically save chat history</small>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Data Management Section -->
-                            <div style="margin-bottom: 40px;">
-                                <h3 style="color: #3B82F6; margin: 0 0 20px 0; font-size: 18px; display: flex; align-items: center;">
-                                    💾 Data Management
-                                </h3>
-                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                                    <div>
-                                        <label style="display: block; color: white; margin-bottom: 8px; font-weight: 500;">Data Retention (days)</label>
-                                        <select id="dataRetention" onchange="updateSetting('dataRetention', this.value)" style="
-                                            width: 100%;
-                                            padding: 12px;
-                                            border: 1px solid #444;
-                                            border-radius: 8px;
-                                            background: #2a2a2a;
-                                            color: white;
-                                            font-size: 14px;
-                                        ">
-                                            <option value="7" ${currentSettings.dataRetention === '7' ? 'selected' : ''}>7 days</option>
-                                            <option value="30" ${currentSettings.dataRetention === '30' ? 'selected' : ''}>30 days</option>
-                                            <option value="90" ${currentSettings.dataRetention === '90' ? 'selected' : ''}>90 days</option>
-                                            <option value="365" ${currentSettings.dataRetention === '365' ? 'selected' : ''}>1 year</option>
-                                            <option value="0" ${currentSettings.dataRetention === '0' ? 'selected' : ''}>Keep forever</option>
-                                        </select>
-                                    </div>
-                                    <div style="display: flex; flex-direction: column; justify-content: end;">
-                                        <button onclick="clearAllData()" style="
-                                            background: #dc2626;
-                                            color: white;
-                                            border: none;
-                                            padding: 12px 20px;
-                                            border-radius: 8px;
-                                            cursor: pointer;
-                                            font-size: 14px;
-                                            font-weight: 500;
-                                        ">Clear All Data</button>
-                                        <small style="color: #888; font-size: 12px; margin-top: 5px;">⚠️ This action cannot be undone</small>
                                     </div>
                                 </div>
                             </div>
@@ -2581,11 +2582,72 @@
         }
         
         function applyTheme(theme) {
-            document.body.className = theme;
+            // Remove existing theme classes
+            document.body.classList.remove('dark', 'light');
+            
             if (theme === 'auto') {
                 // Auto theme based on system preference
                 const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                document.body.className = prefersDark ? 'dark' : 'light';
+                document.body.classList.add(prefersDark ? 'dark' : 'light');
+            } else {
+                document.body.classList.add(theme);
+            }
+            
+            // Update settings modal colors based on theme
+            const settingsModal = document.getElementById('settingsModal');
+            if (settingsModal) {
+                const isDark = document.body.classList.contains('dark');
+                const modalContent = settingsModal.querySelector('div > div');
+                const modalHeader = modalContent.querySelector('div:first-child');
+                const modalBody = modalContent.querySelector('div:last-child');
+                
+                if (isDark) {
+                    // Dark theme
+                    modalContent.style.background = '#1a1a1a';
+                    modalHeader.style.background = 'linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%)';
+                    modalHeader.style.borderBottom = '1px solid #333';
+                    
+                    // Update text colors for dark theme
+                    const labels = modalBody.querySelectorAll('label');
+                    const headings = modalBody.querySelectorAll('h3');
+                    labels.forEach(label => label.style.color = 'white');
+                    headings.forEach(heading => heading.style.color = 'white');
+                    
+                    // Update select backgrounds
+                    const selects = modalBody.querySelectorAll('select');
+                    selects.forEach(select => {
+                        select.style.background = '#2a2a2a';
+                        select.style.color = 'white';
+                        select.style.borderColor = '#444';
+                    });
+                    
+                    // Update small text
+                    const smallTexts = modalBody.querySelectorAll('small');
+                    smallTexts.forEach(small => small.style.color = '#888');
+                } else {
+                    // Light theme
+                    modalContent.style.background = '#ffffff';
+                    modalHeader.style.background = 'linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)';
+                    modalHeader.style.borderBottom = '1px solid #dee2e6';
+                    
+                    // Update text colors for light theme
+                    const labels = modalBody.querySelectorAll('label');
+                    const headings = modalBody.querySelectorAll('h3');
+                    labels.forEach(label => label.style.color = '#212529');
+                    headings.forEach(heading => heading.style.color = '#212529');
+                    
+                    // Update select backgrounds
+                    const selects = modalBody.querySelectorAll('select');
+                    selects.forEach(select => {
+                        select.style.background = '#ffffff';
+                        select.style.color = '#212529';
+                        select.style.borderColor = '#ced4da';
+                    });
+                    
+                    // Update small text
+                    const smallTexts = modalBody.querySelectorAll('small');
+                    smallTexts.forEach(small => small.style.color = '#6c757d');
+                }
             }
         }
         
