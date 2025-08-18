@@ -188,7 +188,7 @@
         /* Clear Chat Button */
         .clear-chat-container {
             text-align: center;
-            margin: 20px 0;
+            margin: 15px 0 40px 0;
         }
 
         .clear-chat-btn {
@@ -770,16 +770,6 @@
             <!-- Main Messages Area -->
             <div class="main-messages" id="mainMessages"></div>
             
-            <!-- Clear Chat Button -->
-            <div class="clear-chat-container">
-                <button class="clear-chat-btn" onclick="clearChatHistory()" title="Clear conversation history">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M19 13H5v-2h14v2z"/>
-                    </svg>
-                    Clear Chat
-                </button>
-            </div>
-            
             <!-- Input Container -->
             <div class="input-container">
                 <input type="text" id="messageInput" class="input-field" placeholder="Ask anything" onkeypress="handleKeyPress(event)">
@@ -797,6 +787,16 @@
                     </div>
                     <button class="send-button" onclick="sendMessage()">↑</button>
                 </div>
+            </div>
+            
+            <!-- Clear Chat Button -->
+            <div class="clear-chat-container">
+                <button class="clear-chat-btn" onclick="clearChatHistory()" title="Clear conversation history">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 13H5v-2h14v2z"/>
+                    </svg>
+                    Clear Chat
+                </button>
             </div>
             <!-- Footer -->
         </div>
