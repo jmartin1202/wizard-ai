@@ -164,6 +164,49 @@ class AdvancedOpenAI:
         self.fallback_model = "gpt-4-turbo"  # Fallback to GPT-4 Turbo
         self.default_provider = "openai"
     
+    def detect_and_fetch_real_time_data(self, message):
+        """Detect if real-time data is needed and fetch it automatically"""
+        message_lower = message.lower()
+        real_time_info = []
+        
+        # Check for weather requests
+        if any(word in message_lower for word in ['weather', 'temperature', 'forecast', 'rain', 'sunny', 'cloudy']):
+            # Extract city name (simple extraction - could be enhanced)
+            import re
+            city_match = re.search(r'(?:weather|temperature|forecast)\s+(?:in|for|at)\s+([A-Za-z\s,]+)', message, re.IGNORECASE)
+            if city_match:
+                city = city_match.group(1).strip().split(',')[0].strip()
+                weather_data = self.real_time.get_weather(city)
+                real_time_info.append(f"Weather: {weather_data}")
+            else:
+                # Default to a common city if none specified
+                weather_data = self.real_time.get_weather("New York")
+                real_time_info.append(f"Weather: {weather_data}")
+        
+        # Check for time requests
+        if any(word in message_lower for word in ['time', 'clock', 'hour', 'minute']):
+            time_data = self.real_time.get_time("UTC")
+            real_time_info.append(f"Time: {time_data}")
+        
+        # Check for crypto requests
+        if any(word in message_lower for word in ['crypto', 'bitcoin', 'btc', 'ethereum', 'eth', 'price']):
+            crypto_data = self.real_time.get_crypto_price("bitcoin")
+            real_time_info.append(f"Crypto: {crypto_data}")
+        
+        # Check for news requests
+        if any(word in message_lower for word in ['news', 'latest', 'headlines', 'current events']):
+            news_data = self.real_time.get_news("technology", 3)
+            real_time_info.append(f"News: {news_data}")
+        
+        # Check for stock requests
+        if any(word in message_lower for word in ['stock', 'market', 'price', 'trading']):
+            stock_data = self.real_time.get_stock_price("AAPL")
+            real_time_info.append(f"Stock: {stock_data}")
+        
+        if real_time_info:
+            return " | ".join(real_time_info)
+        return None
+    
     def get_available_models(self):
         """Get list of available AI models with details"""
         return self.available_models
@@ -210,7 +253,7 @@ class AdvancedOpenAI:
             system_prompt = self.system_prompts.get(personality, self.system_prompts['default'])
             
             # Add real-time information capabilities
-            system_prompt += "\n\nYou can access real-time information. If users ask about current weather, time, news, crypto prices, or stock prices, you can provide this information. Use the following format for real-time data:\n- Weather: Ask for city name\n- Time: Ask for timezone (e.g., UTC, America/New_York)\n- News: Ask for topic (e.g., technology, sports)\n- Crypto: Ask for symbol (e.g., BTC, ETH)\n- Stocks: Ask for symbol (e.g., AAPL, GOOGL)"
+            system_prompt += "\n\nIMPORTANT: You have access to real-time information and MUST use it when users ask about current data. When users ask about weather, time, news, crypto prices, or stock prices, you MUST automatically fetch and provide the actual current data, not placeholders.\n\nReal-time data capabilities:\n- Weather: Automatically fetch current weather for any city mentioned\n- Time: Provide current time for any timezone mentioned\n- News: Fetch latest news on any topic mentioned\n- Crypto: Get current prices for any cryptocurrency mentioned\n- Stocks: Provide current stock prices for any company mentioned\n\nAlways respond with actual current data, never use placeholders like [Current temperature] or [e.g., sunny, cloudy, rainy]."
             
             # Prepare messages array
             messages = [
@@ -223,6 +266,13 @@ class AdvancedOpenAI:
                     "content": message
                 }
             ]
+            
+            # Check if real-time data is needed and fetch it
+            real_time_data = self.detect_and_fetch_real_time_data(message)
+            if real_time_data:
+                # Add real-time data to the user message
+                enhanced_message = f"{message}\n\n[Real-time data available: {real_time_data}]"
+                messages[1]["content"] = enhanced_message
             
             # Add conversation history if memory is enabled
             if use_memory:
@@ -301,6 +351,13 @@ class AdvancedOpenAI:
                     "content": message
                 }
             ]
+            
+            # Check if real-time data is needed and fetch it
+            real_time_data = self.detect_and_fetch_real_time_data(message)
+            if real_time_data:
+                # Add real-time data to the user message
+                enhanced_message = f"{message}\n\n[Real-time data available: {real_time_data}]"
+                messages[0]["content"] = enhanced_message
             
             # Add conversation history if memory is enabled
             if use_memory:
@@ -384,6 +441,13 @@ class AdvancedOpenAI:
                     ]
                 }
             ]
+            
+            # Check if real-time data is needed and fetch it
+            real_time_data = self.detect_and_fetch_real_time_data(message)
+            if real_time_data:
+                # Add real-time data to the user message
+                enhanced_message = f"{message}\n\n[Real-time data available: {real_time_data}]"
+                content[0]["parts"][0]["text"] = f"{system_prompt}\n\nUser message: {enhanced_message}"
             
             # Add conversation history if memory is enabled
             if use_memory:
