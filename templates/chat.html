@@ -2058,108 +2058,369 @@
 
 
 
-        // Settings function with language and TTS options
+        // Comprehensive Settings Tab Function
         function openSettings() {
-            alert('Settings function called!'); // Temporary test
-            console.log('openSettings called!');
+            console.log('Opening comprehensive settings tab...');
             
-            // Create a simple modal that definitely works
-            const modal = document.createElement('div');
-            modal.id = 'settingsModal';
-            modal.style.cssText = `
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.8);
-                z-index: 9999;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            `;
+            // Get current settings from localStorage
+            const currentSettings = {
+                botName: localStorage.getItem('botName') || 'Query AI',
+                botDescription: localStorage.getItem('botDescription') || 'Your intelligent AI assistant',
+                apiKey: localStorage.getItem('apiKey') || '',
+                selectedModel: localStorage.getItem('selectedModel') || 'gpt-4o',
+                creativityLevel: localStorage.getItem('creativityLevel') || '0.7',
+                theme: localStorage.getItem('theme') || 'dark',
+                language: localStorage.getItem('preferredLanguage') || 'en-US',
+                ttsEnabled: localStorage.getItem('ttsEnabled') === 'true',
+                maxTokens: localStorage.getItem('maxTokens') || '1000',
+                timeout: localStorage.getItem('timeout') || '30',
+                autoSave: localStorage.getItem('autoSave') !== 'false',
+                dataRetention: localStorage.getItem('dataRetention') || '30'
+            };
             
-            const content = document.createElement('div');
-            content.style.cssText = `
-                background: #2a2a2a;
-                border: 1px solid #444;
-                border-radius: 16px;
-                padding: 30px;
-                max-width: 500px;
-                width: 90%;
-                color: white;
-                font-family: Arial, sans-serif;
-            `;
-            
-            content.innerHTML = `
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h2 style="margin: 0; color: white;">Settings</h2>
-                    <button onclick="closeSettings()" style="
-                        background: none;
-                        border: none;
-                        color: #888;
-                        font-size: 24px;
-                        cursor: pointer;
-                        padding: 5px;
-                        border-radius: 50%;
-                        width: 30px;
-                        height: 30px;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                    ">×</button>
-                </div>
-                
-                <div style="margin-bottom: 20px;">
-                    <label style="display: block; margin-bottom: 8px; font-weight: bold;">Language for Voice Input:</label>
-                    <select id="languageSelect" style="
+            // Create the comprehensive settings modal
+            const settingsHTML = `
+                <div id="settingsModal" style="
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.9);
+                    z-index: 9999;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    overflow-y: auto;
+                    padding: 20px;
+                ">
+                    <div style="
+                        background: #1a1a1a;
+                        border: 1px solid #333;
+                        border-radius: 20px;
+                        max-width: 800px;
                         width: 100%;
-                        padding: 10px;
-                        border: 1px solid #444;
-                        border-radius: 8px;
-                        background: #333;
-                        color: white;
-                        font-size: 14px;
+                        max-height: 90vh;
+                        overflow-y: auto;
+                        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8);
+                        position: relative;
                     ">
-                        <option value="en-US">English</option>
-                        <option value="es-ES">Spanish</option>
-                        <option value="fr-FR">French</option>
-                        <option value="de-DE">German</option>
-                        <option value="it-IT">Italian</option>
-                        <option value="pt-BR">Portuguese</option>
-                        <option value="ru-RU">Russian</option>
-                        <option value="zh-CN">Chinese</option>
-                        <option value="ja-JP">Japanese</option>
-                        <option value="ko-KR">Korean</option>
-                        <option value="ar-SA">Arabic</option>
-                    </select>
-                </div>
-                
-                <div style="margin-bottom: 20px;">
-                    <label style="display: block; margin-bottom: 8px; font-weight: bold;">Text-to-Speech:</label>
-                    <label style="display: flex; align-items: center; cursor: pointer;">
-                        <input type="checkbox" id="ttsToggleSetting" style="margin-right: 10px; transform: scale(1.2;">
-                        <span>Enable AI voice responses</span>
-                    </label>
-                </div>
-                
-                <div style="text-align: center; margin-top: 30px;">
-                    <button onclick="closeSettings()" style="
-                        background: #3B82F6;
-                        color: white;
-                        border: none;
-                        padding: 12px 24px;
-                        border-radius: 8px;
-                        cursor: pointer;
-                        font-size: 16px;
-                    ">Close Settings</button>
+                        <!-- Header -->
+                        <div style="
+                            background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+                            padding: 25px 30px;
+                            border-bottom: 1px solid #333;
+                            border-radius: 20px 20px 0 0;
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                            position: sticky;
+                            top: 0;
+                            z-index: 10;
+                        ">
+                            <div>
+                                <h1 style="margin: 0; color: white; font-size: 24px; font-weight: 600;">⚙️ Settings</h1>
+                                <p style="margin: 5px 0 0 0; color: #888; font-size: 14px;">Customize your AI assistant experience</p>
+                            </div>
+                            <button onclick="closeSettings()" style="
+                                background: rgba(255, 255, 255, 0.1);
+                                border: 1px solid #444;
+                                color: #888;
+                                font-size: 20px;
+                                cursor: pointer;
+                                padding: 8px;
+                                border-radius: 50%;
+                                width: 40px;
+                                height: 40px;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                transition: all 0.2s ease;
+                            " onmouseover="this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">×</button>
+                        </div>
+                        
+                        <!-- Settings Content -->
+                        <div style="padding: 30px;">
+                            <!-- Bot Identity Section -->
+                            <div style="margin-bottom: 40px;">
+                                <h3 style="color: #3B82F6; margin: 0 0 20px 0; font-size: 18px; display: flex; align-items: center;">
+                                    🤖 Bot Identity
+                                </h3>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                                    <div>
+                                        <label style="display: block; color: white; margin-bottom: 8px; font-weight: 500;">Bot Name</label>
+                                        <input type="text" id="botName" value="${currentSettings.botName}" placeholder="Enter bot name" style="
+                                            width: 100%;
+                                            padding: 12px;
+                                            border: 1px solid #444;
+                                            border-radius: 8px;
+                                            background: #2a2a2a;
+                                            color: white;
+                                            font-size: 14px;
+                                        " onchange="updateSetting('botName', this.value)">
+                                    </div>
+                                    <div>
+                                        <label style="display: block; color: white; margin-bottom: 8px; font-weight: 500;">Bot Description</label>
+                                        <input type="text" id="botDescription" value="${currentSettings.botDescription}" placeholder="Enter bot description" style="
+                                            width: 100%;
+                                            padding: 12px;
+                                            border: 1px solid #444;
+                                            border-radius: 8px;
+                                            background: #2a2a2a;
+                                            color: white;
+                                            font-size: 14px;
+                                        " onchange="updateSetting('botDescription', this.value)">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- API Configuration Section -->
+                            <div style="margin-bottom: 40px;">
+                                <h3 style="color: #3B82F6; margin: 0 0 20px 0; font-size: 18px; display: flex; align-items: center;">
+                                    🔑 API Configuration
+                                </h3>
+                                <div style="margin-bottom: 20px;">
+                                    <label style="display: block; color: white; margin-bottom: 8px; font-weight: 500;">OpenAI API Key</label>
+                                    <input type="password" id="apiKey" value="${currentSettings.apiKey}" placeholder="sk-..." style="
+                                        width: 100%;
+                                        padding: 12px;
+                                        border: 1px solid #444;
+                                        border-radius: 8px;
+                                        background: #2a2a2a;
+                                        color: white;
+                                        font-size: 14px;
+                                    " onchange="updateSetting('apiKey', this.value)">
+                                    <small style="color: #888; font-size: 12px;">Your API key is stored locally and never shared</small>
+                                </div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                                    <div>
+                                        <label style="display: block; color: white; margin-bottom: 8px; font-weight: 500;">AI Model</label>
+                                        <select id="selectedModel" onchange="updateSetting('selectedModel', this.value)" style="
+                                            width: 100%;
+                                            padding: 12px;
+                                            border: 1px solid #444;
+                                            border-radius: 8px;
+                                            background: #2a2a2a;
+                                            color: white;
+                                            font-size: 14px;
+                                        ">
+                                            <option value="gpt-4o" ${currentSettings.selectedModel === 'gpt-4o' ? 'selected' : ''}>GPT-4o (Latest)</option>
+                                            <option value="gpt-4-turbo" ${currentSettings.selectedModel === 'gpt-4-turbo' ? 'selected' : ''}>GPT-4 Turbo</option>
+                                            <option value="gpt-3.5-turbo" ${currentSettings.selectedModel === 'gpt-3.5-turbo' ? 'selected' : ''}>GPT-3.5 Turbo</option>
+                                            <option value="claude-3-sonnet" ${currentSettings.selectedModel === 'claude-3-sonnet' ? 'selected' : ''}>Claude 3 Sonnet</option>
+                                            <option value="gemini-1.5-pro" ${currentSettings.selectedModel === 'gemini-1.5-pro' ? 'selected' : ''}>Gemini 1.5 Pro</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label style="display: block; color: white; margin-bottom: 8px; font-weight: 500;">Creativity Level</label>
+                                        <input type="range" id="creativityLevel" min="0" max="1" step="0.1" value="${currentSettings.creativityLevel}" onchange="updateSetting('creativityLevel', this.value)" style="
+                                            width: 100%;
+                                            margin: 10px 0;
+                                        ">
+                                        <div style="display: flex; justify-content: space-between; color: #888; font-size: 12px;">
+                                            <span>Focused</span>
+                                            <span>Balanced</span>
+                                            <span>Creative</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Appearance & Theme Section -->
+                            <div style="margin-bottom: 40px;">
+                                <h3 style="color: #3B82F6; margin: 0 0 20px 0; font-size: 18px; display: flex; align-items: center;">
+                                    🎨 Appearance & Theme
+                                </h3>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                                    <div>
+                                        <label style="display: block; color: white; margin-bottom: 8px; font-weight: 500;">Theme</label>
+                                        <select id="theme" onchange="updateSetting('theme', this.value)" style="
+                                            width: 100%;
+                                            padding: 12px;
+                                            border: 1px solid #444;
+                                            border-radius: 8px;
+                                            background: #2a2a2a;
+                                            color: white;
+                                            font-size: 14px;
+                                        ">
+                                            <option value="dark" ${currentSettings.theme === 'dark' ? 'selected' : ''}>Dark Theme</option>
+                                            <option value="light" ${currentSettings.theme === 'light' ? 'selected' : ''}>Light Theme</option>
+                                            <option value="auto" ${currentSettings.theme === 'auto' ? 'selected' : ''}>Auto (System)</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label style="display: block; color: white; margin-bottom: 8px; font-weight: 500;">Language</label>
+                                        <select id="language" onchange="updateSetting('preferredLanguage', this.value)" style="
+                                            width: 100%;
+                                            padding: 12px;
+                                            border: 1px solid #444;
+                                            border-radius: 8px;
+                                            background: #2a2a2a;
+                                            color: white;
+                                            font-size: 14px;
+                                        ">
+                                            <option value="en-US" ${currentSettings.language === 'en-US' ? 'selected' : ''}>English</option>
+                                            <option value="es-ES" ${currentSettings.language === 'es-ES' ? 'selected' : ''}>Spanish</option>
+                                            <option value="fr-FR" ${currentSettings.language === 'fr-FR' ? 'selected' : ''}>French</option>
+                                            <option value="de-DE" ${currentSettings.language === 'de-DE' ? 'selected' : ''}>German</option>
+                                            <option value="it-IT" ${currentSettings.language === 'it-IT' ? 'selected' : ''}>Italian</option>
+                                            <option value="pt-BR" ${currentSettings.language === 'pt-BR' ? 'selected' : ''}>Portuguese</option>
+                                            <option value="ru-RU" ${currentSettings.language === 'ru-RU' ? 'selected' : ''}>Russian</option>
+                                            <option value="zh-CN" ${currentSettings.language === 'zh-CN' ? 'selected' : ''}>Chinese</option>
+                                            <option value="ja-JP" ${currentSettings.language === 'ja-JP' ? 'selected' : ''}>Japanese</option>
+                                            <option value="ko-KR" ${currentSettings.language === 'ko-KR' ? 'selected' : ''}>Korean</option>
+                                            <option value="ar-SA" ${currentSettings.language === 'ar-SA' ? 'selected' : ''}>Arabic</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- AI Behavior Section -->
+                            <div style="margin-bottom: 40px;">
+                                <h3 style="color: #3B82F6; margin: 0 0 20px 0; font-size: 18px; display: flex; align-items: center;">
+                                    🧠 AI Behavior
+                                </h3>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                                    <div>
+                                        <label style="display: block; color: white; margin-bottom: 8px; font-weight: 500;">Max Tokens</label>
+                                        <input type="number" id="maxTokens" value="${currentSettings.maxTokens}" min="100" max="4000" step="100" style="
+                                            width: 100%;
+                                            padding: 12px;
+                                            border: 1px solid #444;
+                                            border-radius: 8px;
+                                            background: #2a2a2a;
+                                            color: white;
+                                            font-size: 14px;
+                                        " onchange="updateSetting('maxTokens', this.value)">
+                                    </div>
+                                    <div>
+                                        <label style="display: block; color: white; margin-bottom: 8px; font-weight: 500;">Response Timeout (seconds)</label>
+                                        <input type="number" id="timeout" value="${currentSettings.timeout}" min="10" max="120" step="5" style="
+                                            width: 100%;
+                                            padding: 12px;
+                                            border: 1px solid #444;
+                                            border-radius: 8px;
+                                            background: #2a2a2a;
+                                            color: white;
+                                            font-size: 14px;
+                                        " onchange="updateSetting('timeout', this.value)">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Features Section -->
+                            <div style="margin-bottom: 40px;">
+                                <h3 style="color: #3B82F6; margin: 0 0 20px 0; font-size: 18px; display: flex; align-items: center;">
+                                    ✨ Features
+                                </h3>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                                    <div>
+                                        <label style="display: flex; align-items: center; color: white; margin-bottom: 8px; font-weight: 500; cursor: pointer;">
+                                            <input type="checkbox" id="ttsEnabled" ${currentSettings.ttsEnabled ? 'checked' : ''} onchange="updateSetting('ttsEnabled', this.checked)" style="
+                                                margin-right: 10px;
+                                                transform: scale(1.2;
+                                            ">
+                                            Text-to-Speech
+                                        </label>
+                                        <small style="color: #888; font-size: 12px;">Enable AI voice responses</small>
+                                    </div>
+                                    <div>
+                                        <label style="display: flex; align-items: center; color: white; margin-bottom: 8px; font-weight: 500; cursor: pointer;">
+                                            <input type="checkbox" id="autoSave" ${currentSettings.autoSave ? 'checked' : ''} onchange="updateSetting('autoSave', this.checked)" style="
+                                                margin-right: 10px;
+                                                transform: scale(1.2;
+                                            ">
+                                            Auto-save Conversations
+                                        </label>
+                                        <small style="color: #888; font-size: 12px;">Automatically save chat history</small>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Data Management Section -->
+                            <div style="margin-bottom: 40px;">
+                                <h3 style="color: #3B82F6; margin: 0 0 20px 0; font-size: 18px; display: flex; align-items: center;">
+                                    💾 Data Management
+                                </h3>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                                    <div>
+                                        <label style="display: block; color: white; margin-bottom: 8px; font-weight: 500;">Data Retention (days)</label>
+                                        <select id="dataRetention" onchange="updateSetting('dataRetention', this.value)" style="
+                                            width: 100%;
+                                            padding: 12px;
+                                            border: 1px solid #444;
+                                            border-radius: 8px;
+                                            background: #2a2a2a;
+                                            color: white;
+                                            font-size: 14px;
+                                        ">
+                                            <option value="7" ${currentSettings.dataRetention === '7' ? 'selected' : ''}>7 days</option>
+                                            <option value="30" ${currentSettings.dataRetention === '30' ? 'selected' : ''}>30 days</option>
+                                            <option value="90" ${currentSettings.dataRetention === '90' ? 'selected' : ''}>90 days</option>
+                                            <option value="365" ${currentSettings.dataRetention === '365' ? 'selected' : ''}>1 year</option>
+                                            <option value="0" ${currentSettings.dataRetention === '0' ? 'selected' : ''}>Keep forever</option>
+                                        </select>
+                                    </div>
+                                    <div style="display: flex; flex-direction: column; justify-content: end;">
+                                        <button onclick="clearAllData()" style="
+                                            background: #dc2626;
+                                            color: white;
+                                            border: none;
+                                            padding: 12px 20px;
+                                            border-radius: 8px;
+                                            cursor: pointer;
+                                            font-size: 14px;
+                                            font-weight: 500;
+                                        ">Clear All Data</button>
+                                        <small style="color: #888; font-size: 12px; margin-top: 5px;">⚠️ This action cannot be undone</small>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Action Buttons -->
+                            <div style="display: flex; gap: 15px; justify-content: center; margin-top: 40px;">
+                                <button onclick="saveAllSettings()" style="
+                                    background: #3B82F6;
+                                    color: white;
+                                    border: none;
+                                    padding: 15px 30px;
+                                    border-radius: 10px;
+                                    cursor: pointer;
+                                    font-size: 16px;
+                                    font-weight: 600;
+                                    transition: all 0.2s ease;
+                                " onmouseover="this.style.background='#2563eb'" onmouseout="this.style.background='#3B82F6'">
+                                    💾 Save All Settings
+                                </button>
+                                <button onclick="resetToDefaults()" style="
+                                    background: #6b7280;
+                                    color: white;
+                                    border: none;
+                                    padding: 15px 30px;
+                                    border-radius: 10px;
+                                    cursor: pointer;
+                                    font-size: 16px;
+                                    font-weight: 600;
+                                    transition: all 0.2s ease;
+                                " onmouseover="this.style.background='#4b5563'" onmouseout="this.style.background='#6b7280'">
+                                    🔄 Reset to Defaults
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             `;
             
-            modal.appendChild(content);
-            document.body.appendChild(modal);
+            // Remove existing modal if any
+            const existingModal = document.getElementById('settingsModal');
+            if (existingModal) {
+                existingModal.remove();
+            }
             
-            console.log('Settings modal created and added to page');
+            // Add modal to body
+            document.body.insertAdjacentHTML('beforeend', settingsHTML);
+            
+            console.log('Comprehensive settings modal created successfully!');
         }
 
         function closeSettings() {
@@ -2409,6 +2670,190 @@
         console.log('closeSettings function exists:', typeof closeSettings);
         console.log('ttsEnabled variable exists:', typeof ttsEnabled !== 'undefined');
 
+        // Supporting functions for the comprehensive settings tab
+        function updateSetting(key, value) {
+            localStorage.setItem(key, value);
+            console.log(`Setting updated: ${key} = ${value}`);
+            
+            // Apply immediate changes for certain settings
+            switch(key) {
+                case 'botName':
+                    updateBotName(value);
+                    break;
+                case 'theme':
+                    applyTheme(value);
+                    break;
+                case 'preferredLanguage':
+                    setLanguagePreference(value);
+                    break;
+                case 'ttsEnabled':
+                    updateTTS(value);
+                    break;
+            }
+        }
+        
+        function updateBotName(name) {
+            const titleElement = document.querySelector('.main-title');
+            if (titleElement) {
+                titleElement.textContent = name;
+            }
+        }
+        
+        function applyTheme(theme) {
+            document.body.className = theme;
+            if (theme === 'auto') {
+                // Auto theme based on system preference
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                document.body.className = prefersDark ? 'dark' : 'light';
+            }
+        }
+        
+        function updateTTS(enabled) {
+            ttsEnabled = enabled;
+            const ttsToggle = document.getElementById('ttsToggle');
+            if (ttsToggle) {
+                if (enabled) {
+                    ttsToggle.classList.add('active');
+                    ttsToggle.title = 'Text-to-Speech (On)';
+                    ttsToggle.style.color = 'var(--accent-primary)';
+                } else {
+                    ttsToggle.classList.remove('active');
+                    ttsToggle.title = 'Text-to-Speech (Off)';
+                    ttsToggle.style.color = 'var(--text-secondary)';
+                }
+            }
+        }
+        
+        function saveAllSettings() {
+            // Collect all current values from the form
+            const settings = {
+                botName: document.getElementById('botName').value,
+                botDescription: document.getElementById('botDescription').value,
+                apiKey: document.getElementById('apiKey').value,
+                selectedModel: document.getElementById('selectedModel').value,
+                creativityLevel: document.getElementById('creativityLevel').value,
+                theme: document.getElementById('theme').value,
+                language: document.getElementById('language').value,
+                ttsEnabled: document.getElementById('ttsEnabled').checked,
+                maxTokens: document.getElementById('maxTokens').value,
+                timeout: document.getElementById('timeout').value,
+                autoSave: document.getElementById('autoSave').checked,
+                dataRetention: document.getElementById('dataRetention').value
+            };
+            
+            // Save all settings to localStorage
+            Object.entries(settings).forEach(([key, value]) => {
+                localStorage.setItem(key, value);
+            });
+            
+            // Apply all changes
+            updateBotName(settings.botName);
+            applyTheme(settings.theme);
+            updateTTS(settings.ttsEnabled);
+            
+            // Show success message
+            showNotification('✅ All settings saved successfully!', 'success');
+            
+            console.log('All settings saved:', settings);
+        }
+        
+        function resetToDefaults() {
+            if (confirm('Are you sure you want to reset all settings to defaults? This cannot be undone.')) {
+                // Clear all custom settings
+                const keysToRemove = [
+                    'botName', 'botDescription', 'apiKey', 'selectedModel', 'creativityLevel',
+                    'theme', 'preferredLanguage', 'ttsEnabled', 'maxTokens', 'timeout',
+                    'autoSave', 'dataRetention'
+                ];
+                
+                keysToRemove.forEach(key => localStorage.removeItem(key));
+                
+                // Reset form values
+                const defaultSettings = {
+                    botName: 'Query AI',
+                    botDescription: 'Your intelligent AI assistant',
+                    apiKey: '',
+                    selectedModel: 'gpt-4o',
+                    creativityLevel: '0.7',
+                    theme: 'dark',
+                    language: 'en-US',
+                    ttsEnabled: false,
+                    maxTokens: '1000',
+                    timeout: '30',
+                    autoSave: true,
+                    dataRetention: '30'
+                };
+                
+                // Update form fields
+                Object.entries(defaultSettings).forEach(([key, value]) => {
+                    const element = document.getElementById(key === 'preferredLanguage' ? 'language' : key);
+                    if (element) {
+                        if (element.type === 'checkbox') {
+                            element.checked = value;
+                        } else {
+                            element.value = value;
+                        }
+                    }
+                });
+                
+                // Apply default changes
+                updateBotName(defaultSettings.botName);
+                applyTheme(defaultSettings.theme);
+                updateTTS(defaultSettings.ttsEnabled);
+                
+                showNotification('🔄 Settings reset to defaults!', 'info');
+                console.log('Settings reset to defaults');
+            }
+        }
+        
+        function clearAllData() {
+            if (confirm('⚠️ WARNING: This will permanently delete ALL your chat history, settings, and data. This action cannot be undone. Are you absolutely sure?')) {
+                // Clear all localStorage
+                localStorage.clear();
+                
+                // Clear chat history
+                const mainMessages = document.getElementById('mainMessages');
+                if (mainMessages) {
+                    mainMessages.innerHTML = '';
+                }
+                
+                // Reset to defaults
+                resetToDefaults();
+                
+                showNotification('🗑️ All data cleared successfully!', 'warning');
+                console.log('All data cleared');
+            }
+        }
+        
+        function showNotification(message, type = 'info') {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#10b981' : type === 'warning' ? '#f59e0b' : type === 'error' ? '#ef4444' : '#3b82f6'};
+                color: white;
+                padding: 15px 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+                z-index: 10000;
+                font-weight: 500;
+                max-width: 300px;
+                word-wrap: break-word;
+            `;
+            notification.textContent = message;
+            
+            // Add to page
+            document.body.appendChild(notification);
+            
+            // Auto-remove after 3 seconds
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 3000);
+        }
     </script>
 </body>
 </html>
