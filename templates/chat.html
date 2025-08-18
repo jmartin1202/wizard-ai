@@ -1306,20 +1306,6 @@
                 
                 if (data.success) {
                     addMainMessage(data.response, false);
-                    
-                    // Real-time model info
-                    const modelInfo = document.createElement('div');
-                    modelInfo.className = 'model-indicator';
-                    modelInfo.innerHTML = `
-                        <small style="color: #8b5cf6; font-size: 12px; opacity: 0.8;">
-                            Powered by GPT-4o • ${data.tokens_used || 0} tokens
-                        </small>
-                    `;
-                    
-                    const lastMessage = document.querySelector('.main-messages .message.ai:last-child');
-                    if (lastMessage) {
-                        lastMessage.appendChild(modelInfo);
-                    }
                 } else {
                     addMainMessage(`Error: ${data.error}`, false);
                 }
@@ -1429,12 +1415,7 @@
                 behavior: 'smooth'
             });
             
-            // Add real-time timestamp
-            const timestamp = document.createElement('div');
-            timestamp.className = 'message-timestamp';
-            timestamp.textContent = new Date().toLocaleTimeString();
-            timestamp.style.cssText = 'font-size: 11px; opacity: 0.6; margin-top: 5px; text-align: right;';
-            messageDiv.appendChild(timestamp);
+
         }
 
         // Enhanced Send Message with Real-time Features
@@ -1455,9 +1436,6 @@
             // Show typing indicator
             showTypingIndicator();
             
-            // Start response timer
-            const startTime = Date.now();
-            
             // Send to AI with image if available
             if (uploadedImage && uploadedImageData) {
                 await sendToAIWithImage(message, uploadedImageData);
@@ -1467,103 +1445,9 @@
             
             // Hide typing indicator
             hideTypingIndicator();
-            
-            // Update response time
-            const responseTime = Date.now() - startTime;
-            const responseTimeElement = document.getElementById('responseTime');
-            responseTimeElement.textContent = `${responseTime}ms`;
-            
-            // Add response time to status
-            setTimeout(() => {
-                responseTimeElement.textContent = 'Ready';
-            }, 5000);
         }
 
-        // Enhanced AI Functions with Real-time Features
-        async function sendToAI(message) {
-            try {
-                const response = await fetch('/api/chat', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        message: message,
-                        personality: 'default',
-                        use_memory: true,
-                        provider: 'openai',
-                        model: 'gpt-4o'
-                    })
-                });
 
-                const data = await response.json();
-                
-                if (data.success) {
-                    addMainMessage(data.response, false);
-                    
-                    // Real-time model info
-                    const modelInfo = document.createElement('div');
-                    modelInfo.className = 'model-indicator';
-                    modelInfo.innerHTML = `
-                        <small style="color: #8b5cf6; font-size: 12px; opacity: 0.8;">
-                            Powered by GPT-4o • ${data.tokens_used || 0} tokens
-                        </small>
-                    `;
-                    
-                    const lastMessage = document.querySelector('.main-messages .message.ai:last-child');
-                    if (lastMessage) {
-                        lastMessage.appendChild(modelInfo);
-                    }
-                } else {
-                    addMainMessage(`Error: ${data.error}`, false);
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                addMainMessage('Sorry, I encountered an error. Please try again.', false);
-            }
-        }
-
-        async function sendToAIWithImage(message, imageData) {
-            try {
-                const response = await fetch('/api/chat-with-image', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        message: message,
-                        image_data: imageData,
-                        personality: 'default',
-                        use_memory: true
-                    })
-                });
-
-                const data = await response.json();
-                
-                if (data.success) {
-                    addMainMessage(data.response, false);
-                    
-                    // Real-time model info for image analysis
-                    const modelInfo = document.createElement('div');
-                    modelInfo.className = 'model-indicator';
-                    modelInfo.innerHTML = `
-                        <small style="color: #8b5cf6; font-size: 12px; opacity: 0.8;">
-                            Powered by GPT-4o (Image Analysis) • ${data.tokens_used || 0} tokens
-                        </small>
-                    `;
-                    
-                    const lastMessage = document.querySelector('.main-messages .message.ai:last-child');
-                    if (lastMessage) {
-                        lastMessage.appendChild(modelInfo);
-                    }
-                } else {
-                    addMainMessage(`Error: ${data.error}`, false);
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                addMainMessage('Sorry, I encountered an error. Please try again.', false);
-            }
-        }
     </script>
 </body>
 </html>
