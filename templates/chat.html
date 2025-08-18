@@ -1121,6 +1121,43 @@
             
             <!-- Input Container -->
             <div class="input-container">
+                <!-- Model Selector -->
+                <div style="margin-bottom: 15px; text-align: center;">
+                    <select id="modelSelector" onchange="changeModel(this.value)" style="
+                        background: var(--bg-tertiary);
+                        border: 1px solid var(--dark-border);
+                        border-radius: 12px;
+                        padding: 8px 16px;
+                        color: var(--text-primary);
+                        font-size: 14px;
+                        cursor: pointer;
+                        min-width: 200px;
+                    ">
+                        <option value="gpt-4o">🤖 GPT-4o (Default)</option>
+                        <option value="gpt-4-turbo">🚀 GPT-4 Turbo</option>
+                        <option value="gpt-3.5-turbo">⚡ GPT-3.5 Turbo</option>
+                        <option value="claude-3-sonnet">🧠 Claude 3.5 Sonnet</option>
+                        <option value="claude-3-haiku">🎯 Claude 3 Haiku</option>
+                        <option value="gemini-1.5-pro">🌟 Gemini 1.5 Pro</option>
+                        <option value="gemini-1.5-flash">⚡ Gemini 1.5 Flash</option>
+                    </select>
+                    
+                    <!-- Model Comparison Button -->
+                    <button onclick="compareModels()" style="
+                        background: var(--accent-primary);
+                        color: white;
+                        border: none;
+                        border-radius: 12px;
+                        padding: 8px 16px;
+                        margin-left: 10px;
+                        font-size: 14px;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                    " onmouseover="this.style.background='var(--accent-secondary)'" onmouseout="this.style.background='var(--accent-primary)'">
+                        🔍 Compare Models
+                    </button>
+                </div>
+                
                 <input type="text" id="messageInput" class="input-field" placeholder="Ask anything" onkeypress="handleKeyPress(event)">
                 <div class="input-right-icons">
                     <!-- File Upload Icon (Enhanced for multiple file types) -->
@@ -1188,13 +1225,148 @@
     <script>
         // Global variables
         let useMemory = true;
+        let selectedModel = 'gpt-4o'; // Default model
 
+        // Model selection and comparison functions
+        function changeModel(model) {
+            selectedModel = model;
+            console.log('Model changed to:', model);
+            
+            // Update placeholder based on model capabilities
+            const messageInput = document.getElementById('messageInput');
+            if (model.startsWith('gpt') && model !== 'gpt-3.5-turbo') {
+                messageInput.placeholder = 'Ask anything (supports images)';
+            } else {
+                messageInput.placeholder = 'Ask anything';
+            }
+            
+            // Show notification
+            showNotification(`🤖 Switched to ${getModelDisplayName(model)}`, 'info');
+        }
 
+        function getModelDisplayName(model) {
+            const modelNames = {
+                'gpt-4o': 'GPT-4o',
+                'gpt-4-turbo': 'GPT-4 Turbo',
+                'gpt-3.5-turbo': 'GPT-3.5 Turbo',
+                'claude-3-sonnet': 'Claude 3.5 Sonnet',
+                'claude-3-haiku': 'Claude 3 Haiku',
+                'gemini-1.5-pro': 'Gemini 1.5 Pro',
+                'gemini-1.5-flash': 'Gemini 1.5 Flash'
+            };
+            return modelNames[model] || model;
+        }
 
+        async function compareModels() {
+            const message = document.getElementById('messageInput').value.trim();
+            if (!message) {
+                showNotification('⚠️ Please enter a message to compare models', 'warning');
+                return;
+            }
+            
+            // Show comparison mode
+            showNotification('🔍 Comparing responses from multiple AI models...', 'info');
+            
+            try {
+                const response = await fetch('/api/compare-models', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        models: ['gpt-4o', 'claude-3-sonnet', 'gemini-1.5-pro'],
+                        use_memory: useMemory
+                    })
+                });
 
+                const data = await response.json();
+                
+                if (data.success) {
+                    displayModelComparison(message, data.responses);
+                } else {
+                    showNotification(`❌ Comparison failed: ${data.error}`, 'error');
+                }
+            } catch (error) {
+                console.error('Error comparing models:', error);
+                showNotification('❌ Failed to compare models', 'error');
+            }
+        }
 
+        function displayModelComparison(question, responses) {
+            const mainMessages = document.getElementById('mainMessages');
+            
+            // Add user question
+            addMainMessage(question, true);
+            
+            // Add comparison header
+            const comparisonHeader = document.createElement('div');
+            comparisonHeader.style.cssText = `
+                background: var(--bg-tertiary);
+                border: 1px solid var(--dark-border);
+                border-radius: 16px;
+                padding: 20px;
+                margin: 20px 0;
+                text-align: center;
+            `;
+            comparisonHeader.innerHTML = `
+                <h3 style="color: var(--text-primary); margin: 0 0 15px 0;">🤖 Model Comparison Results</h3>
+                <p style="color: var(--text-secondary); margin: 0;">Comparing responses from multiple AI models</p>
+            `;
+            mainMessages.appendChild(comparisonHeader);
+            
+            // Add responses from each model
+            Object.entries(responses).forEach(([model, response]) => {
+                const responseDiv = document.createElement('div');
+                responseDiv.style.cssText = `
+                    background: var(--bg-tertiary);
+                    border: 1px solid var(--dark-border);
+                    border-radius: 16px;
+                    padding: 20px;
+                    margin: 15px 0;
+                    text-align: left;
+                `;
+                
+                const modelName = getModelDisplayName(model);
+                const provider = getProviderName(model);
+                
+                responseDiv.innerHTML = `
+                    <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                        <div style="
+                            background: var(--accent-primary);
+                            color: white;
+                            padding: 8px 12px;
+                            border-radius: 20px;
+                            font-size: 12px;
+                            font-weight: 600;
+                            margin-right: 10px;
+                        ">${provider}</div>
+                        <h4 style="color: var(--text-primary); margin: 0;">${modelName}</h4>
+                    </div>
+                    <div style="color: var(--text-primary); line-height: 1.6;">${response}</div>
+                `;
+                
+                mainMessages.appendChild(responseDiv);
+            });
+            
+            // Scroll to bottom
+            mainMessages.scrollTo({
+                top: mainMessages.scrollHeight,
+                behavior: 'smooth'
+            });
+            
+            // Clear input
+            document.getElementById('messageInput').value = '';
+            
+            showNotification('✅ Model comparison completed!', 'success');
+        }
 
-
+        function getProviderName(model) {
+            if (model.startsWith('gpt')) return 'OpenAI';
+            if (model.startsWith('claude')) return 'Anthropic';
+            if (model.startsWith('gemini')) return 'Google';
+            return 'Unknown';
+        }
 
         // Handle key press in main input
         function handleKeyPress(event) {
@@ -2089,7 +2261,7 @@
             // Show typing indicator
             showTypingIndicator();
             
-            // Send to AI with appropriate context
+            // Send to AI with appropriate context and selected model
             if (uploadedImage && uploadedImageData) {
                 await sendToAIWithImage(message, uploadedImageData);
             } else if (uploadedDocument && uploadedDocumentData) {
@@ -2102,7 +2274,220 @@
             hideTypingIndicator();
         }
 
+        // Send message to AI with selected model
+        async function sendToAI(message) {
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        model: selectedModel,
+                        use_memory: useMemory
+                    })
+                });
 
+                const data = await response.json();
+                
+                if (data.success) {
+                    addMainMessageWithModelInfo(data.response, data.model, data.provider, data.tokens_used);
+                } else {
+                    addMainMessage(`Error: ${data.error}`, false);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                addMainMessage('Sorry, I encountered an error. Please try again.', false);
+            }
+        }
+
+        // Send message to AI with image using selected model
+        async function sendToAIWithImage(message, imageData) {
+            try {
+                // Show loading message on main page
+                addMainMessage('Analyzing image and processing your question...', false);
+                
+                const response = await fetch('/api/chat-with-image', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        message: message,
+                        image_data: imageData,
+                        model: selectedModel,
+                        use_memory: useMemory
+                    }),
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success && data.response) {
+                        // Remove loading message and add AI response to main page
+                        const mainMessages = document.getElementById('mainMessages');
+                        if (mainMessages.lastChild) {
+                            mainMessages.removeChild(mainMessages.lastChild);
+                        }
+                        addMainMessageWithModelInfo(data.response, data.model, data.provider, data.tokens_used);
+                    } else {
+                        const mainMessages = document.getElementById('mainMessages');
+                        if (mainMessages.lastChild) {
+                            mainMessages.removeChild(mainMessages.lastChild);
+                        }
+                        addMainMessage('Sorry, I encountered an error analyzing the image. Please try again.', false);
+                    }
+                } else {
+                    const mainMessages = document.getElementById('mainMessages');
+                    if (mainMessages.lastChild) {
+                        mainMessages.removeChild(mainMessages.lastChild);
+                    }
+                    addMainMessage('Sorry, I encountered an error analyzing the image. Please try again.', false);
+                }
+            } catch (error) {
+                console.error('Error with image analysis:', error);
+                const mainMessages = document.getElementById('mainMessages');
+                if (mainMessages.lastChild) {
+                    mainMessages.removeChild(mainMessages.lastChild);
+                }
+                addMainMessage('Sorry, I encountered an error analyzing the image. Please try again.', false);
+            }
+        }
+
+        // Send message to AI with document using selected model
+        async function sendToAIWithDocument(message, documentData, documentName) {
+            try {
+                // Show loading message on main page
+                addMainMessage('Analyzing document and processing your question...', false);
+                
+                const response = await fetch('/api/chat-with-document', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        message: message,
+                        document_data: documentData,
+                        document_name: documentName,
+                        model: selectedModel,
+                        use_memory: useMemory
+                    }),
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success && data.response) {
+                        // Remove loading message and add AI response to main page
+                        const mainMessages = document.getElementById('mainMessages');
+                        if (mainMessages.lastChild) {
+                            mainMessages.removeChild(mainMessages.lastChild);
+                        }
+                        addMainMessageWithModelInfo(data.response, data.model, data.provider, data.tokens_used);
+                    } else {
+                        const mainMessages = document.getElementById('mainMessages');
+                        if (mainMessages.lastChild) {
+                            mainMessages.removeChild(mainMessages.lastChild);
+                        }
+                        addMainMessage('Sorry, I encountered an error analyzing the document. Please try again.', false);
+                    }
+                } else {
+                    const mainMessages = document.getElementById('mainMessages');
+                    if (mainMessages.lastChild) {
+                        mainMessages.removeChild(mainMessages.lastChild);
+                    }
+                    addMainMessage('Sorry, I encountered an error analyzing the document. Please try again.', false);
+                }
+            } catch (error) {
+                console.error('Error with document analysis:', error);
+                const mainMessages = document.getElementById('mainMessages');
+                if (mainMessages.lastChild) {
+                    mainMessages.removeChild(mainMessages.lastChild);
+                }
+                addMainMessage('Sorry, I encountered an error analyzing the document. Please try again.', false);
+            }
+        }
+
+        // Add message with model information
+        function addMainMessageWithModelInfo(content, model, provider, tokensUsed) {
+            const mainMessages = document.getElementById('mainMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message ai';
+            
+            const avatar = document.createElement('div');
+            avatar.className = 'avatar ai';
+            avatar.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="#FFFFFF">
+                <!-- Robot Head -->
+                <ellipse cx="12" cy="10" rx="8" ry="6" fill="#FFFFFF"/>
+                <!-- Eyes -->
+                <circle cx="9" cy="8" r="1.5" fill="#3B82F6"/>
+                <circle cx="15" cy="8" r="1.5" fill="#3B82F6"/>
+                <!-- Smiling Mouth -->
+                <path d="M9 12 Q12 15 15 12" stroke="#3B82F6" stroke-width="1.5" fill="none"/>
+                <!-- Headset Band -->
+                <path d="M4 10 Q12 4 20 10" stroke="#FFFFFF" stroke-width="2" fill="none"/>
+                <!-- Earcups -->
+                <circle cx="4" cy="10" r="2" fill="#FFFFFF"/>
+                <circle cx="20" cy="10" r="2" fill="#FFFFFF"/>
+                <!-- Microphone -->
+                <path d="M2 10 Q0 12 0 15" stroke="#FFFFFF" stroke-width="1.5" fill="none"/>
+                <circle cx="0" cy="15" r="1" fill="#FFFFFF"/>
+                <!-- Antenna -->
+                <line x1="12" y1="4" x2="12" y2="1" stroke="#FFFFFF" stroke-width="1.5"/>
+                <circle cx="12" cy="1" r="1" fill="#FFFFFF"/>
+            </svg>`;
+            
+            const messageContent = document.createElement('div');
+            messageContent.className = 'message-content';
+            messageContent.textContent = content;
+            
+            // Add model info below the response
+            const modelInfo = document.createElement('div');
+            modelInfo.style.cssText = `
+                margin-top: 12px;
+                padding-top: 12px;
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+                font-size: 12px;
+                color: rgba(255, 255, 255, 0.7);
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            `;
+            
+            const providerIcon = getProviderIcon(provider);
+            const modelName = getModelDisplayName(model);
+            
+            modelInfo.innerHTML = `
+                <span>${providerIcon} ${provider}</span>
+                <span>•</span>
+                <span>🤖 ${modelName}</span>
+                ${tokensUsed ? `<span>•</span><span>📊 ${tokensUsed} tokens</span>` : ''}
+            `;
+            
+            messageDiv.appendChild(avatar);
+            messageContent.appendChild(modelInfo);
+            messageDiv.appendChild(messageContent);
+            mainMessages.appendChild(messageDiv);
+            
+            // Scroll to bottom with smooth animation
+            mainMessages.scrollTo({
+                top: mainMessages.scrollHeight,
+                behavior: 'smooth'
+            });
+            
+            // Text-to-Speech for AI responses
+            if (ttsEnabled) {
+                speakText(content);
+            }
+        }
+
+        function getProviderIcon(provider) {
+            const icons = {
+                'openai': '🚀',
+                'anthropic': '🧠',
+                'google': '🌟'
+            };
+            return icons[provider] || '🤖';
+        }
 
         // Comprehensive Settings Tab Function
         function openSettings() {
@@ -2111,6 +2496,7 @@
             // Get current settings from localStorage
             const currentSettings = {
                 language: localStorage.getItem('preferredLanguage') || 'en-US',
+                defaultModel: localStorage.getItem('defaultModel') || 'gpt-4o',
                 ttsEnabled: localStorage.getItem('ttsEnabled') === 'true',
                 autoSave: localStorage.getItem('autoSave') !== 'false'
             };
@@ -2745,6 +3131,7 @@
             // Collect all current values from the form
             const settings = {
                 language: document.getElementById('language').value,
+                defaultModel: document.getElementById('modelSelector').value,
                 ttsEnabled: document.getElementById('ttsEnabled').checked,
                 autoSave: document.getElementById('autoSave').checked
             };
@@ -2775,6 +3162,7 @@
                 // Reset form values
                 const defaultSettings = {
                     language: 'en-US',
+                    defaultModel: 'gpt-4o',
                     ttsEnabled: false,
                     autoSave: true
                 };

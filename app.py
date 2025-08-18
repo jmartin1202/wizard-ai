@@ -1,76 +1,40 @@
 # -*- coding: utf-8 -*-
-from flask import Flask, render_template, request, jsonify, session
 import os
-from datetime import datetime
-import logging
-from collections import defaultdict
-import time
-import uuid
+import json
+import requests
+from flask import Flask, request, jsonify, render_template, session
+from flask_cors import CORS
 from dotenv import load_dotenv
+import time
+from collections import defaultdict
+import base64
 
-# Load environment variables from .env file
+# Load environment variables
 load_dotenv()
 
-# Environment variables are loaded automatically on Heroku
-
-# Configure logging
-logging.basicConfig(level=logging.INFO, format='INFO:%(name)s:%(message)s')
-logger = logging.getLogger(__name__)
-
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'your-super-secret-key-change-in-production')
-
-# OpenAI Configuration
-OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
-
-def get_openai_client():
-    """Get OpenAI client instance - using external service"""
-    # Get API key directly from environment each time
-    api_key = os.environ.get('OPENAI_API_KEY')
-    logger.info(f"get_openai_client called, OPENAI_API_KEY exists: {bool(api_key)}")
-    
-    if not api_key:
-        logger.warning("No OPENAI_API_KEY found")
-        return None
-    
-    try:
-        # Use external service to avoid import issues
-        logger.info("Using external OpenAI service")
-        return "external_service"  # Return service marker
-        
-    except Exception as e:
-        logger.error(f'Failed to initialize OpenAI service: {e}')
-        return None
-
-# Initialize client
-client = get_openai_client()
-if client:
-    logger.info('OpenAI API key loaded successfully')
-    logger.info(f'Client object: {client}')
-    logger.info(f'Client type: {type(client)}')
-else:
-    logger.warning('OpenAI client not available. AI features will be disabled.')
-    logger.info(f'Client value: {client}')
+app.secret_key = os.environ.get('SECRET_KEY', 'your-secret-key-here')
+CORS(app)
 
 # Rate limiting
-RATE_LIMIT = 10  # requests per minute
-RATE_LIMIT_WINDOW = 60  # seconds
-request_counts = defaultdict(list)
+rate_limits = defaultdict(list)
+RATE_LIMIT_WINDOW = 60  # 1 minute
+MAX_REQUESTS_PER_WINDOW = 10
 
-def is_rate_limited(client_ip):
-    """Check if client is rate limited"""
-    now = time.time()
+def check_rate_limit(user_id):
+    """Check if user has exceeded rate limit"""
+    current_time = time.time()
+    user_requests = rate_limits[user_id]
+    
     # Remove old requests outside the window
-    request_counts[client_ip] = [req_time for req_time in request_counts[client_ip] 
-                                if now - req_time < RATE_LIMIT_WINDOW]
+    user_requests[:] = [req_time for req_time in user_requests if current_time - req_time < RATE_LIMIT_WINDOW]
     
-    if len(request_counts[client_ip]) >= RATE_LIMIT:
-        return True
+    if len(user_requests) >= MAX_REQUESTS_PER_WINDOW:
+        return False
     
-    request_counts[client_ip].append(now)
-    return False
+    user_requests.append(current_time)
+    return True
 
-# Main routes
 @app.route('/')
 def index():
     return render_template('chat.html')
@@ -87,283 +51,459 @@ def service_worker():
 
 @app.route('/debug')
 def debug():
-    """Debug endpoint to check API key and client status"""
-    api_key = os.environ.get('OPENAI_API_KEY')
-    logger.info(f"Debug endpoint: API key exists: {bool(api_key)}")
-    
-    try:
-        client = get_openai_client()
-        if client == "external_service":
-            # Test simple_openai module
-            try:
-                from simple_openai import AdvancedOpenAI
-                ai = AdvancedOpenAI()
-                ai_status = {
-                    'module_loaded': True,
-                    'api_key_exists': bool(ai.api_key),
-                    'api_key_preview': ai.api_key[:20] + "..." if ai.api_key else None,
-                    'available_models': ai.get_available_models()
-                }
-            except Exception as e:
-                ai_status = {
-                    'module_loaded': False,
-                    'error': str(e)
-                }
-            
-            return jsonify({
-                'api_key_exists': bool(api_key),
-                'client_key': api_key[:20] + "..." if api_key else None,
-                'client_created': True,
-                'client_type': 'external_service',
-                'simple_openai_status': ai_status,
-                'error': None
-            })
-        else:
-            return jsonify({
-                'api_key_exists': bool(api_key),
-                'client_created': False,
-                'client_type': 'none',
-                'error': 'Client creation failed'
-            })
-    except Exception as e:
-        return jsonify({
-            'api_key_exists': bool(api_key),
-            'client_created': False,
-            'client_type': 'error',
-            'error': str(e)
-        })
-
-@app.route('/test-simple-openai')
-def test_simple_openai():
-    """Test endpoint for simple OpenAI module"""
-    try:
-        # Test the simple OpenAI module directly
-        from simple_openai import call_openai_direct
-        
-        result = call_openai_direct("Say hello", max_tokens=20, temperature=0.7)
-        
-        return jsonify({
-            'success': result.get('success'),
-            'response': result.get('response'),
-            'error': result.get('error')
-        })
-        
-    except Exception as e:
-        return jsonify({
-            'success': False,
-            'error': str(e),
-            'error_type': str(type(e))
-        })
+    """Debug endpoint to test backend connectivity"""
+    return jsonify({
+        'status': 'Backend is running',
+        'timestamp': time.time(),
+        'environment': 'production' if os.environ.get('FLASK_ENV') == 'production' else 'development'
+    })
 
 @app.route('/api/chat', methods=['POST'])
 def chat():
-    """Chat endpoint with model selection"""
-    if is_rate_limited(request.remote_addr):
-        return jsonify({'error': 'Rate limit exceeded. Please wait a moment.'}), 429
-    
+    """Main chat endpoint supporting multiple AI models"""
     try:
         data = request.get_json()
-        if not data or 'message' not in data:
-            return jsonify({'error': 'Message is required'}), 400
-        
-        message = data['message']
-        personality = data.get('personality', 'default')
+        message = data.get('message', '')
+        model = data.get('model', 'gpt-4o')  # Default to GPT-4o
         use_memory = data.get('use_memory', True)
-        provider = data.get('provider', 'openai')
-        model = data.get('model', None)
         
-        # Generate user ID if not exists
-        if 'user_id' not in session:
-            session['user_id'] = str(uuid.uuid4())
+        # Check rate limit
+        user_id = session.get('user_id', 'anonymous')
+        if not check_rate_limit(user_id):
+            return jsonify({'success': False, 'error': 'Rate limit exceeded. Please try again later.'}), 429
         
-        user_id = session['user_id']
-        
-        # Initialize AI with model selection
-        try:
-            from simple_openai import AdvancedOpenAI
-            ai = AdvancedOpenAI()
-            
-            # Log API key status
-            logger.info(f"AI initialized for chat, API key exists: {bool(ai.api_key)}")
-            logger.info(f"Using provider: {provider}, model: {model}")
-            
-            # Get AI response with selected model
-            response = ai.call_ai_model(
-                message=message,
-                user_id=user_id,
-                personality=personality,
-                use_memory=use_memory,
-                provider=provider,
-                model=model
-            )
-            
-            logger.info(f"AI response received: {response}")
-            
-        except ImportError as e:
-            logger.error(f"Failed to import simple_openai: {e}")
-            return jsonify({'error': 'AI module import failed'}), 500
-        except Exception as e:
-            logger.error(f"Failed to initialize AI: {e}")
-            return jsonify({'error': 'AI initialization failed'}), 500
-        
-        if response and response.get('success'):
-            return jsonify({
-                'success': True,
-                'response': response['response'],
-                'personality': personality,
-                'model_used': response.get('model_used', 'Unknown'),
-                'provider': response.get('provider', 'Unknown'),
-                'tokens_used': response.get('tokens_used', 0),
-                'conversation_length': response.get('conversation_length', 0)
-            })
+        # Route to appropriate AI model
+        if model.startswith('gpt'):
+            return chat_with_openai(message, model, use_memory)
+        elif model.startswith('claude'):
+            return chat_with_claude(message, model, use_memory)
+        elif model.startswith('gemini'):
+            return chat_with_gemini(message, model, use_memory)
         else:
-            error_msg = response.get('error', 'Unknown error occurred') if response else 'No response from AI'
-            logger.error(f"AI error: {error_msg}")
-            return jsonify({'error': error_msg}), 400
+            return jsonify({'success': False, 'error': f'Unsupported model: {model}'}), 400
             
     except Exception as e:
-        logger.error(f'Chat error: {e}')
-        return jsonify({'error': 'Internal server error'}), 500
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 @app.route('/api/chat-with-image', methods=['POST'])
 def chat_with_image():
-    """Chat endpoint with image analysis"""
-    if is_rate_limited(request.remote_addr):
-        return jsonify({'error': 'Rate limit exceeded. Please wait a moment.'}), 429
-    
+    """Chat with image using multiple AI models"""
     try:
         data = request.get_json()
-        if not data or 'message' not in data or 'image_data' not in data:
-            return jsonify({'error': 'Message and image data are required'}), 400
-        
-        message = data['message']
-        image_data = data['image_data']
-        personality = data.get('personality', 'default')
+        message = data.get('message', '')
+        image_data = data.get('image_data', '')
+        model = data.get('model', 'gpt-4o')  # Default to GPT-4o for image analysis
         use_memory = data.get('use_memory', True)
         
-        # Generate user ID if not exists
-        if 'user_id' not in session:
-            session['user_id'] = str(uuid.uuid4())
+        # Check rate limit
+        user_id = session.get('user_id', 'anonymous')
+        if not check_rate_limit(user_id):
+            return jsonify({'success': False, 'error': 'Rate limit exceeded. Please try again later.'}), 429
         
-        user_id = session['user_id']
-        
-        # Initialize AI with image analysis
-        try:
-            from simple_openai import AdvancedOpenAI
-            ai = AdvancedOpenAI()
-            
-            # Log API key status
-            logger.info(f"AI initialized for image analysis, API key exists: {bool(ai.api_key)}")
-            
-            # Get AI response with image
-            response = ai.call_openai_with_image(
-                message=message,
-                image_data=image_data,
-                user_id=user_id,
-                personality=personality,
-                use_memory=use_memory
-            )
-            
-            logger.info(f"AI image analysis response received: {response}")
-            
-        except ImportError as e:
-            logger.error(f"Failed to import simple_openai: {e}")
-            return jsonify({'error': 'AI module import failed'}), 500
-        except Exception as e:
-            logger.error(f"Failed to initialize AI: {e}")
-            return jsonify({'error': 'AI initialization failed'}), 500
-        
-        if response and response.get('success'):
-            return jsonify({
-                'success': True,
-                'response': response['response'],
-                'personality': personality,
-                'model_used': response.get('model_used', 'GPT-4o'),
-                'provider': response.get('provider', 'openai'),
-                'tokens_used': response.get('tokens_used', 0),
-                'conversation_length': response.get('conversation_length', 0),
-                'image_analyzed': True
-            })
+        # Route to appropriate AI model (only GPT-4o supports images currently)
+        if model.startswith('gpt'):
+            return chat_with_openai_image(message, image_data, use_memory)
         else:
-            error_msg = response.get('error', 'Unknown error occurred') if response else 'No response from AI'
-            logger.error(f"AI image analysis error: {error_msg}")
-            return jsonify({'error': error_msg}), 400
+            return jsonify({'success': False, 'error': f'Image analysis not supported for model: {model}'}), 400
             
     except Exception as e:
-        logger.error(f'Chat with image error: {e}')
-        return jsonify({'error': 'Internal server error'}), 500
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 @app.route('/api/chat-with-document', methods=['POST'])
 def chat_with_document():
-    """Chat endpoint with document analysis"""
-    if is_rate_limited(request.remote_addr):
-        return jsonify({'error': 'Rate limit exceeded. Please wait a moment.'}), 429
-    
+    """Chat with document using multiple AI models"""
     try:
         data = request.get_json()
-        if not data or 'message' not in data or 'document_data' not in data:
-            return jsonify({'error': 'Message and document data are required'}), 400
-        
-        message = data['message']
-        document_data = data['document_data']
+        message = data.get('message', '')
+        document_data = data.get('document_data', '')
         document_name = data.get('document_name', 'Document')
-        personality = data.get('personality', 'default')
+        model = data.get('model', 'gpt-4o')  # Default to GPT-4o
         use_memory = data.get('use_memory', True)
         
-        # Generate user ID if not exists
-        if 'user_id' not in session:
-            session['user_id'] = str(uuid.uuid4())
+        # Check rate limit
+        user_id = session.get('user_id', 'anonymous')
+        if not check_rate_limit(user_id):
+            return jsonify({'success': False, 'error': 'Rate limit exceeded. Please try again later.'}), 429
         
-        user_id = session['user_id']
-        
-        # Initialize AI with document analysis
-        try:
-            from simple_openai import AdvancedOpenAI
-            ai = AdvancedOpenAI()
-            
-            # Log API key status
-            logger.info(f"AI initialized for document analysis, API key exists: {bool(ai.api_key)}")
-            
-            # Create enhanced message with document context
-            enhanced_message = f"Document: {document_name}\n\nDocument Content:\n{document_data}\n\nUser Question: {message}"
-            
-            # Get AI response with document context
-            response = ai.call_openai_advanced(
-                message=enhanced_message,
-                user_id=user_id,
-                personality=personality,
-                use_memory=use_memory
-            )
-            
-            logger.info(f"AI document analysis response received: {response}")
-            
-        except ImportError as e:
-            logger.error(f"Failed to import simple_openai: {e}")
-            return jsonify({'error': 'AI module import failed'}), 500
-        except Exception as e:
-            logger.error(f"Failed to initialize AI: {e}")
-            return jsonify({'error': 'AI initialization failed'}), 500
-        
-        if response and response.get('success'):
-            return jsonify({
-                'success': True,
-                'response': response['response'],
-                'personality': personality,
-                'model_used': response.get('model_used', 'GPT-4o'),
-                'provider': response.get('provider', 'openai'),
-                'tokens_used': response.get('tokens_used', 0),
-                'conversation_length': response.get('conversation_length', 0),
-                'document_analyzed': True,
-                'document_name': document_name
-            })
+        # Route to appropriate AI model
+        if model.startswith('gpt'):
+            return chat_with_openai_document(message, document_data, document_name, use_memory)
+        elif model.startswith('claude'):
+            return chat_with_claude_document(message, document_data, document_name, use_memory)
+        elif model.startswith('gemini'):
+            return chat_with_gemini_document(message, document_data, document_name, use_memory)
         else:
-            error_msg = response.get('error', 'Unknown error occurred') if response else 'No response from AI'
-            logger.error(f"AI document analysis error: {error_msg}")
-            return jsonify({'error': error_msg}), 400
+            return jsonify({'success': False, 'error': f'Unsupported model: {model}'}), 400
             
     except Exception as e:
-        logger.error(f'Chat with document error: {e}')
-        return jsonify({'error': 'Internal server error'}), 500
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/api/compare-models', methods=['POST'])
+def compare_models():
+    """Compare responses from multiple AI models"""
+    try:
+        data = request.get_json()
+        message = data.get('message', '')
+        models = data.get('models', ['gpt-4o', 'claude-3-sonnet', 'gemini-1.5-pro'])
+        use_memory = data.get('use_memory', True)
+        
+        # Check rate limit
+        user_id = session.get('user_id', 'anonymous')
+        if not check_rate_limit(user_id):
+            return jsonify({'success': False, 'error': 'Rate limit exceeded. Please try again later.'}), 429
+        
+        # Get responses from all models
+        responses = {}
+        for model in models:
+            try:
+                if model.startswith('gpt'):
+                    response = chat_with_openai(message, model, use_memory)
+                    if response[1] == 200:
+                        responses[model] = response[0].get_json()['response']
+                    else:
+                        responses[model] = f"Error: {response[0].get_json()['error']}"
+                elif model.startswith('claude'):
+                    response = chat_with_claude(message, model, use_memory)
+                    if response[1] == 200:
+                        responses[model] = response[0].get_json()['response']
+                    else:
+                        responses[model] = f"Error: {response[0].get_json()['error']}"
+                elif model.startswith('gemini'):
+                    response = chat_with_gemini(message, model, use_memory)
+                    if response[1] == 200:
+                        responses[model] = response[0].get_json()['response']
+                    else:
+                        responses[model] = f"Error: {response[0].get_json()['error']}"
+            except Exception as e:
+                responses[model] = f"Error: {str(e)}"
+        
+        return jsonify({
+            'success': True,
+            'responses': responses,
+            'message': message,
+            'models_compared': models
+        })
+        
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/api/models', methods=['GET'])
+def get_available_models():
+    """Get list of available AI models"""
+    models = {
+        'openai': [
+            {'id': 'gpt-4o', 'name': 'GPT-4o', 'description': 'Latest OpenAI model with enhanced capabilities', 'supports_images': True},
+            {'id': 'gpt-4-turbo', 'name': 'GPT-4 Turbo', 'description': 'Fast and efficient GPT-4 variant', 'supports_images': False},
+            {'id': 'gpt-3.5-turbo', 'name': 'GPT-3.5 Turbo', 'description': 'Fast and cost-effective model', 'supports_images': False}
+        ],
+        'anthropic': [
+            {'id': 'claude-3-sonnet', 'name': 'Claude 3.5 Sonnet', 'description': 'Anthropic\'s most capable model', 'supports_images': False},
+            {'id': 'claude-3-haiku', 'name': 'Claude 3 Haiku', 'description': 'Fast and efficient Claude model', 'supports_images': False}
+        ],
+        'google': [
+            {'id': 'gemini-1.5-pro', 'name': 'Gemini 1.5 Pro', 'description': 'Google\'s most advanced AI model', 'supports_images': False},
+            {'id': 'gemini-1.5-flash', 'name': 'Gemini 1.5 Flash', 'description': 'Fast and efficient Gemini model', 'supports_images': False}
+        ]
+    }
+    
+    return jsonify({'success': True, 'models': models})
+
+# OpenAI Integration
+def chat_with_openai(message, model='gpt-4o', use_memory=True):
+    """Chat with OpenAI models"""
+    try:
+        api_key = os.environ.get('OPENAI_API_KEY')
+        if not api_key:
+            return jsonify({'success': False, 'error': 'OpenAI API key not configured'}), 500
+        
+        headers = {
+            'Authorization': f'Bearer {api_key}',
+            'Content-Type': 'application/json'
+        }
+        
+        data = {
+            'model': model,
+            'messages': [{'role': 'user', 'content': message}],
+            'max_tokens': 1000,
+            'temperature': 0.7
+        }
+        
+        response = requests.post('https://api.openai.com/v1/chat/completions', headers=headers, json=data)
+        
+        if response.status_code == 200:
+            result = response.json()
+            ai_response = result['choices'][0]['message']['content']
+            tokens_used = result['usage']['total_tokens']
+            
+            return jsonify({
+                'success': True,
+                'response': ai_response,
+                'model': model,
+                'tokens_used': tokens_used,
+                'provider': 'openai'
+            })
+        else:
+            return jsonify({'success': False, 'error': f'OpenAI API error: {response.text}'}), response.status_code
+            
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+def chat_with_openai_image(message, image_data, use_memory=True):
+    """Chat with OpenAI models using image input"""
+    try:
+        api_key = os.environ.get('OPENAI_API_KEY')
+        if not api_key:
+            return jsonify({'success': False, 'error': 'OpenAI API key not configured'}), 500
+        
+        headers = {
+            'Authorization': f'Bearer {api_key}',
+            'Content-Type': 'application/json'
+        }
+        
+        # Remove data URL prefix if present
+        if image_data.startswith('data:image'):
+            image_data = image_data.split(',')[1]
+        
+        data = {
+            'model': 'gpt-4o',
+            'messages': [
+                {
+                    'role': 'user',
+                    'content': [
+                        {'type': 'text', 'text': message},
+                        {'type': 'image_url', 'image_url': {'url': f'data:image/jpeg;base64,{image_data}'}}
+                    ]
+                }
+            ],
+            'max_tokens': 1000,
+            'temperature': 0.7
+        }
+        
+        response = requests.post('https://api.openai.com/v1/chat/completions', headers=headers, json=data)
+        
+        if response.status_code == 200:
+            result = response.json()
+            ai_response = result['choices'][0]['message']['content']
+            tokens_used = result['usage']['total_tokens']
+            
+            return jsonify({
+                'success': True,
+                'response': ai_response,
+                'model': 'gpt-4o',
+                'tokens_used': tokens_used,
+                'provider': 'openai'
+            })
+        else:
+            return jsonify({'success': False, 'error': f'OpenAI API error: {response.text}'}), response.status_code
+            
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+def chat_with_openai_document(message, document_data, document_name, use_memory=True):
+    """Chat with OpenAI models using document input"""
+    try:
+        api_key = os.environ.get('OPENAI_API_KEY')
+        if not api_key:
+            return jsonify({'success': False, 'error': 'OpenAI API key not configured'}), 500
+        
+        headers = {
+            'Authorization': f'Bearer {api_key}',
+            'Content-Type': 'application/json'
+        }
+        
+        enhanced_message = f"Document: {document_name}\n\nContent:\n{document_data}\n\nUser Question: {message}"
+        
+        data = {
+            'model': 'gpt-4o',
+            'messages': [{'role': 'user', 'content': enhanced_message}],
+            'max_tokens': 1000,
+            'temperature': 0.7
+        }
+        
+        response = requests.post('https://api.openai.com/v1/chat/completions', headers=headers, json=data)
+        
+        if response.status_code == 200:
+            result = response.json()
+            ai_response = result['choices'][0]['message']['content']
+            tokens_used = result['usage']['total_tokens']
+            
+            return jsonify({
+                'success': True,
+                'response': ai_response,
+                'model': 'gpt-4o',
+                'tokens_used': tokens_used,
+                'provider': 'openai'
+            })
+        else:
+            return jsonify({'success': False, 'error': f'OpenAI API error: {response.text}'}), response.status_code
+            
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+# Claude Integration
+def chat_with_claude(message, model='claude-3-sonnet', use_memory=True):
+    """Chat with Claude models"""
+    try:
+        api_key = os.environ.get('ANTHROPIC_API_KEY')
+        if not api_key:
+            return jsonify({'success': False, 'error': 'Anthropic API key not configured'}), 500
+        
+        headers = {
+            'x-api-key': api_key,
+            'Content-Type': 'application/json',
+            'anthropic-version': '2023-06-01'
+        }
+        
+        # Map model names to Claude API format
+        model_mapping = {
+            'claude-3-sonnet': 'claude-3-5-sonnet-20241022',
+            'claude-3-haiku': 'claude-3-haiku-20240307'
+        }
+        
+        claude_model = model_mapping.get(model, 'claude-3-5-sonnet-20241022')
+        
+        data = {
+            'model': claude_model,
+            'max_tokens': 1000,
+            'messages': [{'role': 'user', 'content': message}]
+        }
+        
+        response = requests.post('https://api.anthropic.com/v1/messages', headers=headers, json=data)
+        
+        if response.status_code == 200:
+            result = response.json()
+            ai_response = result['content'][0]['text']
+            
+            return jsonify({
+                'success': True,
+                'response': ai_response,
+                'model': model,
+                'provider': 'anthropic'
+            })
+        else:
+            return jsonify({'success': False, 'error': f'Claude API error: {response.text}'}), response.status_code
+            
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+def chat_with_claude_document(message, document_data, document_name, use_memory=True):
+    """Chat with Claude models using document input"""
+    try:
+        api_key = os.environ.get('ANTHROPIC_API_KEY')
+        if not api_key:
+            return jsonify({'success': False, 'error': 'Anthropic API key not configured'}), 500
+        
+        headers = {
+            'x-api-key': api_key,
+            'Content-Type': 'application/json',
+            'anthropic-version': '2023-06-01'
+        }
+        
+        enhanced_message = f"Document: {document_name}\n\nContent:\n{document_data}\n\nUser Question: {message}"
+        
+        data = {
+            'model': 'claude-3-5-sonnet-20241022',
+            'max_tokens': 1000,
+            'messages': [{'role': 'user', 'content': enhanced_message}]
+        }
+        
+        response = requests.post('https://api.anthropic.com/v1/messages', headers=headers, json=data)
+        
+        if response.status_code == 200:
+            result = response.json()
+            ai_response = result['content'][0]['text']
+            
+            return jsonify({
+                'success': True,
+                'response': ai_response,
+                'model': 'claude-3-sonnet',
+                'provider': 'anthropic'
+            })
+        else:
+            return jsonify({'success': False, 'error': f'Claude API error: {response.text}'}), response.status_code
+            
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+# Gemini Integration
+def chat_with_gemini(message, model='gemini-1.5-pro', use_memory=True):
+    """Chat with Gemini models"""
+    try:
+        api_key = os.environ.get('GOOGLE_API_KEY')
+        if not api_key:
+            return jsonify({'success': False, 'error': 'Google API key not configured'}), 500
+        
+        # Map model names to Gemini API format
+        model_mapping = {
+            'gemini-1.5-pro': 'gemini-1.5-pro',
+            'gemini-1.5-flash': 'gemini-1.5-flash'
+        }
+        
+        gemini_model = model_mapping.get(model, 'gemini-1.5-pro')
+        
+        url = f'https://generativelanguage.googleapis.com/v1beta/models/{gemini_model}:generateContent?key={api_key}'
+        
+        data = {
+            'contents': [{
+                'parts': [{'text': message}]
+            }],
+            'generationConfig': {
+                'maxOutputTokens': 1000,
+                'temperature': 0.7
+            }
+        }
+        
+        response = requests.post(url, json=data)
+        
+        if response.status_code == 200:
+            result = response.json()
+            ai_response = result['candidates'][0]['content']['parts'][0]['text']
+            
+            return jsonify({
+                'success': True,
+                'response': ai_response,
+                'model': model,
+                'provider': 'google'
+            })
+        else:
+            return jsonify({'success': False, 'error': f'Gemini API error: {response.text}'}), response.status_code
+            
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+def chat_with_gemini_document(message, document_data, document_name, use_memory=True):
+    """Chat with Gemini models using document input"""
+    try:
+        api_key = os.environ.get('GOOGLE_API_KEY')
+        if not api_key:
+            return jsonify({'success': False, 'error': 'Google API key not configured'}), 500
+        
+        enhanced_message = f"Document: {document_name}\n\nContent:\n{document_data}\n\nUser Question: {message}"
+        
+        url = f'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key={api_key}'
+        
+        data = {
+            'contents': [{
+                'parts': [{'text': enhanced_message}]
+            }],
+            'generationConfig': {
+                'maxOutputTokens': 1000,
+                'temperature': 0.7
+            }
+        }
+        
+        response = requests.post(url, json=data)
+        
+        if response.status_code == 200:
+            result = response.json()
+            ai_response = result['candidates'][0]['content']['parts'][0]['text']
+            
+            return jsonify({'success': True, 'response': ai_response, 'model': 'gemini-1.5-pro', 'provider': 'google'})
+        else:
+            return jsonify({'success': False, 'error': f'Gemini API error: {response.text}'}), response.status_code
+            
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 @app.route('/api/personalities', methods=['GET'])
 def get_personalities():
