@@ -415,20 +415,20 @@ class AdvancedOpenAI:
                 }
             ]
             
-            # Add conversation history if memory is enabled
-            if use_memory:
-                conversation = self.get_conversation_context(user_id)
-                for msg in conversation[-5:]:  # Last 5 messages for context (shorter for image analysis)
-                    if msg["role"] in ["user", "assistant"]:
-                        messages.insert(-1, {"role": msg["role"], "content": msg["content"]})
-            
-                            # Use GPT-4o model (latest and best for images)
-                data = {
-                    "model": "gpt-4o",
-                    "max_tokens": max_tokens,
-                    "temperature": temperature,
-                    "messages": messages
-                }
+                         # Add conversation history if memory is enabled
+             if use_memory:
+                 conversation = self.get_conversation_context(user_id)
+                 for msg in conversation[-5:]:  # Last 5 messages for context (shorter for image analysis)
+                     if msg["role"] in ["user", "assistant"]:
+                         messages.insert(-1, {"role": msg["role"], "content": msg["content"]})
+             
+             # Use GPT-4o model (latest and best for images)
+             data = {
+                 "model": "gpt-4o",
+                 "max_tokens": max_tokens,
+                 "temperature": temperature,
+                 "messages": messages
+             }
             
             headers = {
                 "Authorization": f"Bearer {self.api_key}",
@@ -446,18 +446,18 @@ class AdvancedOpenAI:
                 result = response.json()
                 ai_response = result['choices'][0]['message']['content'].strip()
                 
-                # Add to conversation history
-                self.add_to_conversation(user_id, "user", f"[Image Analysis Request] {message}")
-                self.add_to_conversation(user_id, "assistant", ai_response)
-                
-                                    return {
-                        "success": True, 
-                        "response": ai_response,
-                        "model_used": "gpt-4o",
-                        "tokens_used": result['usage']['total_tokens'],
-                        "conversation_length": len(self.get_conversation_context(user_id)),
-                        "image_analyzed": True
-                    }
+                                 # Add to conversation history
+                 self.add_to_conversation(user_id, "user", f"[Image Analysis Request] {message}")
+                 self.add_to_conversation(user_id, "assistant", ai_response)
+                 
+                 return {
+                     "success": True, 
+                     "response": ai_response,
+                     "model_used": "gpt-4o",
+                     "tokens_used": result['usage']['total_tokens'],
+                     "conversation_length": len(self.get_conversation_context(user_id)),
+                     "image_analyzed": True
+                 }
             else:
                 return {"success": False, "error": f"API error: {response.status_code} - {response.text}"}
                 
