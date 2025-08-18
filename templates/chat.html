@@ -351,7 +351,7 @@
             transform: scale(1.05);
         }
 
-        .image-icon {
+        .file-upload-icon {
             color: var(--text-secondary);
             cursor: pointer;
             padding: 8px;
@@ -364,14 +364,253 @@
             height: 36px;
         }
 
-        .image-icon:hover {
+        .file-upload-icon:hover {
             background: rgba(255, 255, 255, 0.1);
             color: var(--text-primary);
             transform: scale(1.05);
         }
 
-        .image-icon svg {
+        .file-upload-icon svg {
             transition: all var(--transition-speed) var(--transition-ease);
+        }
+
+        .tts-toggle {
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: all var(--transition-speed) var(--transition-ease);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+        }
+
+        .tts-toggle:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            transform: scale(1.05);
+        }
+
+        .tts-toggle.active {
+            color: var(--accent-primary);
+        }
+
+        .tts-toggle svg {
+            transition: all var(--transition-speed) var(--transition-ease);
+        }
+
+        /* Rich Media Content Styles */
+        .rich-content {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .rich-content img {
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s ease;
+        }
+
+        .rich-content img:hover {
+            transform: scale(1.02);
+        }
+
+        .response-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--accent-primary);
+            text-decoration: none;
+            padding: 8px 16px;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .response-link:hover {
+            background: rgba(59, 130, 246, 0.2);
+            border-color: rgba(59, 130, 246, 0.4);
+            transform: translateY(-1px);
+        }
+
+        /* Document Upload Styles */
+        .document-upload {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 8px;
+            padding: 12px;
+            margin: 8px 0;
+        }
+
+        .document-upload strong {
+            color: var(--accent-primary);
+        }
+
+        .document-upload small {
+            color: var(--text-secondary);
+            font-size: 12px;
+        }
+
+        /* Language Detection Indicator */
+        .language-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--accent-primary);
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+            margin-left: 8px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .language-indicator::before {
+            content: '🌐';
+            font-size: 10px;
+        }
+
+        /* Settings Modal Styles */
+        .settings-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .settings-content {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--dark-border);
+            border-radius: 16px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .settings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid var(--dark-border);
+        }
+
+        .settings-header h3 {
+            color: var(--text-primary);
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .close-settings {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all var(--transition-speed) var(--transition-ease);
+        }
+
+        .close-settings:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+        }
+
+        .settings-body {
+            padding: 20px;
+        }
+
+        .setting-group {
+            margin-bottom: 20px;
+        }
+
+        .setting-group label {
+            display: block;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .setting-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--dark-border);
+            border-radius: 8px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        .setting-group select:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+        }
+
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--dark-border);
+            transition: 0.3s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.3s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--accent-primary);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
         }
 
         .voice-icon.listening {
@@ -786,8 +1025,8 @@
     
 
     
-    <!-- Hidden File Input for Image Upload -->
-    <input type="file" id="imageUploadInput" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
+    <!-- Hidden File Input for Multiple File Types -->
+    <input type="file" id="fileUploadInput" accept="image/*,.pdf,.doc,.docx,.txt,.md" style="display: none;" onchange="handleFileUpload(event)">
     
 
 
@@ -823,13 +1062,16 @@
                     <h1 class="main-title">Query AI</h1>
                     <p class="main-subtitle">Ask detailed questions for better responses</p>
                 </div>
-                <div class="settings-icon" onclick="openSettings()" title="Settings">
+                <div class="settings-icon" onclick="alert('Settings clicked!'); openSettings();" title="Settings" style="cursor: pointer;">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
                         <circle cx="12" cy="6" r="2"/>
                         <circle cx="12" cy="12" r="2"/>
                         <circle cx="12" cy="18" r="2"/>
                     </svg>
                 </div>
+                <!-- Debug button to test if JavaScript is working -->
+                <button onclick="alert('JavaScript is working!')" style="margin-left: 10px; padding: 5px 10px; background: red; color: white; border: none; border-radius: 5px; cursor: pointer;">Test JS</button>
+
             </div>
             
             <!-- Main Messages Area -->
@@ -839,15 +1081,23 @@
             <div class="input-container">
                 <input type="text" id="messageInput" class="input-field" placeholder="Ask anything" onkeypress="handleKeyPress(event)">
                 <div class="input-right-icons">
-                    <div class="image-icon" onclick="triggerImageUpload()" title="Upload Image">
+                    <!-- File Upload Icon (Enhanced for multiple file types) -->
+                    <div class="file-upload-icon" onclick="triggerFileUpload()" title="Upload Files (Images, Documents)">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+                            <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zM16 18H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
                         </svg>
                     </div>
+                    <!-- Voice Input Icon -->
                     <div class="voice-icon" onclick="startVoiceInput()" title="Voice Input">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
                             <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+                        </svg>
+                    </div>
+                    <!-- Text-to-Speech Toggle -->
+                    <div class="tts-toggle" id="ttsToggle" onclick="toggleTTS()" title="Text-to-Speech (Off)">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
                         </svg>
                     </div>
                     <button class="send-button" onclick="sendMessage()">↑</button>
@@ -992,10 +1242,99 @@
             
             messageDiv.appendChild(avatar);
             messageDiv.appendChild(messageContent);
+            
+            // Add language detection for user messages
+            if (isUser) {
+                const detectedLang = detectLanguage(content);
+                if (detectedLang !== 'english') {
+                    const langIndicator = document.createElement('span');
+                    langIndicator.className = 'language-indicator';
+                    langIndicator.textContent = detectedLang;
+                    messageDiv.appendChild(langIndicator);
+                }
+            }
+            
             mainMessages.appendChild(messageDiv);
             
-            // Scroll to bottom
-            mainMessages.scrollTop = mainMessages.scrollHeight;
+            // Scroll to bottom with smooth animation
+            mainMessages.scrollTo({
+                top: mainMessages.scrollHeight,
+                behavior: 'smooth'
+            });
+            
+            // Text-to-Speech for AI responses
+            if (!isUser && ttsEnabled) {
+                speakText(content);
+            }
+        }
+
+        // Add rich media message with enhanced features
+        function addRichMessage(content, isUser = false, mediaType = null, mediaData = null) {
+            const mainMessages = document.getElementById('mainMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user' : 'ai'}`;
+            
+            const avatar = document.createElement('div');
+            avatar.className = `avatar ${isUser ? 'user' : 'ai'}`;
+            if (isUser) {
+                avatar.textContent = '👤';
+            } else {
+                avatar.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="#FFFFFF">
+                    <!-- Robot Head -->
+                    <ellipse cx="12" cy="10" rx="8" ry="6" fill="#FFFFFF"/>
+                    <!-- Eyes -->
+                    <circle cx="9" cy="8" r="1.5" fill="#3B82F6"/>
+                    <!-- Smiling Mouth -->
+                    <path d="M9 12 Q12 15 15 12" stroke="#3B82F6" stroke-width="1.5" fill="none"/>
+                    <!-- Headset Band -->
+                    <path d="M4 10 Q12 4 20 10" stroke="#FFFFFF" stroke-width="2" fill="none"/>
+                    <!-- Earcups -->
+                    <circle cx="4" cy="10" r="2" fill="#FFFFFF"/>
+                    <circle cx="20" cy="10" r="2" fill="#FFFFFF"/>
+                    <!-- Microphone -->
+                    <path d="M2 10 Q0 12 0 15" stroke="#FFFFFF" stroke-width="1.5" fill="none"/>
+                    <circle cx="0" cy="15" r="1" fill="#FFFFFF"/>
+                    <!-- Antenna -->
+                    <line x1="12" y1="4" x2="12" y2="1" stroke="#FFFFFF" stroke-width="1.5"/>
+                    <circle cx="12" cy="1" r="1" fill="#FFFFFF"/>
+                </svg>`;
+            }
+            
+            const messageContent = document.createElement('div');
+            messageContent.className = 'message-content';
+            
+            // Handle rich media content
+            if (mediaType === 'image' && mediaData) {
+                messageContent.innerHTML = `
+                    <div class="rich-content">
+                        <img src="${mediaData}" alt="AI Response Image" style="max-width: 100%; border-radius: 8px; margin: 10px 0;">
+                        <div class="text-content">${content}</div>
+                    </div>
+                `;
+            } else if (mediaType === 'link' && mediaData) {
+                messageContent.innerHTML = `
+                    <div class="rich-content">
+                        <div class="text-content">${content}</div>
+                        <a href="${mediaData}" target="_blank" class="response-link">🔗 View Resource</a>
+                    </div>
+                `;
+            } else {
+                messageContent.textContent = content;
+            }
+            
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(messageContent);
+            mainMessages.appendChild(messageDiv);
+            
+            // Auto-scroll and speak if TTS is enabled
+            mainMessages.scrollTo({
+                top: mainMessages.scrollHeight,
+                behavior: 'smooth'
+            });
+            
+            if (!isUser && ttsEnabled) {
+                speakText(content);
+            }
         }
 
         // Add message to chat
@@ -1124,6 +1463,58 @@
             }
         }
 
+        // Send message to AI with document
+        async function sendToAIWithDocument(message, documentData, documentName) {
+            try {
+                // Show loading message on main page
+                addMainMessage('Analyzing document and processing your question...', false);
+                
+                const response = await fetch('/api/chat-with-document', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        message: message,
+                        document_data: documentData,
+                        document_name: documentName,
+                        use_memory: true
+                    }),
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success && data.response) {
+                        // Remove loading message and add AI response to main page
+                        const mainMessages = document.getElementById('mainMessages');
+                        if (mainMessages.lastChild) {
+                            mainMessages.removeChild(mainMessages.lastChild);
+                        }
+                        addMainMessage(data.response, false);
+                    } else {
+                        const mainMessages = document.getElementById('mainMessages');
+                        if (mainMessages.lastChild) {
+                            mainMessages.removeChild(mainMessages.lastChild);
+                        }
+                        addMainMessage('Sorry, I encountered an error analyzing the document. Please try again.', false);
+                    }
+                } else {
+                    const mainMessages = document.getElementById('mainMessages');
+                    if (mainMessages.lastChild) {
+                        mainMessages.removeChild(mainMessages.lastChild);
+                    }
+                    addMainMessage('Sorry, I encountered an error analyzing the document. Please try again.', false);
+                }
+            } catch (error) {
+                console.error('Error with document analysis:', error);
+                const mainMessages = document.getElementById('mainMessages');
+                if (mainMessages.lastChild) {
+                    mainMessages.removeChild(mainMessages.lastChild);
+                }
+                addMainMessage('Sorry, I encountered an error analyzing the document. Please try again.', false);
+            }
+        }
+
         // Voice input functionality
         let recognition = null;
         let isListening = false;
@@ -1148,7 +1539,14 @@
             
             recognition.continuous = false;
             recognition.interimResults = false;
-            recognition.lang = 'en-US';
+            
+            // Auto-detect language or use user preference
+            const userLang = localStorage.getItem('preferredLanguage') || 'en-US';
+            recognition.lang = userLang;
+            
+            // Show language being used
+            const langName = getLanguageName(userLang);
+            showVoiceStatus(`Listening in ${langName}... Speak now!`);
 
             // Start listening
             recognition.start();
@@ -1488,8 +1886,16 @@
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded!'); // Debug log
             // Test backend connection
             testBackend();
+            
+            // Test if settings function is available
+            if (typeof openSettings === 'function') {
+                console.log('openSettings function is available!');
+            } else {
+                console.error('openSettings function is NOT available!');
+            }
         });
 
         // Real-time Updates System
@@ -1638,9 +2044,11 @@
             // Show typing indicator
             showTypingIndicator();
             
-            // Send to AI with image if available
+            // Send to AI with appropriate context
             if (uploadedImage && uploadedImageData) {
                 await sendToAIWithImage(message, uploadedImageData);
+            } else if (uploadedDocument && uploadedDocumentData) {
+                await sendToAIWithDocument(message, uploadedDocumentData, uploadedDocument.name);
             } else {
                 await sendToAI(message);
             }
@@ -1649,13 +2057,295 @@
             hideTypingIndicator();
         }
 
-        // Settings function (placeholder for future implementation)
+
+
+        // Settings function with language and TTS options
         function openSettings() {
-            // TODO: Add settings functionality later
-            console.log('Settings clicked - functionality to be added');
-            // You can add a modal, dropdown, or navigation to settings page here
+            console.log('Settings clicked!'); // Debug log
+            alert('openSettings function called!'); // Debug alert
+            
+            // Create a super simple test modal first
+            const testModal = document.createElement('div');
+            testModal.id = 'testModal';
+            testModal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: red;
+                z-index: 99999;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            `;
+            
+            testModal.innerHTML = `
+                <div style="background: white; padding: 50px; border-radius: 20px; color: black; font-size: 24px;">
+                    <h1>🎉 SETTINGS WORKING! 🎉</h1>
+                    <p>If you can see this red background and white box, the modal is working!</p>
+                    <button onclick="document.getElementById('testModal').remove()" style="
+                        background: #3B82F6;
+                        color: white;
+                        border: none;
+                        padding: 15px 30px;
+                        border-radius: 10px;
+                        font-size: 18px;
+                        cursor: pointer;
+                    ">Close Test Modal</button>
+                </div>
+            `;
+            
+            document.body.appendChild(testModal);
+            console.log('Test modal created!');
         }
 
+        function closeSettings() {
+            const modal = document.getElementById('settingsModal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        function toggleTTSFromSettings(enabled) {
+            ttsEnabled = enabled;
+            const ttsToggle = document.getElementById('ttsToggle');
+            
+            if (enabled) {
+                ttsToggle.classList.add('active');
+                ttsToggle.title = 'Text-to-Speech (On)';
+                ttsToggle.style.color = 'var(--accent-primary)';
+            } else {
+                ttsToggle.classList.remove('active');
+                ttsToggle.title = 'Text-to-Speech (Off)';
+                ttsToggle.style.color = 'var(--text-secondary)';
+            }
+        }
+
+        // Enhanced File Upload Function (supports multiple file types)
+        function triggerFileUpload() {
+            document.getElementById('fileUploadInput').click();
+        }
+
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const fileType = file.type;
+            const fileName = file.name;
+
+            if (fileType.startsWith('image/')) {
+                // Handle image files
+                handleImageFile(file);
+            } else if (fileType === 'application/pdf' || 
+                       fileType.includes('document') || 
+                       fileType === 'text/plain' || 
+                       fileType === 'text/markdown') {
+                // Handle document files
+                handleDocumentFile(file);
+            } else {
+                alert('Unsupported file type. Please upload images, PDFs, or text documents.');
+            }
+        }
+
+        function handleImageFile(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                uploadedImage = file;
+                uploadedImageData = e.target.result;
+                showImagePreview(e.target.result, file.name);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function handleDocumentFile(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                // Store document data for AI processing
+                uploadedDocument = file;
+                uploadedDocumentData = e.target.result;
+                showDocumentPreview(file.name);
+            };
+            reader.readAsText(file);
+        }
+
+        function showDocumentPreview(fileName) {
+            // Show document upload confirmation
+            const mainMessages = document.getElementById('mainMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message user';
+            messageDiv.innerHTML = `
+                <div class="avatar user">📄</div>
+                <div class="message-content">
+                    <strong>Document uploaded:</strong> ${fileName}<br>
+                    <small>You can now ask questions about this document.</small>
+                </div>
+            `;
+            mainMessages.appendChild(messageDiv);
+            mainMessages.scrollTop = mainMessages.scrollHeight;
+        }
+
+        // Text-to-Speech Functionality
+        let ttsEnabled = false;
+        let speechSynthesis = window.speechSynthesis;
+
+        function toggleTTS() {
+            ttsEnabled = !ttsEnabled;
+            const ttsToggle = document.getElementById('ttsToggle');
+            
+            if (ttsEnabled) {
+                ttsToggle.classList.add('active');
+                ttsToggle.title = 'Text-to-Speech (On)';
+                ttsToggle.style.color = 'var(--accent-primary)';
+            } else {
+                ttsToggle.classList.remove('active');
+                ttsToggle.title = 'Text-to-Speech (Off)';
+                ttsToggle.style.color = 'var(--text-secondary)';
+            }
+        }
+
+        function speakText(text) {
+            if (!ttsEnabled) return;
+            
+            if (speechSynthesis.speaking) {
+                speechSynthesis.cancel();
+            }
+            
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = 0.9;
+            utterance.pitch = 1;
+            utterance.volume = 0.8;
+            speechSynthesis.speak(utterance);
+        }
+
+        // Multi-language Support
+        function detectLanguage(text) {
+            // Simple language detection (can be enhanced with libraries)
+            const patterns = {
+                'spanish': /[áéíóúñ¿¡]/i,
+                'french': /[àâäéèêëïîôùûüÿç]/i,
+                'german': /[äöüß]/i,
+                'italian': /[àèéìíîòóù]/i,
+                'portuguese': /[ãâáàçéêíóôõú]/i,
+                'russian': /[а-яё]/i,
+                'chinese': /[\u4e00-\u9fff]/i,
+                'japanese': /[\u3040-\u309f\u30a0-\u30ff]/i,
+                'korean': /[\uac00-\ud7af]/i,
+                'arabic': /[\u0600-\u06ff]/i
+            };
+
+            for (const [lang, pattern] of Object.entries(patterns)) {
+                if (pattern.test(text)) {
+                    return lang;
+                }
+            }
+            return 'english';
+        }
+
+        function getLanguageName(langCode) {
+            const languages = {
+                'en-US': 'English',
+                'es-ES': 'Spanish',
+                'fr-FR': 'French',
+                'de-DE': 'German',
+                'it-IT': 'Italian',
+                'pt-BR': 'Portuguese',
+                'ru-RU': 'Russian',
+                'zh-CN': 'Chinese',
+                'ja-JP': 'Japanese',
+                'ko-KR': 'Korean',
+                'ar-SA': 'Arabic'
+            };
+            return languages[langCode] || 'English';
+        }
+
+        function setLanguagePreference(langCode) {
+            localStorage.setItem('preferredLanguage', langCode);
+            // Update voice recognition language if currently listening
+            if (recognition && isListening) {
+                recognition.lang = langCode;
+                const langName = getLanguageName(langCode);
+                showVoiceStatus(`Switched to ${langName}... Speak now!`);
+            }
+        }
+
+        // Enhanced message display with rich media support
+        function addRichMessage(content, isUser = false, mediaType = null, mediaData = null) {
+            const mainMessages = document.getElementById('mainMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user' : 'ai'}`;
+            
+            const avatar = document.createElement('div');
+            avatar.className = `avatar ${isUser ? 'user' : 'ai'}`;
+            if (isUser) {
+                avatar.textContent = '👤';
+            } else {
+                avatar.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="#FFFFFF">
+                    <!-- Robot Head -->
+                    <ellipse cx="12" cy="10" rx="8" ry="6" fill="#FFFFFF"/>
+                    <!-- Eyes -->
+                    <circle cx="9" cy="8" r="1.5" fill="#3B82F6"/>
+                    <circle cx="15" cy="8" r="1.5" fill="#3B82F6"/>
+                    <!-- Smiling Mouth -->
+                    <path d="M9 12 Q12 15 15 12" stroke="#3B82F6" stroke-width="1.5" fill="none"/>
+                    <!-- Headset Band -->
+                    <path d="M4 10 Q12 4 20 10" stroke="#FFFFFF" stroke-width="2" fill="none"/>
+                    <!-- Earcups -->
+                    <circle cx="12" cy="8" r="1.5" fill="#3B82F6"/>
+                    <!-- Antenna -->
+                    <line x1="12" y1="4" x2="12" y2="1" stroke="#FFFFFF" stroke-width="1.5"/>
+                    <circle cx="12" cy="1" r="1" fill="#FFFFFF"/>
+                </svg>`;
+            }
+            
+            const messageContent = document.createElement('div');
+            messageContent.className = 'message-content';
+            
+            // Handle rich media content
+            if (mediaType === 'image' && mediaData) {
+                messageContent.innerHTML = `
+                    <div class="rich-content">
+                        <img src="${mediaData}" alt="AI Response Image" style="max-width: 100%; border-radius: 8px; margin: 10px 0;">
+                        <div class="text-content">${content}</div>
+                    </div>
+                `;
+            } else if (mediaType === 'link' && mediaData) {
+                messageContent.innerHTML = `
+                    <div class="rich-content">
+                        <div class="text-content">${content}</div>
+                        <a href="${mediaData}" target="_blank" class="response-link">🔗 View Resource</a>
+                    </div>
+                `;
+            } else {
+                messageContent.textContent = content;
+            }
+            
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(messageContent);
+            mainMessages.appendChild(messageDiv);
+            
+            // Auto-scroll and speak if TTS is enabled
+            mainMessages.scrollTo({
+                top: mainMessages.scrollHeight,
+                behavior: 'smooth'
+            });
+            
+            if (!isUser && ttsEnabled) {
+                speakText(content);
+            }
+        }
+
+        // Global variables for file handling
+        let uploadedImage = null;
+        let uploadedImageData = null;
+        let uploadedDocument = null;
+        let uploadedDocumentData = null;
+
+        // Debug: Test if functions are defined
+        console.log('Script loaded!');
+        console.log('openSettings function exists:', typeof openSettings);
+        console.log('closeSettings function exists:', typeof closeSettings);
+        console.log('ttsEnabled variable exists:', typeof ttsEnabled !== 'undefined');
 
     </script>
 </body>

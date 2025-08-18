@@ -293,6 +293,78 @@ def chat_with_image():
         logger.error(f'Chat with image error: {e}')
         return jsonify({'error': 'Internal server error'}), 500
 
+@app.route('/api/chat-with-document', methods=['POST'])
+def chat_with_document():
+    """Chat endpoint with document analysis"""
+    if is_rate_limited(request.remote_addr):
+        return jsonify({'error': 'Rate limit exceeded. Please wait a moment.'}), 429
+    
+    try:
+        data = request.get_json()
+        if not data or 'message' not in data or 'document_data' not in data:
+            return jsonify({'error': 'Message and document data are required'}), 400
+        
+        message = data['message']
+        document_data = data['document_data']
+        document_name = data.get('document_name', 'Document')
+        personality = data.get('personality', 'default')
+        use_memory = data.get('use_memory', True)
+        
+        # Generate user ID if not exists
+        if 'user_id' not in session:
+            session['user_id'] = str(uuid.uuid4())
+        
+        user_id = session['user_id']
+        
+        # Initialize AI with document analysis
+        try:
+            from simple_openai import AdvancedOpenAI
+            ai = AdvancedOpenAI()
+            
+            # Log API key status
+            logger.info(f"AI initialized for document analysis, API key exists: {bool(ai.api_key)}")
+            
+            # Create enhanced message with document context
+            enhanced_message = f"Document: {document_name}\n\nDocument Content:\n{document_data}\n\nUser Question: {message}"
+            
+            # Get AI response with document context
+            response = ai.call_openai_advanced(
+                message=enhanced_message,
+                user_id=user_id,
+                personality=personality,
+                use_memory=use_memory
+            )
+            
+            logger.info(f"AI document analysis response received: {response}")
+            
+        except ImportError as e:
+            logger.error(f"Failed to import simple_openai: {e}")
+            return jsonify({'error': 'AI module import failed'}), 500
+        except Exception as e:
+            logger.error(f"Failed to initialize AI: {e}")
+            return jsonify({'error': 'AI initialization failed'}), 500
+        
+        if response and response.get('success'):
+            return jsonify({
+                'success': True,
+                'response': response['response'],
+                'personality': personality,
+                'model_used': response.get('model_used', 'GPT-4o'),
+                'provider': response.get('provider', 'openai'),
+                'tokens_used': response.get('tokens_used', 0),
+                'conversation_length': response.get('conversation_length', 0),
+                'document_analyzed': True,
+                'document_name': document_name
+            })
+        else:
+            error_msg = response.get('error', 'Unknown error occurred') if response else 'No response from AI'
+            logger.error(f"AI document analysis error: {error_msg}")
+            return jsonify({'error': error_msg}), 400
+            
+    except Exception as e:
+        logger.error(f'Chat with document error: {e}')
+        return jsonify({'error': 'Internal server error'}), 500
+
 @app.route('/api/personalities', methods=['GET'])
 def get_personalities():
     """Get available AI personalities"""
