@@ -1,12 +1,32 @@
 # Environment Variables Template
 # Copy this file to .env and fill in your actual values
 
-# OpenAI API Configuration
+# OpenAI API Key (Required for GPT models)
 OPENAI_API_KEY=your_openai_api_key_here
+
+# Claude API Key (Optional - for Anthropic models)
+CLAUDE_API_KEY=your_claude_api_key_here
+
+# Google Gemini API Key (Optional - for Google models)
+GEMINI_API_KEY=your_gemini_api_key_here
+
+# Weather API Key (Optional - for real-time weather data)
+OPENWEATHER_API_KEY=your_openweather_api_key_here
+
+# Crypto API Key (Optional - for cryptocurrency prices)
+CRYPTO_API_KEY=your_crypto_api_key_here
+
+# News API Key (Optional - for real-time news)
+NEWS_API_KEY=your_news_api_key_here
+
+# Stocks API Key (Optional - for stock market data)
+STOCKS_API_KEY=your_stocks_api_key_here
+
+# Flask Secret Key (Required for sessions)
+SECRET_KEY=your_secret_key_here
 
 # Flask Configuration
 FLASK_ENV=development
-SECRET_KEY=your_super_secret_key_here
 
 # Server Configuration
 PORT=8080

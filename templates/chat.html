@@ -565,6 +565,106 @@
                 opacity: 0;
             }
         }
+
+        /* Model Selector Styles */
+        .model-selector {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+            text-align: center;
+        }
+
+        .model-selector label {
+            display: block;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .model-dropdown {
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 16px;
+            padding: 12px 20px;
+            width: 100%;
+            max-width: 400px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .model-dropdown:hover {
+            border-color: rgba(255, 255, 255, 0.4);
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        .model-dropdown:focus {
+            outline: none;
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.3);
+        }
+
+        .model-dropdown option {
+            background: #1a1a1a;
+            color: #fff;
+            padding: 10px;
+        }
+
+        .model-info {
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(139, 92, 246, 0.1);
+            border-radius: 8px;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .model-name {
+            display: block;
+            color: #8b5cf6;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .model-description {
+            display: block;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        /* Responsive Model Selector */
+        @media (max-width: 768px) {
+            .model-selector {
+                padding: 15px;
+                margin-bottom: 20px;
+            }
+            
+            .model-dropdown {
+                font-size: 14px;
+                padding: 10px 15px;
+            }
+            
+            .model-info {
+                padding: 12px;
+            }
+            
+            .model-name {
+                font-size: 16px;
+            }
+            
+            .model-description {
+                font-size: 13px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -608,6 +708,23 @@
             <h1 class="main-title">Query AI</h1>
             <p class="main-subtitle">Ask detailed questions for better responses</p>
             
+            <!-- Model Selector -->
+            <div class="model-selector">
+                <label for="aiModel">Choose AI Model:</label>
+                <select id="aiModel" class="model-dropdown">
+                    <option value="openai:gpt-4o">🤖 GPT-4o (Latest & Best)</option>
+                    <option value="openai:gpt-4-turbo">🚀 GPT-4 Turbo (Fast & Powerful)</option>
+                    <option value="openai:gpt-3.5-turbo">⚡ GPT-3.5 Turbo (Fast & Cost-effective)</option>
+                    <option value="claude:claude-3-5-sonnet">🧠 Claude 3.5 Sonnet (Anthropic)</option>
+                    <option value="claude:claude-3-haiku">🎯 Claude 3 Haiku (Fast & Efficient)</option>
+                    <option value="gemini:gemini-1.5-pro">🔍 Gemini 1.5 Pro (Google)</option>
+                </select>
+                <div class="model-info" id="modelInfo">
+                    <span class="model-name">GPT-4o</span>
+                    <span class="model-description">Latest and most capable model</span>
+                </div>
+            </div>
+            
             <!-- Main Messages Area -->
             <div class="main-messages" id="mainMessages"></div>
             
@@ -617,7 +734,7 @@
                 <div class="input-right-icons">
                     <div class="image-icon" onclick="triggerImageUpload()" title="Upload Image">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M21 19V5c0-1.1-.9-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+                            <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
                         </svg>
                     </div>
                     <div class="voice-icon" onclick="startVoiceInput()" title="Voice Input">
@@ -629,12 +746,8 @@
                     <button class="send-button" onclick="sendMessage()">↑</button>
                 </div>
             </div>
-
-
-
             <!-- Footer -->
-
-            </div>
+        </div>
 
         <!-- Chat Container (Hidden by default) -->
     <div class="chat-container" id="chatContainer">
@@ -841,31 +954,48 @@
 
         // Send message to AI
         async function sendToAI(message) {
+            const { provider, model } = getSelectedModel();
+            
             try {
                 const response = await fetch('/api/chat', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ 
+                    body: JSON.stringify({
                         message: message,
-                        use_memory: useMemory
-                    }),
+                        personality: 'default',
+                        use_memory: true,
+                        provider: provider,
+                        model: model
+                    })
                 });
 
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data.success && data.response) {
-                        addMainMessage(data.response, false);
-                    } else {
-                        addMainMessage('Sorry, I encountered an error. Please try again.', false);
+                const data = await response.json();
+                
+                if (data.success) {
+                    addMainMessage(data.response, false);
+                    
+                    // Show model info in response
+                    const modelInfo = document.createElement('div');
+                    modelInfo.className = 'model-indicator';
+                    modelInfo.innerHTML = `
+                        <small style="color: #8b5cf6; font-size: 12px; opacity: 0.8;">
+                            Powered by ${data.provider} - ${data.model_used}
+                        </small>
+                    `;
+                    
+                    // Add model info to the last AI message
+                    const lastMessage = document.querySelector('.main-messages .message.ai:last-child');
+                    if (lastMessage) {
+                        lastMessage.appendChild(modelInfo);
                     }
                 } else {
-                    addMainMessage('Sorry, I encountered an error. Please try again.', false);
+                    addMainMessage(`Error: ${data.error}`, false);
                 }
             } catch (error) {
                 console.error('Error:', error);
-                addMessage('Sorry, I encountered an error. Please try again.', false);
+                addMainMessage('Sorry, I encountered an error. Please try again.', false);
             }
         }
 
@@ -1158,7 +1288,162 @@
             }
         }
 
+        // Model selection functionality
+        function updateModelInfo() {
+            const modelSelect = document.getElementById('aiModel');
+            const modelInfo = document.getElementById('modelInfo');
+            const selectedValue = modelSelect.value;
+            
+            const [provider, model] = selectedValue.split(':');
+            
+            // Model information mapping
+            const modelDetails = {
+                'openai:gpt-4o': {
+                    name: 'GPT-4o',
+                    description: 'Latest and most capable model - best for complex reasoning and creative tasks'
+                },
+                'openai:gpt-4-turbo': {
+                    name: 'GPT-4 Turbo',
+                    description: 'Fast and powerful - great balance of speed and capability'
+                },
+                'openai:gpt-3.5-turbo': {
+                    name: 'GPT-3.5 Turbo',
+                    description: 'Fast and cost-effective - perfect for quick responses and simple tasks'
+                },
+                'claude:claude-3-5-sonnet': {
+                    name: 'Claude 3.5 Sonnet',
+                    description: 'Anthropic\'s latest model - excellent for analysis and writing'
+                },
+                'claude:claude-3-haiku': {
+                    name: 'Claude 3 Haiku',
+                    description: 'Fast and efficient - great for quick responses and simple queries'
+                },
+                'gemini:gemini-1.5-pro': {
+                    name: 'Gemini 1.5 Pro',
+                    description: 'Google\'s latest AI model - strong in research and analysis'
+                }
+            };
+            
+            const details = modelDetails[selectedValue] || {
+                name: 'Unknown Model',
+                description: 'Model information not available'
+            };
+            
+            modelInfo.innerHTML = `
+                <span class="model-name">${details.name}</span>
+                <span class="model-description">${details.description}</span>
+            `;
+        }
 
+        // Initialize model info on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateModelInfo();
+            
+            // Add event listener for model selection
+            const modelSelect = document.getElementById('aiModel');
+            modelSelect.addEventListener('change', updateModelInfo);
+        });
+
+        // Get selected model and provider
+        function getSelectedModel() {
+            const modelSelect = document.getElementById('aiModel');
+            const selectedValue = modelSelect.value;
+            const [provider, model] = selectedValue.split(':');
+            return { provider, model };
+        }
+
+        // Modified sendToAI function to use selected model
+        async function sendToAI(message) {
+            const { provider, model } = getSelectedModel();
+            
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        personality: 'default',
+                        use_memory: true,
+                        provider: provider,
+                        model: model
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    addMainMessage(data.response, false);
+                    
+                    // Show model info in response
+                    const modelInfo = document.createElement('div');
+                    modelInfo.className = 'model-indicator';
+                    modelInfo.innerHTML = `
+                        <small style="color: #8b5cf6; font-size: 12px; opacity: 0.8;">
+                            Powered by ${data.provider} - ${data.model_used}
+                        </small>
+                    `;
+                    
+                    // Add model info to the last AI message
+                    const lastMessage = document.querySelector('.main-messages .message.ai:last-child');
+                    if (lastMessage) {
+                        lastMessage.appendChild(modelInfo);
+                    }
+                } else {
+                    addMainMessage(`Error: ${data.error}`, false);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                addMainMessage('Sorry, I encountered an error. Please try again.', false);
+            }
+        }
+
+        // Modified sendToAIWithImage function to use selected model
+        async function sendToAIWithImage(message, imageData) {
+            const { provider, model } = getSelectedModel();
+            
+            try {
+                const response = await fetch('/api/chat-with-image', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        image_data: imageData,
+                        personality: 'default',
+                        use_memory: true
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    addMainMessage(data.response, false);
+                    
+                    // Show model info in response
+                    const modelInfo = document.createElement('div');
+                    modelInfo.className = 'model-indicator';
+                    modelInfo.innerHTML = `
+                        <small style="color: #8b5cf6; font-size: 12px; opacity: 0.8;">
+                            Powered by ${data.provider} - ${data.model_used} (Image Analysis)
+                        </small>
+                    `;
+                    
+                    // Add model info to the last AI message
+                    const lastMessage = document.querySelector('.main-messages .message.ai:last-child:last-child');
+                    if (lastMessage) {
+                        lastMessage.appendChild(modelInfo);
+                    }
+                } else {
+                    addMainMessage(`Error: ${data.error}`, false);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                addMainMessage('Sorry, I encountered an error. Please try again.', false);
+            }
+        }
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {

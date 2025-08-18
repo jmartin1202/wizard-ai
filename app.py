@@ -101,7 +101,8 @@ def debug():
                 ai_status = {
                     'module_loaded': True,
                     'api_key_exists': bool(ai.api_key),
-                    'api_key_preview': ai.api_key[:20] + "..." if ai.api_key else None
+                    'api_key_preview': ai.api_key[:20] + "..." if ai.api_key else None,
+                    'available_models': ai.get_available_models()
                 }
             except Exception as e:
                 ai_status = {
@@ -153,6 +154,76 @@ def test_simple_openai():
             'error': str(e),
             'error_type': str(type(e))
         })
+
+@app.route('/api/chat', methods=['POST'])
+def chat():
+    """Chat endpoint with model selection"""
+    if is_rate_limited(request.remote_addr):
+        return jsonify({'error': 'Rate limit exceeded. Please wait a moment.'}), 429
+    
+    try:
+        data = request.get_json()
+        if not data or 'message' not in data:
+            return jsonify({'error': 'Message is required'}), 400
+        
+        message = data['message']
+        personality = data.get('personality', 'default')
+        use_memory = data.get('use_memory', True)
+        provider = data.get('provider', 'openai')
+        model = data.get('model', None)
+        
+        # Generate user ID if not exists
+        if 'user_id' not in session:
+            session['user_id'] = str(uuid.uuid4())
+        
+        user_id = session['user_id']
+        
+        # Initialize AI with model selection
+        try:
+            from simple_openai import AdvancedOpenAI
+            ai = AdvancedOpenAI()
+            
+            # Log API key status
+            logger.info(f"AI initialized for chat, API key exists: {bool(ai.api_key)}")
+            logger.info(f"Using provider: {provider}, model: {model}")
+            
+            # Get AI response with selected model
+            response = ai.call_ai_model(
+                message=message,
+                user_id=user_id,
+                personality=personality,
+                use_memory=use_memory,
+                provider=provider,
+                model=model
+            )
+            
+            logger.info(f"AI response received: {response}")
+            
+        except ImportError as e:
+            logger.error(f"Failed to import simple_openai: {e}")
+            return jsonify({'error': 'AI module import failed'}), 500
+        except Exception as e:
+            logger.error(f"Failed to initialize AI: {e}")
+            return jsonify({'error': 'AI initialization failed'}), 500
+        
+        if response and response.get('success'):
+            return jsonify({
+                'success': True,
+                'response': response['response'],
+                'personality': personality,
+                'model_used': response.get('model_used', 'Unknown'),
+                'provider': response.get('provider', 'Unknown'),
+                'tokens_used': response.get('tokens_used', 0),
+                'conversation_length': response.get('conversation_length', 0)
+            })
+        else:
+            error_msg = response.get('error', 'Unknown error occurred') if response else 'No response from AI'
+            logger.error(f"AI error: {error_msg}")
+            return jsonify({'error': error_msg}), 400
+            
+    except Exception as e:
+        logger.error(f'Chat error: {e}')
+        return jsonify({'error': 'Internal server error'}), 500
 
 @app.route('/api/chat-with-image', methods=['POST'])
 def chat_with_image():
@@ -208,6 +279,7 @@ def chat_with_image():
                 'response': response['response'],
                 'personality': personality,
                 'model_used': response.get('model_used', 'GPT-4o'),
+                'provider': response.get('provider', 'openai'),
                 'tokens_used': response.get('tokens_used', 0),
                 'conversation_length': response.get('conversation_length', 0),
                 'image_analyzed': True
@@ -219,71 +291,6 @@ def chat_with_image():
             
     except Exception as e:
         logger.error(f'Chat with image error: {e}')
-        return jsonify({'error': 'Internal server error'}), 500
-
-@app.route('/api/chat', methods=['POST'])
-def chat():
-    """Main chat endpoint"""
-    if is_rate_limited(request.remote_addr):
-        return jsonify({'error': 'Rate limit exceeded. Please wait a moment.'}), 429
-    
-    try:
-        data = request.get_json()
-        if not data or 'message' not in data:
-            return jsonify({'error': 'Message is required'}), 400
-        
-        message = data['message']
-        personality = data.get('personality', 'default')
-        use_memory = data.get('use_memory', True)
-        
-        # Generate user ID if not exists
-        if 'user_id' not in session:
-            session['user_id'] = str(uuid.uuid4())
-        
-        user_id = session['user_id']
-        
-        # Initialize AI
-        try:
-            from simple_openai import AdvancedOpenAI
-            ai = AdvancedOpenAI()
-            
-            # Log API key status
-            logger.info(f"AI initialized, API key exists: {bool(ai.api_key)}")
-            
-            # Get AI response
-            response = ai.call_openai_advanced(
-                message=message,
-                user_id=user_id,
-                personality=personality,
-                use_memory=use_memory
-            )
-            
-            logger.info(f"AI response received: {response}")
-            
-        except ImportError as e:
-            logger.error(f"Failed to import simple_openai: {e}")
-            return jsonify({'error': 'AI module import failed'}), 500
-        except Exception as e:
-            logger.error(f"Failed to initialize AI: {e}")
-            return jsonify({'error': 'AI initialization failed'}), 500
-        
-        if response and response.get('success'):
-            return jsonify({
-                'success': True,
-                'response': response['response'],
-                'personality': personality,
-                'model_used': response.get('model_used', 'GPT-4o'),
-                'tokens_used': response.get('tokens_used', 0),
-                'conversation_length': response.get('conversation_length', 0),
-                'real_time_data': response.get('real_time_data')
-            })
-        else:
-            error_msg = response.get('error', 'Unknown error occurred') if response else 'No response from AI'
-            logger.error(f"AI response error: {error_msg}")
-            return jsonify({'error': error_msg}), 400
-            
-    except Exception as e:
-        logger.error(f'Chat error: {e}')
         return jsonify({'error': 'Internal server error'}), 500
 
 @app.route('/api/personalities', methods=['GET'])
@@ -425,6 +432,62 @@ def test_real_time_service(service):
     except Exception as e:
         logger.error(f'Error testing real-time service {service}: {e}')
         return jsonify({'error': f'Failed to test {service} service'}), 500
+
+@app.route('/api/models')
+def get_models():
+    """Get available AI models"""
+    try:
+        from simple_openai import AdvancedOpenAI
+        ai = AdvancedOpenAI()
+        models = ai.get_available_models()
+        return jsonify({
+            'success': True,
+            'models': models,
+            'default_provider': ai.default_provider,
+            'default_model': ai.default_model
+        })
+    except Exception as e:
+        logger.error(f'Error getting models: {e}')
+        return jsonify({'error': 'Failed to get models'}), 500
+
+@app.route('/api/real-time/<query_type>')
+def get_real_time_info(query_type):
+    """Get real-time information"""
+    try:
+        from simple_openai import AdvancedOpenAI
+        ai = AdvancedOpenAI()
+        
+        # Get query parameters
+        city = request.args.get('city', 'New York')
+        timezone = request.args.get('timezone', 'UTC')
+        symbol = request.args.get('symbol', 'BTC')
+        topic = request.args.get('topic', 'technology')
+        limit = request.args.get('limit', 3, type=int)
+        
+        # Get real-time information
+        if query_type == 'weather':
+            info = ai.get_real_time_info('weather', city=city)
+        elif query_type == 'time':
+            info = ai.get_real_time_info('time', timezone=timezone)
+        elif query_type == 'crypto':
+            info = ai.get_real_time_info('crypto', symbol=symbol)
+        elif query_type == 'news':
+            info = ai.get_real_time_info('news', topic=topic, limit=limit)
+        elif query_type == 'stocks':
+            info = ai.get_real_time_info('stocks', symbol=symbol)
+        else:
+            return jsonify({'error': 'Invalid query type'}), 400
+        
+        return jsonify({
+            'success': True,
+            'query_type': query_type,
+            'data': info,
+            'timestamp': datetime.now().isoformat()
+        })
+        
+    except Exception as e:
+        logger.error(f'Real-time info error: {e}')
+        return jsonify({'error': 'Failed to get real-time information'}), 500
 
 @app.errorhandler(404)
 def not_found(error):
