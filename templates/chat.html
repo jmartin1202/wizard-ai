@@ -664,37 +664,7 @@
 
 
 
-        /* Real-time Notifications */
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(139, 92, 246, 0.9);
-            color: white;
-            padding: 15px 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            z-index: 1000;
-            transform: translateX(400px);
-            transition: transform 0.3s ease;
-            max-width: 300px;
-        }
 
-        .notification.show {
-            transform: translateX(0);
-        }
-
-        .notification.success {
-            background: rgba(16, 185, 129, 0.9);
-        }
-
-        .notification.error {
-            background: rgba(239, 68, 68, 0.9);
-        }
-
-        .notification.warning {
-            background: rgba(245, 158, 11, 0.9);
-        }
 
 
     </style>
@@ -1406,19 +1376,11 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Test backend connection
             testBackend();
-            
-            // Start real-time updates
-            startRealTimeUpdates();
         });
 
         // Real-time Updates System
 
-        function startRealTimeUpdates() {
-            // Initial load of live data
-            setTimeout(() => {
-                showNotification('Real-time system ready!', 'success');
-            }, 1000);
-        }
+
 
 
 
@@ -1427,48 +1389,7 @@
             // Data will be fetched when users ask specific questions
         }
 
-        // Notification System
-        function showNotification(message, type = 'info', duration = 3000) {
-            // Remove existing notifications
-            const existingNotifications = document.querySelectorAll('.notification');
-            existingNotifications.forEach(notification => notification.remove());
-            
-            // Create new notification
-            const notification = document.createElement('div');
-            notification.className = `notification ${type}`;
-            notification.innerHTML = `
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    <span>${getNotificationIcon(type)}</span>
-                    <span>${message}</span>
-                </div>
-            `;
-            
-            document.body.appendChild(notification);
-            
-            // Show notification
-            setTimeout(() => {
-                notification.classList.add('show');
-            }, 100);
-            
-            // Hide notification after duration
-            setTimeout(() => {
-                notification.classList.remove('show');
-                setTimeout(() => {
-                    if (notification.parentNode) {
-                        notification.parentNode.removeChild(notification);
-                    }
-                }, 300);
-            }, duration);
-        }
 
-        function getNotificationIcon(type) {
-            switch (type) {
-                case 'success': return '✅';
-                case 'error': return '❌';
-                case 'warning': return '⚠️';
-                default: return 'ℹ️';
-            }
-        }
 
 
 
