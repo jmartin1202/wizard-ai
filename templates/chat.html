@@ -185,6 +185,32 @@
 
 
 
+        /* Clear Chat Button */
+        .clear-chat-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .clear-chat-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.7);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .clear-chat-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+            color: rgba(255, 255, 255, 0.9);
+        }
+
         /* Input Container */
         .input-container {
             width: 100%;
@@ -744,7 +770,15 @@
             <!-- Main Messages Area -->
             <div class="main-messages" id="mainMessages"></div>
             
-
+            <!-- Clear Chat Button -->
+            <div class="clear-chat-container">
+                <button class="clear-chat-btn" onclick="clearChatHistory()" title="Clear conversation history">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 13H5v-2h14v2z"/>
+                    </svg>
+                    Clear Chat
+                </button>
+            </div>
             
             <!-- Input Container -->
             <div class="input-container">
@@ -819,47 +853,7 @@
             }
         }
 
-        // Send message from main input
-        function sendMessage() {
-            const input = document.getElementById('messageInput');
-            const message = input.value.trim();
-            
-            if (!message) return;
-            
-            // Clear previous messages for a fresh conversation
-            const mainMessages = document.getElementById('mainMessages');
-            mainMessages.innerHTML = '';
-            
-            // Add user message to main page
-            addMainMessage(message, true);
-            input.value = '';
-            
-            // Show typing indicator
-            showTypingIndicator();
-            
-            // Start response timer
-            const startTime = Date.now();
-            
-            // Send to AI with image if available
-            if (uploadedImage && uploadedImageData) {
-                sendToAIWithImage(message, uploadedImageData);
-            } else {
-                sendToAI(message);
-            }
-            
-            // Hide typing indicator
-            hideTypingIndicator();
-            
-            // Update response time
-            const responseTime = Date.now() - startTime;
-            const responseTimeElement = document.getElementById('responseTime');
-            responseTimeElement.textContent = `${responseTime}ms`;
-            
-            // Add response time to status
-            setTimeout(() => {
-                responseTimeElement.textContent = 'Ready';
-            }, 5000);
-        }
+
 
         // Send message from chat input
         function sendChatMessage() {
@@ -1402,6 +1396,12 @@
 
 
 
+        // Clear Chat History
+        function clearChatHistory() {
+            const mainMessages = document.getElementById('mainMessages');
+            mainMessages.innerHTML = '';
+        }
+
         // Typing Indicator Functions
         function showTypingIndicator() {
             const mainMessages = document.getElementById('mainMessages');
@@ -1478,11 +1478,7 @@
             
             if (!message) return;
             
-            // Clear previous messages for a fresh conversation
-            const mainMessages = document.getElementById('mainMessages');
-            mainMessages.innerHTML = '';
-            
-            // Add user message to main page
+            // Add user message to main page (keep conversation history)
             addMainMessage(message, true);
             input.value = '';
             
