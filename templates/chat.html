@@ -1062,7 +1062,7 @@
                     <h1 class="main-title">Query AI</h1>
                     <p class="main-subtitle">Ask detailed questions for better responses</p>
                 </div>
-                <div class="settings-icon" onclick="openSettings()" title="Settings" style="cursor: pointer;">
+                <div class="settings-icon" onclick="console.log('Settings icon clicked!'); openSettings();" title="Settings" style="cursor: pointer;">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
                         <circle cx="12" cy="6" r="2"/>
                         <circle cx="12" cy="12" r="2"/>
@@ -2060,133 +2060,106 @@
 
         // Settings function with language and TTS options
         function openSettings() {
-            try {
-                const currentLang = localStorage.getItem('preferredLanguage') || 'en-US';
-                
-                // Create the proper settings modal
-                const settingsHTML = `
-                    <div id="settingsModal" style="
-                        position: fixed;
-                        top: 0;
-                        left: 0;
-                        width: 100%;
-                        height: 100%;
-                        background: rgba(0, 0, 0, 0.8);
+            alert('Settings function called!'); // Temporary test
+            console.log('openSettings called!');
+            
+            // Create a simple modal that definitely works
+            const modal = document.createElement('div');
+            modal.id = 'settingsModal';
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                z-index: 9999;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            `;
+            
+            const content = document.createElement('div');
+            content.style.cssText = `
+                background: #2a2a2a;
+                border: 1px solid #444;
+                border-radius: 16px;
+                padding: 30px;
+                max-width: 500px;
+                width: 90%;
+                color: white;
+                font-family: Arial, sans-serif;
+            `;
+            
+            content.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 style="margin: 0; color: white;">Settings</h2>
+                    <button onclick="closeSettings()" style="
+                        background: none;
+                        border: none;
+                        color: #888;
+                        font-size: 24px;
+                        cursor: pointer;
+                        padding: 5px;
+                        border-radius: 50%;
+                        width: 30px;
+                        height: 30px;
                         display: flex;
                         align-items: center;
                         justify-content: center;
-                        z-index: 9999;
+                    ">×</button>
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: bold;">Language for Voice Input:</label>
+                    <select id="languageSelect" style="
+                        width: 100%;
+                        padding: 10px;
+                        border: 1px solid #444;
+                        border-radius: 8px;
+                        background: #333;
+                        color: white;
+                        font-size: 14px;
                     ">
-                        <div style="
-                            background: #2a2a2a;
-                            border: 1px solid #444;
-                            border-radius: 16px;
-                            max-width: 500px;
-                            width: 90%;
-                            max-height: 80vh;
-                            overflow: hidden;
-                            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-                        ">
-                            <div style="
-                                display: flex;
-                                justify-content: space-between;
-                                align-items: center;
-                                padding: 20px;
-                                border-bottom: 1px solid #444;
-                            ">
-                                <h3 style="color: white; margin: 0; font-size: 18px;">Settings</h3>
-                                <button onclick="closeSettings()" style="
-                                    background: none;
-                                    border: none;
-                                    color: #888;
-                                    font-size: 24px;
-                                    cursor: pointer;
-                                    padding: 0;
-                                    width: 32px;
-                                    height: 32px;
-                                    display: flex;
-                                    align-items: center;
-                                    justify-content: center;
-                                    border-radius: 50%;
-                                    transition: all 0.2s ease;
-                                " onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='none'">×</button>
-                            </div>
-                            <div style="padding: 20px;">
-                                <div style="margin-bottom: 20px;">
-                                    <label style="display: block; color: white; margin-bottom: 8px; font-weight: 500;">Language for Voice Input:</label>
-                                    <select id="languageSelect" onchange="setLanguagePreference(this.value)" style="
-                                        width: 100%;
-                                        padding: 10px;
-                                        border: 1px solid #444;
-                                        border-radius: 8px;
-                                        background: #333;
-                                        color: white;
-                                        font-size: 14px;
-                                        transition: border-color 0.2s ease;
-                                    " onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#444'">
-                                        <option value="en-US" ${currentLang === 'en-US' ? 'selected' : ''}>English</option>
-                                        <option value="es-ES" ${currentLang === 'es-ES' ? 'selected' : ''}>Spanish</option>
-                                        <option value="fr-FR" ${currentLang === 'fr-FR' ? 'selected' : ''}>French</option>
-                                        <option value="de-DE" ${currentLang === 'de-DE' ? 'selected' : ''}>German</option>
-                                        <option value="it-IT" ${currentLang === 'it-IT' ? 'selected' : ''}>Italian</option>
-                                        <option value="pt-BR" ${currentLang === 'pt-BR' ? 'selected' : ''}>Portuguese</option>
-                                        <option value="ru-RU" ${currentLang === 'ru-RU' ? 'selected' : ''}>Russian</option>
-                                        <option value="zh-CN" ${currentLang === 'zh-CN' ? 'selected' : ''}>Chinese</option>
-                                        <option value="ja-JP" ${currentLang === 'ja-JP' ? 'selected' : ''}>Japanese</option>
-                                        <option value="ko-KR" ${currentLang === 'ko-KR' ? 'selected' : ''}>Korean</option>
-                                        <option value="ar-SA" ${currentLang === 'ar-SA' ? 'selected' : ''}>Arabic</option>
-                                    </select>
-                                </div>
-                                <div style="margin-bottom: 20px;">
-                                    <label style="display: block; color: white; margin-bottom: 8px; font-weight: 500;">Text-to-Speech:</label>
-                                    <div style="
-                                        position: relative;
-                                        display: inline-block;
-                                        width: 50px;
-                                        height: 24px;
-                                    ">
-                                        <input type="checkbox" id="ttsToggleSetting" ${ttsEnabled ? 'checked' : ''} onchange="toggleTTSFromSettings(this.checked)" style="opacity: 0; width: 0; height: 0;">
-                                        <span style="
-                                            position: absolute;
-                                            cursor: pointer;
-                                            top: 0;
-                                            left: 0;
-                                            right: 0;
-                                            bottom: 0;
-                                            background-color: ${ttsEnabled ? '#3B82F6' : '#444'};
-                                            transition: 0.3s;
-                                            border-radius: 24px;
-                                        "></span>
-                                        <span style="
-                                            position: absolute;
-                                            content: '';
-                                            height: 18px;
-                                            width: 18px;
-                                            left: ${ttsEnabled ? '26px' : '3px'};
-                                            bottom: 3px;
-                                            background-color: white;
-                                            transition: 0.3s;
-                                            border-radius: 50%;
-                                        "></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
+                        <option value="en-US">English</option>
+                        <option value="es-ES">Spanish</option>
+                        <option value="fr-FR">French</option>
+                        <option value="de-DE">German</option>
+                        <option value="it-IT">Italian</option>
+                        <option value="pt-BR">Portuguese</option>
+                        <option value="ru-RU">Russian</option>
+                        <option value="zh-CN">Chinese</option>
+                        <option value="ja-JP">Japanese</option>
+                        <option value="ko-KR">Korean</option>
+                        <option value="ar-SA">Arabic</option>
+                    </select>
+                </div>
                 
-                // Remove existing modal if any
-                const existingModal = document.getElementById('settingsModal');
-                if (existingModal) {
-                    existingModal.remove();
-                }
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: bold;">Text-to-Speech:</label>
+                    <label style="display: flex; align-items: center; cursor: pointer;">
+                        <input type="checkbox" id="ttsToggleSetting" style="margin-right: 10px; transform: scale(1.2;">
+                        <span>Enable AI voice responses</span>
+                    </label>
+                </div>
                 
-                // Add modal to body
-                document.body.insertAdjacentHTML('beforeend', settingsHTML);
-                
-            } catch (error) {
-                console.error('Error opening settings:', error);
-            }
+                <div style="text-align: center; margin-top: 30px;">
+                    <button onclick="closeSettings()" style="
+                        background: #3B82F6;
+                        color: white;
+                        border: none;
+                        padding: 12px 24px;
+                        border-radius: 8px;
+                        cursor: pointer;
+                        font-size: 16px;
+                    ">Close Settings</button>
+                </div>
+            `;
+            
+            modal.appendChild(content);
+            document.body.appendChild(modal);
+            
+            console.log('Settings modal created and added to page');
         }
 
         function closeSettings() {
