@@ -76,7 +76,7 @@
             align-items: center;
         }
 
-        /* Obsidian Black Background - will be overridden by theme switching */
+        /* Obsidian Black Background - Fixed */
         body::before {
             content: '';
             position: fixed;
@@ -86,7 +86,6 @@
             height: 100%;
             background: #0a0a0a;
             z-index: -1;
-            transition: background 0.3s ease;
         }
 
         body.light-mode::before {
@@ -1939,16 +1938,9 @@
                 console.error('openSettings function is NOT available!');
             }
             
-            // Force refresh theme on page load
-            setTimeout(() => {
-                const currentTheme = localStorage.getItem('theme') || 'dark';
-                console.log('Applying theme on load:', currentTheme);
-                applyTheme(currentTheme);
-                
-                // Apply current TTS setting
-                const currentTTS = localStorage.getItem('ttsEnabled') === 'true';
-                updateTTS(currentTTS);
-            }, 100);
+            // Apply current TTS setting
+            const currentTTS = localStorage.getItem('ttsEnabled') === 'true';
+            updateTTS(currentTTS);
         });
 
         // Real-time Updates System
@@ -2118,18 +2110,9 @@
             
             // Get current settings from localStorage
             const currentSettings = {
-                botName: localStorage.getItem('botName') || 'Query AI',
-                botDescription: localStorage.getItem('botDescription') || 'Your intelligent AI assistant',
-                apiKey: localStorage.getItem('apiKey') || '',
-                selectedModel: localStorage.getItem('selectedModel') || 'gpt-4o',
-                creativityLevel: localStorage.getItem('creativityLevel') || '0.7',
-                theme: localStorage.getItem('theme') || 'dark',
                 language: localStorage.getItem('preferredLanguage') || 'en-US',
                 ttsEnabled: localStorage.getItem('ttsEnabled') === 'true',
-                maxTokens: localStorage.getItem('maxTokens') || '1000',
-                timeout: localStorage.getItem('timeout') || '30',
-                autoSave: localStorage.getItem('autoSave') !== 'false',
-                dataRetention: localStorage.getItem('dataRetention') || '30'
+                autoSave: localStorage.getItem('autoSave') !== 'false'
             };
             
             // Create the comprehensive settings modal
@@ -2198,25 +2181,9 @@
                             <!-- Appearance & Theme Section -->
                             <div style="margin-bottom: 40px;">
                                 <h3 style="color: white; margin: 0 0 20px 0; font-size: 18px; display: flex; align-items: center;">
-                                    🎨 Appearance & Theme
+                                    🌐 Language Settings
                                 </h3>
-                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                                    <div>
-                                        <label style="display: block; color: white; margin-bottom: 8px; font-weight: 500;">Theme</label>
-                                        <select id="theme" onchange="updateSetting('theme', this.value)" style="
-                                            width: 100%;
-                                            padding: 12px;
-                                            border: 1px solid #444;
-                                            border-radius: 8px;
-                                            background: #2a2a2a;
-                                            color: white;
-                                            font-size: 14px;
-                                        ">
-                                            <option value="dark" ${currentSettings.theme === 'dark' ? 'selected' : ''}>Dark Theme</option>
-                                            <option value="light" ${currentSettings.theme === 'light' ? 'selected' : ''}>Light Theme</option>
-                                            <option value="auto" ${currentSettings.theme === 'auto' ? 'selected' : ''}>Auto (System)</option>
-                                        </select>
-                                    </div>
+                                <div style="display: grid; grid-template-columns: 1fr; gap: 20px;">
                                     <div>
                                         <label style="display: block; color: white; margin-bottom: 8px; font-weight: 500;">Language</label>
                                         <select id="language" onchange="updateSetting('preferredLanguage', this.value)" style="
@@ -2573,12 +2540,6 @@
             
             // Apply immediate changes for certain settings
             switch(key) {
-                case 'botName':
-                    updateBotName(value);
-                    break;
-                case 'theme':
-                    forceThemeRefresh(value);
-                    break;
                 case 'preferredLanguage':
                     setLanguagePreference(value);
                     break;
@@ -2783,7 +2744,6 @@
         function saveAllSettings() {
             // Collect all current values from the form
             const settings = {
-                theme: document.getElementById('theme').value,
                 language: document.getElementById('language').value,
                 ttsEnabled: document.getElementById('ttsEnabled').checked,
                 autoSave: document.getElementById('autoSave').checked
@@ -2795,7 +2755,6 @@
             });
             
             // Apply all changes
-            applyTheme(settings.theme);
             updateTTS(settings.ttsEnabled);
             
             // Show success message
@@ -2808,14 +2767,13 @@
             if (confirm('Are you sure you want to reset all settings to defaults? This cannot be undone.')) {
                 // Clear all custom settings
                 const keysToRemove = [
-                    'theme', 'preferredLanguage', 'ttsEnabled', 'autoSave'
+                    'preferredLanguage', 'ttsEnabled', 'autoSave'
                 ];
                 
                 keysToRemove.forEach(key => localStorage.removeItem(key));
                 
                 // Reset form values
                 const defaultSettings = {
-                    theme: 'dark',
                     language: 'en-US',
                     ttsEnabled: false,
                     autoSave: true
@@ -2834,7 +2792,6 @@
                 });
                 
                 // Apply default changes
-                applyTheme(defaultSettings.theme);
                 updateTTS(defaultSettings.ttsEnabled);
                 
                 showNotification('🔄 Settings reset to defaults!', 'info');
