@@ -2140,91 +2140,6 @@
                         
                         <!-- Settings Content -->
                         <div style="padding: 30px;">
-                            <!-- Bot Identity Section -->
-                            <div style="margin-bottom: 40px;">
-                                <h3 style="color: #3B82F6; margin: 0 0 20px 0; font-size: 18px; display: flex; align-items: center;">
-                                    🤖 Bot Identity
-                                </h3>
-                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                                    <div>
-                                        <label style="display: block; color: white; margin-bottom: 8px; font-weight: 500;">Bot Name</label>
-                                        <input type="text" id="botName" value="${currentSettings.botName}" placeholder="Enter bot name" style="
-                                            width: 100%;
-                                            padding: 12px;
-                                            border: 1px solid #444;
-                                            border-radius: 8px;
-                                            background: #2a2a2a;
-                                            color: white;
-                                            font-size: 14px;
-                                        " onchange="updateSetting('botName', this.value)">
-                                    </div>
-                                    <div>
-                                        <label style="display: block; color: white; margin-bottom: 8px; font-weight: 500;">Bot Description</label>
-                                        <input type="text" id="botDescription" value="${currentSettings.botDescription}" placeholder="Enter bot description" style="
-                                            width: 100%;
-                                            padding: 12px;
-                                            border: 1px solid #444;
-                                            border-radius: 8px;
-                                            background: #2a2a2a;
-                                            color: white;
-                                            font-size: 14px;
-                                        " onchange="updateSetting('botDescription', this.value)">
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- API Configuration Section -->
-                            <div style="margin-bottom: 40px;">
-                                <h3 style="color: #3B82F6; margin: 0 0 20px 0; font-size: 18px; display: flex; align-items: center;">
-                                    🔑 API Configuration
-                                </h3>
-                                <div style="margin-bottom: 20px;">
-                                    <label style="display: block; color: white; margin-bottom: 8px; font-weight: 500;">OpenAI API Key</label>
-                                    <input type="password" id="apiKey" value="${currentSettings.apiKey}" placeholder="sk-..." style="
-                                        width: 100%;
-                                        padding: 12px;
-                                        border: 1px solid #444;
-                                        border-radius: 8px;
-                                        background: #2a2a2a;
-                                        color: white;
-                                        font-size: 14px;
-                                    " onchange="updateSetting('apiKey', this.value)">
-                                    <small style="color: #888; font-size: 12px;">Your API key is stored locally and never shared</small>
-                                </div>
-                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                                    <div>
-                                        <label style="display: block; color: white; margin-bottom: 8px; font-weight: 500;">AI Model</label>
-                                        <select id="selectedModel" onchange="updateSetting('selectedModel', this.value)" style="
-                                            width: 100%;
-                                            padding: 12px;
-                                            border: 1px solid #444;
-                                            border-radius: 8px;
-                                            background: #2a2a2a;
-                                            color: white;
-                                            font-size: 14px;
-                                        ">
-                                            <option value="gpt-4o" ${currentSettings.selectedModel === 'gpt-4o' ? 'selected' : ''}>GPT-4o (Latest)</option>
-                                            <option value="gpt-4-turbo" ${currentSettings.selectedModel === 'gpt-4-turbo' ? 'selected' : ''}>GPT-4 Turbo</option>
-                                            <option value="gpt-3.5-turbo" ${currentSettings.selectedModel === 'gpt-3.5-turbo' ? 'selected' : ''}>GPT-3.5 Turbo</option>
-                                            <option value="claude-3-sonnet" ${currentSettings.selectedModel === 'claude-3-sonnet' ? 'selected' : ''}>Claude 3 Sonnet</option>
-                                            <option value="gemini-1.5-pro" ${currentSettings.selectedModel === 'gemini-1.5-pro' ? 'selected' : ''}>Gemini 1.5 Pro</option>
-                                        </select>
-                                    </div>
-                                    <div>
-                                        <label style="display: block; color: white; margin-bottom: 8px; font-weight: 500;">Creativity Level</label>
-                                        <input type="range" id="creativityLevel" min="0" max="1" step="0.1" value="${currentSettings.creativityLevel}" onchange="updateSetting('creativityLevel', this.value)" style="
-                                            width: 100%;
-                                            margin: 10px 0;
-                                        ">
-                                        <div style="display: flex; justify-content: space-between; color: #888; font-size: 12px;">
-                                            <span>Focused</span>
-                                            <span>Balanced</span>
-                                            <span>Creative</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
                             <!-- Appearance & Theme Section -->
                             <div style="margin-bottom: 40px;">
                                 <h3 style="color: #3B82F6; margin: 0 0 20px 0; font-size: 18px; display: flex; align-items: center;">
@@ -2270,39 +2185,6 @@
                                             <option value="ko-KR" ${currentSettings.language === 'ko-KR' ? 'selected' : ''}>Korean</option>
                                             <option value="ar-SA" ${currentSettings.language === 'ar-SA' ? 'selected' : ''}>Arabic</option>
                                         </select>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- AI Behavior Section -->
-                            <div style="margin-bottom: 40px;">
-                                <h3 style="color: #3B82F6; margin: 0 0 20px 0; font-size: 18px; display: flex; align-items: center;">
-                                    🧠 AI Behavior
-                                </h3>
-                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                                    <div>
-                                        <label style="display: block; color: white; margin-bottom: 8px; font-weight: 500;">Max Tokens</label>
-                                        <input type="number" id="maxTokens" value="${currentSettings.maxTokens}" min="100" max="4000" step="100" style="
-                                            width: 100%;
-                                            padding: 12px;
-                                            border: 1px solid #444;
-                                            border-radius: 8px;
-                                            background: #2a2a2a;
-                                            color: white;
-                                            font-size: 14px;
-                                        " onchange="updateSetting('maxTokens', this.value)">
-                                    </div>
-                                    <div>
-                                        <label style="display: block; color: white; margin-bottom: 8px; font-weight: 500;">Response Timeout (seconds)</label>
-                                        <input type="number" id="timeout" value="${currentSettings.timeout}" min="10" max="120" step="5" style="
-                                            width: 100%;
-                                            padding: 12px;
-                                            border: 1px solid #444;
-                                            border-radius: 8px;
-                                            background: #2a2a2a;
-                                            color: white;
-                                            font-size: 14px;
-                                        " onchange="updateSetting('timeout', this.value)">
                                     </div>
                                 </div>
                             </div>
